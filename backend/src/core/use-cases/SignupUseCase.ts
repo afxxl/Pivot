@@ -1,13 +1,15 @@
 import { SignupRequestDTO, SignupResponseDTO } from "../dto/SignupDTO";
 import { ICompanyRepository } from "../repositories/ICompanyRepository";
 import { IUserRepository } from "../repositories/IUserRepository";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { IPasswordService } from "../services/IPasswordService";
+import { ITokenService } from "../services/ITokenService";
 
 export class SignupUseCase {
   constructor(
     private userRepository: IUserRepository,
     private companyRepository: ICompanyRepository,
+    private passwordService: IPasswordService,
+    private tokenService: ITokenService,
   ) {}
 
   async execute(req: SignupRequestDTO): Promise<SignupResponseDTO> {
@@ -19,15 +21,13 @@ export class SignupUseCase {
       throw new Error("EMAIL_EXISTS: Company email already registered");
     }
 
-    const existingUser = await this.companyRepository.findByEmail(
-      req.adminEmail,
-    );
+    const existingUser = await this.userRepository.findByEmail(req.adminEmail);
 
     if (existingUser) {
       throw new Error("EMAIL_EXISTS: Admin email already registered");
     }
 
-    const hashedPassword = await bcrypt.hash(req.password, 10);
+    const hashedPassword = await this.passwordService.hash(req.password);
 
     const company = await this.companyRepository.create({
       name: req.companyName,
@@ -47,15 +47,11 @@ export class SignupUseCase {
       companyId: company.id,
     });
 
-    const token = jwt.sign(
-      {
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-      },
-      process.env.JWT_SECRET || "SECRET_KEY",
-      { expiresIn: "24h" },
-    );
+    const token = this.tokenService.generate({
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    });
 
     return {
       success: true,

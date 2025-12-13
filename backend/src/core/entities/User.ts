@@ -6,19 +6,19 @@ export interface User {
   password: string;
   role: "workspace_admin" | "project_manager" | "member";
   status: "active" | "invited" | "inactive";
-  companyId?: string;
+  companyId: string;
   phone?: string;
   profile?: {
-    avater?: string;
+    avatar?: string;
     bio?: string;
     location?: string;
     timezone?: string;
   };
   preferences?: {
-    emailNotifications?: Boolean;
-    pushNotifications?: Boolean;
-    weeklySummary?: Boolean;
-    theme?: String;
+    emailNotifications?: boolean;
+    pushNotifications?: boolean;
+    weeklySummary?: boolean;
+    theme?: string;
   };
   lastLogin?: Date;
   createdAt?: Date;

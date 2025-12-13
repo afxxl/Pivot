@@ -1,18 +1,11 @@
 import { Router } from "express";
-import { UserRepository } from "../../database/repositories/UserRepository";
-import { CompanyRepository } from "../../database/repositories/CompanyRepository";
-import { SignupUseCase } from "../../../core/use-cases/SignupUseCase";
-import { AuthController } from "../controllers/AuthController";
+import { container } from "../../container/Container";
 
 const router = Router();
 
-const userRepository = new UserRepository();
-const companyRepository = new CompanyRepository();
-
-const signUpCase = new SignupUseCase(userRepository, companyRepository);
-
-const authController = new AuthController(signUpCase);
+const authController = container.authController;
 
 router.post("/signup", authController.signup);
+router.post("/login", authController.login);
 
 export default router;

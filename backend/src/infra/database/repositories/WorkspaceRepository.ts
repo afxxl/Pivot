@@ -1,0 +1,69 @@
+import { Workspace } from "../../../core/entities/Workspace";
+import { IWorkspaceRepository } from "../../../core/repositories/IWorkspaceRepository";
+import WorkspaceModel from "../models/WorkspaceModel";
+import { v4 as uuidv4 } from "uuid";
+import workspaceMemberModel from "../models/WorkspaceMemberModel";
+
+export class WorkspaceRepository implements IWorkspaceRepository {
+  async create(
+    workspaceData: Omit<Workspace, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Workspace> {
+    const doc = new WorkspaceModel({
+      _id: uuidv4(),
+      ...workspaceData,
+    });
+
+    await doc.save();
+    return this.toEntity(doc);
+  }
+
+  async findById(workspaceId: string): Promise<Workspace | null> {
+    const workspace = await WorkspaceModel.findById(workspaceId);
+    return workspace ? this.toEntity(workspace) : null;
+  }
+
+  async update(
+    workspaceId: string,
+    data: Partial<Workspace>,
+  ): Promise<Workspace> {
+    const workspace = await WorkspaceModel.findByIdAndUpdate(workspaceId, data);
+
+    return this.toEntity(workspace);
+  }
+
+  async delete(workspaceId: string): Promise<Boolean> {
+    await WorkspaceModel.findByIdAndDelete(workspaceId);
+    return true;
+  }
+
+  async findByCompanyId(companyId: string): Promise<Workspace[]> {
+    const workspace = await WorkspaceModel.find({ companyId });
+    return workspace.map((doc) => this.toEntity(doc));
+  }
+
+  async findByUserId(userId: string): Promise<Workspace[]> {
+    const workspaceMemberships = await workspaceMemberModel.find({ userId });
+
+    const workspaceIds = workspaceMemberships.map((x) => x.workspaceId);
+
+    const workspaces = await WorkspaceModel.find({
+      _id: { $in: workspaceIds },
+    });
+
+    return workspaces.map((ws) => this.toEntity(ws));
+  }
+
+  private toEntity(doc: any): Workspace {
+    return {
+      id: doc._id,
+      name: doc.name,
+      description: doc.description,
+      companyId: doc.companyId,
+      memberCount: doc.memberCount,
+      projectCount: doc.projectCount,
+      createdBy: doc.createdBy,
+      createdAt: doc.createdAt,
+      updatedAt: doc.updatedAt,
+    };
+  }
+}
