@@ -3,6 +3,7 @@ import { IWorkspaceRepository } from "../../../core/repositories/IWorkspaceRepos
 import WorkspaceModel from "../models/WorkspaceModel";
 import { v4 as uuidv4 } from "uuid";
 import workspaceMemberModel from "../models/WorkspaceMemberModel";
+import { AppError } from "../../../shared/errors/AppError";
 
 export class WorkspaceRepository implements IWorkspaceRepository {
   async create(
@@ -26,7 +27,15 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     workspaceId: string,
     data: Partial<Workspace>,
   ): Promise<Workspace> {
-    const workspace = await WorkspaceModel.findByIdAndUpdate(workspaceId, data);
+    const workspace = await WorkspaceModel.findByIdAndUpdate(
+      workspaceId,
+      { $set: data },
+      { new: true, runValidators: true },
+    );
+
+    if (!workspace) {
+      throw new AppError(404, "WORKSPACE_NOT_FOUND", "Workspace not found");
+    }
 
     return this.toEntity(workspace);
   }

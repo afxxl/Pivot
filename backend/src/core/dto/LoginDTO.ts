@@ -1,8 +1,6 @@
-export interface LoginRequestDTO {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-}
+import { loginInput } from "../../shared/validation/authSchemas";
+
+export type LoginRequestDTO = loginInput;
 
 export interface LoginResponseDTO {
   success: boolean;
@@ -25,6 +23,11 @@ export interface LoginResponseDTO {
       }>;
     };
   };
-  token: string;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
+    tokenType: string;
+  };
   redirectTo: string;
 }

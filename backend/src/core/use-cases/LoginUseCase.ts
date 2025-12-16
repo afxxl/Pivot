@@ -1,3 +1,8 @@
+import {
+  CompanyNotFoundError,
+  InvalidCredentialsError,
+  UserNotFoundError,
+} from "../../shared/errors/AuthError";
 import { LoginResponseDTO, LoginRequestDTO } from "../dto/LoginDTO";
 import { ICompanyRepository } from "../repositories/ICompanyRepository";
 import { IUserRepository } from "../repositories/IUserRepository";
@@ -17,7 +22,7 @@ export class LoginUseCase {
     const user = await this.UserRepository.findByEmail(req.email);
 
     if (!user) {
-      throw new Error("INVALID_CREDENTIALS: Email or password is incorrect");
+      throw new InvalidCredentialsError();
     }
 
     const isPasswordValid = await this.passwordService.compare(
@@ -25,17 +30,17 @@ export class LoginUseCase {
       user.password,
     );
     if (!isPasswordValid) {
-      throw new Error("INVALID_CREDENTIALS: Email or password is incorrect");
+      throw new InvalidCredentialsError();
     }
 
     if (!user.companyId) {
-      throw new Error("INVALID_USER: User is not associated with any company");
+      throw new UserNotFoundError("User is not associated with any company");
     }
 
     const company = await this.CompanyRepository.findById(user.companyId);
 
     if (!company) {
-      throw new Error("INVALID_USER: User is not associated with any company");
+      throw new CompanyNotFoundError();
     }
 
     const workspaceEntities = await this.workspaceRepository.findByUserId(
@@ -51,7 +56,7 @@ export class LoginUseCase {
       lastLogin: new Date(),
     });
 
-    const token = this.tokenService.generate({
+    const tokens = this.tokenService.generateTokenPair({
       userId: user.id,
       email: user.email,
       role: user.role,
@@ -83,7 +88,7 @@ export class LoginUseCase {
           workspaces: workspaces,
         },
       },
-      token,
+      tokens,
       redirectTo,
     };
   }

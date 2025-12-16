@@ -2,6 +2,7 @@ import { IUserRepository } from "../../../core/repositories/IUserRepository";
 import UserModel from "../models/UserModel";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../../../core/entities/User";
+import { UserNotFoundError } from "../../../shared/errors/AuthError";
 
 export class UserRepository implements IUserRepository {
   async create(
@@ -30,6 +31,10 @@ export class UserRepository implements IUserRepository {
       { $set: data },
       { new: true, runValidators: true },
     );
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
 
     return this.toEntity(user);
   }

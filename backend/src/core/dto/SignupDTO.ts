@@ -1,13 +1,5 @@
-export interface SignupRequestDTO {
-  companyName: string;
-  companyEmail: string;
-  adminFirstName: string;
-  adminLastName: string;
-  adminEmail: string;
-  password: string;
-  agreeToTerms: boolean;
-}
-
+import { signupInput } from "../../shared/validation/authSchemas";
+export type SignupRequestDTO = signupInput;
 export interface SignupResponseDTO {
   success: boolean;
   message: string;
@@ -28,7 +20,12 @@ export interface SignupResponseDTO {
       role: string;
       status: string;
     };
-    token: string;
+    tokens: {
+      accessToken: string;
+      refreshToken: string;
+      expiresIn: number;
+      tokenType: string;
+    };
     redirectTo: string;
   };
 }

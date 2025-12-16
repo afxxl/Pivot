@@ -1,11 +1,16 @@
 import { Router } from "express";
 import { container } from "../../container/Container";
+import { validateRequest } from "../middlewares/validateRequest";
+import {
+  loginSchema,
+  signupSchema,
+} from "../../../shared/validation/authSchemas";
 
 const router = Router();
 
 const authController = container.authController;
 
-router.post("/signup", authController.signup);
-router.post("/login", authController.login);
+router.post("/signup", validateRequest(signupSchema), authController.signup);
+router.post("/login", validateRequest(loginSchema), authController.login);
 
 export default router;

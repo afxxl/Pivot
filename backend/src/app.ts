@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import authRoutes from "./infra/http/routes/authRoutes";
+import { errorHandler } from "./infra/http/middlewares/errorHandler";
 
 const app = express();
 
@@ -9,10 +10,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/auth", authRoutes);
-
-app.get("/health", (req: Request, res: Response) => {
-  res.json({ status: "OK", message: "Server is running" });
-});
 
 app.use((req: Request, res: Response) => {
   res.status(400).json({
@@ -23,5 +20,7 @@ app.use((req: Request, res: Response) => {
     },
   });
 });
+
+app.use(errorHandler);
 
 export default app;

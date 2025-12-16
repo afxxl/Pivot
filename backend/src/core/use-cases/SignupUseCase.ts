@@ -1,3 +1,4 @@
+import { EmailAlreadyExistsError } from "../../shared/errors/AuthError";
 import { SignupRequestDTO, SignupResponseDTO } from "../dto/SignupDTO";
 import { ICompanyRepository } from "../repositories/ICompanyRepository";
 import { IUserRepository } from "../repositories/IUserRepository";
@@ -18,13 +19,13 @@ export class SignupUseCase {
     );
 
     if (existingCompany) {
-      throw new Error("EMAIL_EXISTS: Company email already registered");
+      throw new EmailAlreadyExistsError("Company email already registered");
     }
 
     const existingUser = await this.userRepository.findByEmail(req.adminEmail);
 
     if (existingUser) {
-      throw new Error("EMAIL_EXISTS: Admin email already registered");
+      throw new EmailAlreadyExistsError("Admin email already registered");
     }
 
     const hashedPassword = await this.passwordService.hash(req.password);
@@ -47,7 +48,7 @@ export class SignupUseCase {
       companyId: company.id,
     });
 
-    const token = this.tokenService.generate({
+    const tokens = this.tokenService.generateTokenPair({
       userId: user.id,
       email: user.email,
       role: user.role,
@@ -73,7 +74,7 @@ export class SignupUseCase {
           role: user.role,
           status: user.status,
         },
-        token,
+        tokens,
         redirectTo: "/onboarding/welcome",
       },
     };
