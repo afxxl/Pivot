@@ -1,5 +1,7 @@
 import { signupInput } from "../../shared/validation/authSchemas";
+
 export type SignupRequestDTO = signupInput;
+
 export interface SignupResponseDTO {
   success: boolean;
   message: string;
@@ -20,12 +22,9 @@ export interface SignupResponseDTO {
       role: string;
       status: string;
     };
-    tokens: {
-      accessToken: string;
-      refreshToken: string;
-      expiresIn: number;
-      tokenType: string;
-    };
-    redirectTo: string;
+    accessToken: string;
+    expiresIn: number;
+    tokenType: string;
   };
+  redirectTo: string;
 }

@@ -1,5 +1,6 @@
 import { LoginUseCase } from "../../core/use-cases/LoginUseCase";
 import { SignupUseCase } from "../../core/use-cases/SignupUseCase";
+import { RefreshTokenUseCase } from "../../core/use-cases/RefreshTokenUseCase";
 import { CompanyRepository } from "../database/repositories/CompanyRepository";
 import { UserRepository } from "../database/repositories/UserRepository";
 import { WorkspaceMemberRepository } from "../database/repositories/WorkspaceMemberRepository";
@@ -9,28 +10,25 @@ import { BcryptPasswordService } from "../services/BcryptPasswordService";
 import { JwtTokenService } from "../services/JwtTokenService";
 
 class Container {
-  //REPOSITORIES
-
+  // REPOSITORIES
   private _userRepository?: UserRepository;
   private _companyRepository?: CompanyRepository;
   private _workspaceRepository?: WorkspaceRepository;
   private _workspaceMemberRepository?: WorkspaceMemberRepository;
 
-  // Services
-
+  // SERVICES
   private _passwordService?: BcryptPasswordService;
   private _tokenService?: JwtTokenService;
 
-  //useCases
+  // USE CASES
   private _signupUseCase?: SignupUseCase;
   private _loginUseCase?: LoginUseCase;
+  private _refreshTokenUseCase?: RefreshTokenUseCase;
 
-  //controllers
-
+  // CONTROLLERS
   private _authController?: AuthController;
 
-  //repository getters
-
+  // REPOSITORY GETTERS
   get userRepository(): UserRepository {
     if (!this._userRepository) {
       this._userRepository = new UserRepository();
@@ -59,8 +57,7 @@ class Container {
     return this._workspaceMemberRepository;
   }
 
-  // service getters
-
+  // SERVICE GETTERS
   get passwordService(): BcryptPasswordService {
     if (!this._passwordService) {
       this._passwordService = new BcryptPasswordService();
@@ -75,8 +72,7 @@ class Container {
     return this._tokenService;
   }
 
-  // usecase getters
-
+  // USE CASE GETTERS
   get signupUseCase(): SignupUseCase {
     if (!this._signupUseCase) {
       this._signupUseCase = new SignupUseCase(
@@ -102,16 +98,27 @@ class Container {
     return this._loginUseCase;
   }
 
-  //controller getters
+  get refreshTokenUseCase(): RefreshTokenUseCase {
+    if (!this._refreshTokenUseCase) {
+      this._refreshTokenUseCase = new RefreshTokenUseCase(
+        this.tokenService,
+        this.userRepository,
+      );
+    }
+    return this._refreshTokenUseCase;
+  }
 
+  // CONTROLLER GETTERS
   get authController(): AuthController {
     if (!this._authController) {
       this._authController = new AuthController(
         this.signupUseCase,
         this.loginUseCase,
+        this.refreshTokenUseCase,
       );
     }
     return this._authController;
   }
 }
+
 export const container = new Container();
