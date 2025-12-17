@@ -2,7 +2,9 @@ import { IWorkspaceMemberRepository } from "../../../core/repositories/IWorkspac
 import { WorkspaceMember } from "../../../core/entities/WorkspaceMember";
 import { v4 as uuidv4 } from "uuid";
 import workspaceMemberModel from "../models/WorkspaceMemberModel";
+import { injectable } from "inversify";
 
+@injectable()
 export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
   async create(
     workspaceMemberData: Omit<

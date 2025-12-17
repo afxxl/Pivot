@@ -9,13 +9,25 @@ import { IUserRepository } from "../repositories/IUserRepository";
 import { IWorkspaceRepository } from "../repositories/IWorkspaceRepository";
 import { IPasswordService } from "../services/IPasswordService";
 import { ITokenService, TokenResponse } from "../services/ITokenService";
+import { injectable, inject } from "inversify";
+import { Types } from "../../infra/container/types";
 
+@injectable()
 export class LoginUseCase {
   constructor(
+    @inject(Types.UserRepository)
     private userRepository: IUserRepository,
+
+    @inject(Types.CompanyRepository)
     private companyRepository: ICompanyRepository,
+
+    @inject(Types.WorkspaceRepository)
     private workspaceRepository: IWorkspaceRepository,
+
+    @inject(Types.PasswordService)
     private passwordService: IPasswordService,
+
+    @inject(Types.TokenService)
     private tokenService: ITokenService,
   ) {}
 

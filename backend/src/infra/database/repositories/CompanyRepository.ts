@@ -1,8 +1,10 @@
+import { injectable } from "inversify";
 import { Company } from "../../../core/entities/Company";
 import { ICompanyRepository } from "../../../core/repositories/ICompanyRepository";
 import CompanyModel from "../models/CompanyModel";
 import { v4 as uuidv4 } from "uuid";
 
+@injectable()
 export class CompanyRepository implements ICompanyRepository {
   async create(
     company: Omit<Company, "id" | "createdAt" | "updatedAt">,

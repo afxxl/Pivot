@@ -9,9 +9,16 @@ import {
 import { IUserRepository } from "../repositories/IUserRepository";
 import { ITokenService } from "../services/ITokenService";
 
+import { Types } from "../../infra/container/types";
+import { inject, injectable } from "inversify";
+
+@injectable()
 export class RefreshTokenUseCase {
   constructor(
+    @inject(Types.TokenService)
     private tokenService: ITokenService,
+
+    @inject(Types.UserRepository)
     private userRepository: IUserRepository,
   ) {}
 

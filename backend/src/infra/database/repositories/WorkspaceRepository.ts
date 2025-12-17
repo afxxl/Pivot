@@ -4,7 +4,9 @@ import WorkspaceModel from "../models/WorkspaceModel";
 import { v4 as uuidv4 } from "uuid";
 import workspaceMemberModel from "../models/WorkspaceMemberModel";
 import { AppError } from "../../../shared/errors/AppError";
+import { injectable } from "inversify";
 
+@injectable()
 export class WorkspaceRepository implements IWorkspaceRepository {
   async create(
     workspaceData: Omit<Workspace, "id" | "createdAt" | "updatedAt">,

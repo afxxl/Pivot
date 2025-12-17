@@ -9,7 +9,9 @@ import {
   TokenExpiredError,
   UnauthorizedError,
 } from "../../shared/errors/AuthError";
+import { injectable } from "inversify";
 
+@injectable()
 export class JwtTokenService implements ITokenService {
   private readonly accessTokenSecret: string;
   private readonly refreshTokenSecret: string;

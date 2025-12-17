@@ -2,11 +2,19 @@ import { LoginUseCase } from "../../../core/use-cases/LoginUseCase";
 import { SignupUseCase } from "../../../core/use-cases/SignupUseCase";
 import { RefreshTokenUseCase } from "../../../core/use-cases/RefreshTokenUseCase";
 import { NextFunction, Request, Response } from "express";
+import { injectable, inject } from "inversify";
+import { Types } from "../../container/types";
 
+@injectable()
 export class AuthController {
   constructor(
+    @inject(Types.SignupUseCase)
     private signupUseCase: SignupUseCase,
+
+    @inject(Types.LoginUseCase)
     private loginUseCase: LoginUseCase,
+
+    @inject(Types.RefreshTokenUseCase)
     private refreshTokenUseCase: RefreshTokenUseCase,
   ) {}
 

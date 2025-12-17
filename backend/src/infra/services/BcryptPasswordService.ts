@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import { IPasswordService } from "../../core/services/IPasswordService";
+import { injectable } from "inversify";
 
+@injectable()
 export class BcryptPasswordService implements IPasswordService {
   private readonly saltRounds: number;
   constructor() {
