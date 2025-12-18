@@ -7,7 +7,8 @@
     "dev": "nodemon src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "start:dev": "ts-node src/server.ts"
+    "start:dev": "ts-node src/server.ts",
+    "lint": "cd .. && npx eslint backend/src"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -21,6 +22,7 @@
     "mongoose": "^8.0.0",
     "reflect-metadata": "^0.2.2",
     "uuid": "^9.0.1",
+    "winston": "^3.19.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {

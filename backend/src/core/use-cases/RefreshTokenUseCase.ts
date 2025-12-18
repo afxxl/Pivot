@@ -1,7 +1,4 @@
-import {
-  TokenExpiredError,
-  UnauthorizedError,
-} from "../../shared/errors/AuthError";
+import { UnauthorizedError } from "../../shared/errors/AuthError";
 import {
   RefreshTokenRequestDTO,
   RefreshTokenResponseDTO,

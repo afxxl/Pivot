@@ -8,6 +8,7 @@ export const Types = {
   //Services
   PasswordService: "PasswordService",
   TokenService: "TokenService",
+  Logger: "Logger",
 
   //Use Cases
   LoginUseCase: "LoginUseCase",

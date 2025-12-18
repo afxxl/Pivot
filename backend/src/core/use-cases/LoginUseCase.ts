@@ -11,6 +11,7 @@ import { IPasswordService } from "../services/IPasswordService";
 import { ITokenService, TokenResponse } from "../services/ITokenService";
 import { injectable, inject } from "inversify";
 import { Types } from "../../infra/container/types";
+import { ILogger } from "../services/ILogger";
 
 @injectable()
 export class LoginUseCase {
@@ -29,12 +30,16 @@ export class LoginUseCase {
 
     @inject(Types.TokenService)
     private tokenService: ITokenService,
+
+    @inject(Types.Logger)
+    private logger: ILogger,
   ) {}
 
   async execute(req: LoginRequestDTO): Promise<{
     response: LoginResponseDTO;
     refreshToken: string;
   }> {
+    this.logger.info("Login procedure started");
     const user = await this.userRepository.findByEmail(req.email);
     if (!user) {
       throw new InvalidCredentialsError();

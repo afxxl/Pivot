@@ -10,14 +10,25 @@ import { LoginUseCase } from "../../core/use-cases/LoginUseCase";
 import { SignupUseCase } from "../../core/use-cases/SignupUseCase";
 import { RefreshTokenUseCase } from "../../core/use-cases/RefreshTokenUseCase";
 import { AuthController } from "../http/controllers/AuthController";
+import { WinstonService } from "../services/WinstonService";
+import { ILogger } from "../../core/services/ILogger";
 
 export const container = new Container();
 
 //Repositories
-container.bind(Types.UserRepository).to(UserRepository);
-container.bind(Types.CompanyRepository).to(CompanyRepository);
-container.bind(Types.WorkspaceRepository).to(WorkspaceRepository);
-container.bind(Types.WorkspaceMemberRepository).to(WorkspaceMemberRepository);
+container.bind(Types.UserRepository).to(UserRepository).inSingletonScope();
+container
+  .bind(Types.CompanyRepository)
+  .to(CompanyRepository)
+  .inSingletonScope();
+container
+  .bind(Types.WorkspaceRepository)
+  .to(WorkspaceRepository)
+  .inSingletonScope();
+container
+  .bind(Types.WorkspaceMemberRepository)
+  .to(WorkspaceMemberRepository)
+  .inSingletonScope();
 
 //UseCases
 container.bind(Types.LoginUseCase).to(LoginUseCase);
@@ -26,8 +37,12 @@ container.bind(Types.RefreshTokenUseCase).to(RefreshTokenUseCase);
 
 //Services
 
-container.bind(Types.TokenService).to(JwtTokenService);
-container.bind(Types.PasswordService).to(BcryptPasswordService);
+container.bind(Types.TokenService).to(JwtTokenService).inSingletonScope();
+container
+  .bind(Types.PasswordService)
+  .to(BcryptPasswordService)
+  .inSingletonScope();
+container.bind<ILogger>(Types.Logger).to(WinstonService).inSingletonScope();
 
 //Controllers
 
