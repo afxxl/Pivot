@@ -46,7 +46,10 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const result = await this.loginUseCase.execute(req.body);
+      const result = await this.loginUseCase.execute(
+        req.body,
+        req.subdomain as string,
+      );
 
       const cookieMaxAge = req.body.rememberMe
         ? 30 * 24 * 60 * 60 * 1000

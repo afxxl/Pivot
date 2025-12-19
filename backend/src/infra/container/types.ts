@@ -10,6 +10,10 @@ export const Types = {
   TokenService: "TokenService",
   Logger: "Logger",
 
+  //Uow (Unit of Work)
+
+  UnitOfWork: "UnitOfWork",
+
   //Use Cases
   LoginUseCase: "LoginUseCase",
   SignupUseCase: "SignupUseCase",

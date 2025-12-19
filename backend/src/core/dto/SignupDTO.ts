@@ -10,6 +10,7 @@ export interface SignupResponseDTO {
       id: string;
       name: string;
       email: string;
+      subdomain: string;
       status: string;
       subscriptionPlan: string;
       createdAt: string;

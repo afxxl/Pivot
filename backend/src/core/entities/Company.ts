@@ -2,6 +2,7 @@ export interface Company {
   id: string;
   name: string;
   email: string;
+  subdomain: string;
   phone?: string;
   website?: string;
   address?: {

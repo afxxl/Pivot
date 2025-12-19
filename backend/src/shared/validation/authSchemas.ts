@@ -1,25 +1,54 @@
 import { z } from "zod";
 
-// signup
+const RESERVED_SUBDOMAINS = [
+  "www",
+  "api",
+  "app",
+  "admin",
+  "mail",
+  "smtp",
+  "ftp",
+  "blog",
+  "help",
+  "support",
+  "docs",
+  "status",
+  "dashboard",
+  "login",
+  "signup",
+  "pivot",
+];
+
 export const signupSchema = z.object({
   companyName: z
     .string()
+    .trim()
     .min(2, "Company name must be at least 2 characters")
     .max(100, "Company name must not exceed 100 characters"),
 
-  companyEmail: z.string().email("Invalid company email address").toLowerCase(),
+  companyEmail: z
+    .string()
+    .trim()
+    .email("Invalid company email address")
+    .toLowerCase(),
 
   adminFirstName: z
     .string()
+    .trim()
     .min(2, "First Name must be at least 2 characters")
     .max(100, "First Name must not exceed 100 characters"),
 
   adminLastName: z
     .string()
+    .trim()
     .min(2, "Last Name must be at least 2 characters")
     .max(100, "Last Name must not exceed 100 characters"),
 
-  adminEmail: z.string().email("Invalid admin email address").toLowerCase(),
+  adminEmail: z
+    .string()
+    .trim()
+    .email("Invalid admin email address")
+    .toLowerCase(),
 
   password: z
     .string()
@@ -30,6 +59,21 @@ export const signupSchema = z.object({
       "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
     ),
 
+  subdomain: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(3, "Subdomain must be at least 3 characters")
+    .max(30, "Subdomain must not exceed 30 characters")
+    .regex(
+      /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/,
+      "Only lowercase letters, numbers, and hyphens. Cannot start/end with hyphen",
+    )
+    .refine(
+      (val) => !RESERVED_SUBDOMAINS.includes(val),
+      "This subdomain is reserved",
+    ),
+
   agreeToTerms: z.boolean().refine((val) => val === true, {
     message: "You must agree to the terms and conditions",
   }),
@@ -37,10 +81,8 @@ export const signupSchema = z.object({
 
 export type signupInput = z.infer<typeof signupSchema>;
 
-//login
-
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email address").toLowerCase(),
+  email: z.string().trim().email("Invalid email address").toLowerCase(),
   password: z.string().min(1, "Password is required"),
   rememberMe: z.boolean().optional().default(false),
 });

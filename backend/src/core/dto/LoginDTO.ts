@@ -16,6 +16,7 @@ export interface LoginResponseDTO {
       company: {
         id: string;
         name: string;
+        subdomain:string;
       };
       workspaces?: Array<{
         id: string;

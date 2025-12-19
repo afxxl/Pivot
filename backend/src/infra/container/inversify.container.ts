@@ -12,6 +12,7 @@ import { RefreshTokenUseCase } from "../../core/use-cases/RefreshTokenUseCase";
 import { AuthController } from "../http/controllers/AuthController";
 import { WinstonService } from "../services/WinstonService";
 import { ILogger } from "../../core/services/ILogger";
+import { MongooseUnitOfWork } from "../uow/MongooseUnitOfWork";
 
 export const container = new Container();
 
@@ -43,6 +44,10 @@ container
   .to(BcryptPasswordService)
   .inSingletonScope();
 container.bind<ILogger>(Types.Logger).to(WinstonService).inSingletonScope();
+
+//Uow
+
+container.bind(Types.UnitOfWork).to(MongooseUnitOfWork).inTransientScope();
 
 //Controllers
 

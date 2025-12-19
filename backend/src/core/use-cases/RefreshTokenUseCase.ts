@@ -39,6 +39,7 @@ export class RefreshTokenUseCase {
       userId: user.id,
       email: user.email,
       role: user.role,
+      companyId: user.companyId,
     });
 
     return {

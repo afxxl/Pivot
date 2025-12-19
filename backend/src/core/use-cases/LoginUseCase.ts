@@ -1,6 +1,10 @@
 import {
+  CompanyInactiveError,
   CompanyNotFoundError,
   InvalidCredentialsError,
+  SubdomainNotFoundError,
+  UserInactiveError,
+  UserInvitedError,
   UserNotFoundError,
 } from "../../shared/errors/AuthError";
 import { LoginResponseDTO, LoginRequestDTO } from "../dto/LoginDTO";
@@ -35,32 +39,82 @@ export class LoginUseCase {
     private logger: ILogger,
   ) {}
 
-  async execute(req: LoginRequestDTO): Promise<{
+  async execute(
+    req: LoginRequestDTO,
+    subdomain: string,
+  ): Promise<{
     response: LoginResponseDTO;
     refreshToken: string;
   }> {
-    this.logger.info("Login procedure started");
-    const user = await this.userRepository.findByEmail(req.email);
+    const company = await this.companyRepository.findBySubDomain(subdomain);
+
+    if (!company) {
+      throw new SubdomainNotFoundError("Please check the URL");
+    }
+    if (company.status === "inactive") {
+      throw new CompanyInactiveError(
+        "This company account is inactive. Please contact support.",
+      );
+    }
+
+    const user = await this.userRepository.findByEmailAndCompanyId(
+      req.email,
+      company.id,
+    );
     if (!user) {
       throw new InvalidCredentialsError();
+    }
+
+    if (user.status !== "active") {
+      if (user.status === "invited") {
+        throw new UserInvitedError(
+          "Please complete your account setup. Check your email for invite link.",
+        );
+      }
+      if (user.status === "inactive") {
+        throw new UserInactiveError(
+          "Your account is deactivated. Please contact your workspace admin.",
+        );
+      }
     }
 
     const isPasswordValid = await this.passwordService.compare(
       req.password,
       user.password,
     );
+
     if (!isPasswordValid) {
+      this.logger.warn("Login failed - Invalid credentials", {
+        email: req.email,
+        companyid: company.id,
+        subdomain: subdomain,
+        timestamp: new Date().toISOString(),
+      });
+
       throw new InvalidCredentialsError();
     }
 
-    if (!user.companyId) {
-      throw new UserNotFoundError("User is not associated with any company");
+    this.logger.info("Login successful", {
+      userId: user.id,
+      email: user.email,
+      companyid: company.id,
+      subdomain: subdomain,
+      timestamp: new Date().toISOString(),
+    });
+
+    if (!user.companyId || user.companyId !== company.id) {
+      this.logger.error("User companyId mismatch or missing", {
+        userId: user.id,
+        usercompanyId: user.companyId,
+        expectedCompanyId: company.id,
+      });
+
+      throw new UserNotFoundError("User not found");
     }
 
-    const company = await this.companyRepository.findById(user.companyId);
-    if (!company) {
-      throw new CompanyNotFoundError();
-    }
+    await this.userRepository.update(user.id, {
+      lastLogin: new Date(),
+    });
 
     const workspaceEntities = await this.workspaceRepository.findByUserId(
       user.id,
@@ -70,22 +124,20 @@ export class LoginUseCase {
       name: ws.name,
     }));
 
-    await this.userRepository.update(user.id, {
-      lastLogin: new Date(),
-    });
-
     const tokens: TokenResponse = this.tokenService.generateTokenPair({
       userId: user.id,
       email: user.email,
       role: user.role,
+      companyId: company.id,
     });
 
-    let redirectTo = "/member/dashboard";
-    if (user.role === "workspace_admin") {
-      redirectTo = "/workspace-admin/dashboard";
-    } else if (user.role === "project_manager") {
-      redirectTo = "/pm/dashboard";
-    }
+    const roleRedirects = {
+      workspace_admin: "/workspace-admin/dashboard",
+      project_manager: "/pm/dashboard",
+      member: "/member/dashboard",
+    };
+
+    let redirectTo = roleRedirects[user.role] || "/member/dashboard";
 
     return {
       response: {
@@ -102,6 +154,7 @@ export class LoginUseCase {
             company: {
               id: company.id,
               name: company.name,
+              subdomain: company.subdomain,
             },
             workspaces,
           },

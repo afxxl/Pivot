@@ -4,6 +4,7 @@ interface ICompany {
   _id: string;
   name: string;
   email: string;
+  subdomain: string;
   phone?: string;
   website?: string;
   address?: {
@@ -33,6 +34,7 @@ const CompanySchema = new Schema<ICompany>(
     _id: { type: String, required: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    subdomain: { type: String, required: true, unique: true, lowercase: true },
     phone: { type: String },
     website: { type: String },
     address: {

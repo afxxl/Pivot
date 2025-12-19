@@ -4,21 +4,35 @@ import { v4 as uuidv4 } from "uuid";
 import { User } from "../../../core/entities/User";
 import { UserNotFoundError } from "../../../shared/errors/AuthError";
 import { injectable } from "inversify";
+import { IUnitWork } from "../../../core/uow/IUnitWork";
+import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
 
 @injectable()
 export class UserRepository implements IUserRepository {
   async create(
     userData: Omit<User, "id" | "createdAt" | "updatedAt">,
+    uow?: IUnitWork,
   ): Promise<User> {
+    const session =
+      uow instanceof MongooseUnitOfWork ? uow.getSession() : undefined;
+
     const doc = new UserModel({
       _id: uuidv4(),
       ...userData,
     });
-    await doc.save();
+    await doc.save({ session });
     return this.toEntity(doc);
   }
   async findByEmail(email: string): Promise<User | null> {
     const user = await UserModel.findOne({ email });
+    return user ? this.toEntity(user) : null;
+  }
+
+  async findByEmailAndCompanyId(
+    email: string,
+    companyId: string,
+  ): Promise<User | null> {
+    const user = await UserModel.findOne({ email, companyId });
     return user ? this.toEntity(user) : null;
   }
 

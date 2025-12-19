@@ -2,6 +2,7 @@ export interface TokenPayload {
   userId: string;
   email: string;
   role: string;
+  companyId: string;
   type?: "access" | "refresh";
 }
 

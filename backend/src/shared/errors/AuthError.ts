@@ -12,6 +12,30 @@ export class EmailAlreadyExistsError extends AppError {
   }
 }
 
+export class UserInvitedError extends AppError {
+  constructor(message: string = "User already invited") {
+    super(403, "USER_INVITED", message);
+  }
+}
+
+export class UserInactiveError extends AppError {
+  constructor(message: string = "User is inactive") {
+    super(403, "USER_INACTIVE", message);
+  }
+}
+
+export class SubdomainAlreadyExistsError extends AppError {
+  constructor(message: string = "Subdomain already exists") {
+    super(400, "SUBDOMAIN_EXISTS", message);
+  }
+}
+
+export class SubdomainNotFoundError extends AppError {
+  constructor(message: string = "Subdomain not found") {
+    super(404, "SUBDOMAIN_NOT_FOUND", message);
+  }
+}
+
 export class UserNotFoundError extends AppError {
   constructor(message: string = "User not found") {
     super(404, "USER_NOT_FOUND", message);
@@ -20,7 +44,13 @@ export class UserNotFoundError extends AppError {
 
 export class CompanyNotFoundError extends AppError {
   constructor(message: string = "Company not found") {
-    super(404, "Company_NOT_FOUND", message);
+    super(404, "COMPANY_NOT_FOUND", message);
+  }
+}
+
+export class CompanyInactiveError extends AppError {
+  constructor(message: string = "This company is inactive") {
+    super(403, "COMPANY_INACTIVE", message);
   }
 }
 

@@ -1,4 +1,7 @@
-import { EmailAlreadyExistsError } from "../../shared/errors/AuthError";
+import {
+  EmailAlreadyExistsError,
+  SubdomainAlreadyExistsError,
+} from "../../shared/errors/AuthError";
 import { SignupRequestDTO, SignupResponseDTO } from "../dto/SignupDTO";
 import { ICompanyRepository } from "../repositories/ICompanyRepository";
 import { IUserRepository } from "../repositories/IUserRepository";
@@ -6,6 +9,7 @@ import { IPasswordService } from "../services/IPasswordService";
 import { ITokenService, TokenResponse } from "../services/ITokenService";
 import { Types } from "../../infra/container/types";
 import { inject, injectable } from "inversify";
+import { IUnitWork } from "../uow/IUnitWork";
 
 @injectable()
 export class SignupUseCase {
@@ -21,6 +25,9 @@ export class SignupUseCase {
 
     @inject(Types.TokenService)
     private tokenService: ITokenService,
+
+    @inject(Types.UnitOfWork)
+    private uow: IUnitWork,
   ) {}
 
   async execute(req: SignupRequestDTO): Promise<{
@@ -34,6 +41,13 @@ export class SignupUseCase {
       throw new EmailAlreadyExistsError("Company email already registered");
     }
 
+    const existingSubdomain = await this.companyRepository.findBySubDomain(
+      req.subdomain,
+    );
+    if (existingSubdomain) {
+      throw new SubdomainAlreadyExistsError("Subdomain already exists");
+    }
+
     const existingUser = await this.userRepository.findByEmail(req.adminEmail);
     if (existingUser) {
       throw new EmailAlreadyExistsError("Admin email already registered");
@@ -41,58 +55,85 @@ export class SignupUseCase {
 
     const hashedPassword = await this.passwordService.hash(req.password);
 
-    const company = await this.companyRepository.create({
-      name: req.companyName,
-      email: req.companyEmail,
-      status: "trial",
-      subscriptionPlan: "trial",
-      subscriptionStatus: "active",
-    });
+    await this.uow.begin();
 
-    const user = await this.userRepository.create({
-      firstName: req.adminFirstName,
-      lastName: req.adminLastName,
-      email: req.adminEmail,
-      password: hashedPassword,
-      role: "workspace_admin",
-      status: "active",
-      companyId: company.id,
-    });
-
-    const tokens: TokenResponse = this.tokenService.generateTokenPair({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    });
-
-    return {
-      response: {
-        success: true,
-        message: "Company created successfully",
-        data: {
-          company: {
-            id: company.id,
-            name: company.name,
-            email: company.email,
-            status: company.status,
-            subscriptionPlan: company.subscriptionPlan,
-            createdAt: company.createdAt.toISOString(),
-          },
-          user: {
-            id: user.id,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            role: user.role,
-            status: user.status,
-          },
-          accessToken: tokens.accessToken,
-          expiresIn: tokens.expiresIn,
-          tokenType: tokens.tokenType,
+    try {
+      const company = await this.companyRepository.create(
+        {
+          name: req.companyName,
+          email: req.companyEmail,
+          subdomain: req.subdomain,
+          status: "trial",
+          subscriptionPlan: "trial",
+          subscriptionStatus: "active",
         },
-        redirectTo: "/onboarding/welcome",
-      },
-      refreshToken: tokens.refreshToken,
-    };
+        this.uow,
+      );
+
+      const user = await this.userRepository.create(
+        {
+          firstName: req.adminFirstName,
+          lastName: req.adminLastName,
+          email: req.adminEmail,
+          password: hashedPassword,
+          role: "workspace_admin",
+          status: "active",
+          companyId: company.id,
+        },
+        this.uow,
+      );
+
+      const tokens: TokenResponse = this.tokenService.generateTokenPair({
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        companyId: company.id,
+      });
+
+      await this.uow.commit();
+
+      return {
+        response: {
+          success: true,
+          message: "Company created successfully",
+          data: {
+            company: {
+              id: company.id,
+              name: company.name,
+              email: company.email,
+              subdomain: company.subdomain,
+              status: company.status,
+              subscriptionPlan: company.subscriptionPlan,
+              createdAt: company.createdAt.toISOString(),
+            },
+            user: {
+              id: user.id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              role: user.role,
+              status: user.status,
+            },
+            accessToken: tokens.accessToken,
+            expiresIn: tokens.expiresIn,
+            tokenType: tokens.tokenType,
+          },
+          redirectTo: "/onboarding/welcome",
+        },
+        refreshToken: tokens.refreshToken,
+      };
+    } catch (error: any) {
+      await this.uow.rollback();
+
+      if (error.code === 11000) {
+        if (error.keyPattern?.subdomain) {
+          throw new SubdomainAlreadyExistsError(
+            "Subdomain was just taken. Please try another.",
+          );
+        }
+      }
+
+      throw error;
+    }
   }
 }
