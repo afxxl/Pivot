@@ -4,7 +4,7 @@ export interface User {
   firstName: string;
   lastName: string;
   password: string;
-  role: "workspace_admin" | "project_manager" | "member";
+  role: "company_admin" | "workspace_admin" | "project_manager" | "member";
   status: "active" | "invited" | "inactive";
   companyId: string;
   phone?: string;

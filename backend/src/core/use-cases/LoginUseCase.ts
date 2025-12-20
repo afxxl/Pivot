@@ -1,6 +1,5 @@
 import {
   CompanyInactiveError,
-  CompanyNotFoundError,
   InvalidCredentialsError,
   SubdomainNotFoundError,
   UserInactiveError,
@@ -116,9 +115,16 @@ export class LoginUseCase {
       lastLogin: new Date(),
     });
 
-    const workspaceEntities = await this.workspaceRepository.findByUserId(
-      user.id,
-    );
+    let workspaceEntities;
+
+    if (user.role === "company_admin") {
+      workspaceEntities = await this.workspaceRepository.findByCompanyId(
+        company.id,
+      );
+    } else {
+      workspaceEntities = await this.workspaceRepository.findByUserId(user.id);
+    }
+
     const workspaces = workspaceEntities.map((ws) => ({
       id: ws.id,
       name: ws.name,
@@ -131,13 +137,22 @@ export class LoginUseCase {
       companyId: company.id,
     });
 
-    const roleRedirects = {
+    const roleRedirects: Record<string, string> = {
+      company_admin: "/company-admin/dashboard",
       workspace_admin: "/workspace-admin/dashboard",
       project_manager: "/pm/dashboard",
       member: "/member/dashboard",
     };
 
     let redirectTo = roleRedirects[user.role] || "/member/dashboard";
+
+    if (workspaces.length === 0 && user.role !== "company_admin") {
+      redirectTo = "/benched";
+    }
+
+    if (workspaces.length === 0 && user.role === "company_admin") {
+      redirectTo = "/onboarding/create-workspace";
+    }
 
     return {
       response: {

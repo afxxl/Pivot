@@ -76,7 +76,7 @@ export class SignupUseCase {
           lastName: req.adminLastName,
           email: req.adminEmail,
           password: hashedPassword,
-          role: "workspace_admin",
+          role: "company_admin",
           status: "active",
           companyId: company.id,
         },
