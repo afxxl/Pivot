@@ -65,3 +65,11 @@ export class TokenExpiredError extends AppError {
     super(401, "TOKEN_EXPIRED", message);
   }
 }
+
+// Invite Errors
+
+export class InviteNotFoundError extends AppError {
+  constructor(message: string = "Invite not found") {
+    super(404, "INVITE_NOT_FOUND", message);
+  }
+}

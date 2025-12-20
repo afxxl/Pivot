@@ -13,6 +13,7 @@ import { AuthController } from "../http/controllers/AuthController";
 import { WinstonService } from "../services/WinstonService";
 import { ILogger } from "../../core/services/ILogger";
 import { MongooseUnitOfWork } from "../uow/MongooseUnitOfWork";
+import { InviteRepository } from "../database/repositories/InviteRepository";
 
 export const container = new Container();
 
@@ -30,6 +31,8 @@ container
   .bind(Types.WorkspaceMemberRepository)
   .to(WorkspaceMemberRepository)
   .inSingletonScope();
+
+container.bind(Types.InviteRepository).to(InviteRepository).inSingletonScope();
 
 //UseCases
 container.bind(Types.LoginUseCase).to(LoginUseCase);

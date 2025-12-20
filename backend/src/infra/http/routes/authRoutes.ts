@@ -3,11 +3,13 @@ import { container } from "../../container/inversify.container";
 import { validateRequest } from "../middlewares/validateRequest";
 import {
   loginSchema,
+  sendCompanyInviteSchema,
   signupSchema,
 } from "../../../shared/validation/authSchemas";
 import { Types } from "../../container/types";
 import { AuthController } from "../controllers/AuthController";
 import { resolveSubdomain } from "../middlewares/resolveSubdomain";
+import { authenticate, requireCompanyAdmin } from "../middlewares/authenticate";
 
 const router = Router();
 
@@ -22,5 +24,15 @@ router.post(
 );
 router.post("/refresh", authController.refreshToken);
 router.post("/logout", authController.logout);
+
+// Invite Routes
+
+router.post(
+  "/invite",
+  authenticate,
+  requireCompanyAdmin,
+  validateRequest(sendCompanyInviteSchema),
+  authController.inviteUser,
+);
 
 export default router;

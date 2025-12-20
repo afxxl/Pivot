@@ -4,6 +4,7 @@ export const Types = {
   CompanyRepository: "CompanyRepository",
   WorkspaceRepository: "WorkspaceRepository",
   WorkspaceMemberRepository: "WorkspaceMemberRepository",
+  InviteRepository: "InviteRepository",
 
   //Services
   PasswordService: "PasswordService",
