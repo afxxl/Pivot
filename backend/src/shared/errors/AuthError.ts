@@ -73,3 +73,21 @@ export class InviteNotFoundError extends AppError {
     super(404, "INVITE_NOT_FOUND", message);
   }
 }
+
+export class InviteAlreadyExists extends AppError {
+  constructor(message: string = "Invite already exists") {
+    super(400, "INVITE_EXISTS", message);
+  }
+}
+
+export class InviteAlreadySentError extends AppError {
+  constructor(message: string = "Invite already send") {
+    super(400, "INVITE_ALREADY_SEND", message);
+  }
+}
+
+export class CannotInviteSelfError extends AppError {
+  constructor(message: string = "You cannot invite yourself") {
+    super(400, "CANNOT_INVITE_SELF", message);
+  }
+}

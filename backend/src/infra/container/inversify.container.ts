@@ -14,6 +14,8 @@ import { WinstonService } from "../services/WinstonService";
 import { ILogger } from "../../core/services/ILogger";
 import { MongooseUnitOfWork } from "../uow/MongooseUnitOfWork";
 import { InviteRepository } from "../database/repositories/InviteRepository";
+import { SendCompanyInviteUseCase } from "../../core/use-cases/SendCompanyInviteUseCase";
+import { NodemailerService } from "../services/NodemailerService";
 
 export const container = new Container();
 
@@ -38,6 +40,7 @@ container.bind(Types.InviteRepository).to(InviteRepository).inSingletonScope();
 container.bind(Types.LoginUseCase).to(LoginUseCase);
 container.bind(Types.SignupUseCase).to(SignupUseCase);
 container.bind(Types.RefreshTokenUseCase).to(RefreshTokenUseCase);
+container.bind(Types.SendCompanyInviteUseCase).to(SendCompanyInviteUseCase);
 
 //Services
 
@@ -47,6 +50,7 @@ container
   .to(BcryptPasswordService)
   .inSingletonScope();
 container.bind<ILogger>(Types.Logger).to(WinstonService).inSingletonScope();
+container.bind(Types.EmailService).to(NodemailerService).inSingletonScope();
 
 //Uow
 

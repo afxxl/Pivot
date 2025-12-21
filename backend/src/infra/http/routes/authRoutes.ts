@@ -32,7 +32,7 @@ router.post(
   authenticate,
   requireCompanyAdmin,
   validateRequest(sendCompanyInviteSchema),
-  authController.inviteUser,
+  authController.sendCompanyInvite,
 );
 
 export default router;

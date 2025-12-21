@@ -10,6 +10,7 @@ export const Types = {
   PasswordService: "PasswordService",
   TokenService: "TokenService",
   Logger: "Logger",
+  EmailService: "EmailService",
 
   //Uow (Unit of Work)
 
@@ -19,6 +20,7 @@ export const Types = {
   LoginUseCase: "LoginUseCase",
   SignupUseCase: "SignupUseCase",
   RefreshTokenUseCase: "RefreshTokenUseCase",
+  SendCompanyInviteUseCase: "SendCompanyInviteUseCase",
 
   //Controllers
   AuthController: "AuthController",
