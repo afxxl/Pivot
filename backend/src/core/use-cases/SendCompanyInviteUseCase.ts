@@ -7,13 +7,15 @@ import { Types } from "../../infra/container/types";
 import { IInviteRepository } from "../repositories/IInviteRepository";
 import { IUserRepository } from "../repositories/IUserRepository";
 import {
-  CannotInviteSelfError,
   CompanyNotFoundError,
   EmailAlreadyExistsError,
-  InviteAlreadyExists,
-  InviteAlreadySentError,
   UserNotFoundError,
 } from "../../shared/errors/AuthError";
+import {
+  CannotInviteSelfError,
+  InviteAlreadyExists,
+  InviteAlreadySentError,
+} from "../../shared/errors/inviteError";
 import { v4 as uuidv4 } from "uuid";
 import { IEmailService } from "../services/IEmailService";
 import { sendCompanyInviteTemplate } from "../../shared/emailTemplates/sendCompanyInvite.template";

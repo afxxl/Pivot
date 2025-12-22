@@ -16,6 +16,8 @@ import { MongooseUnitOfWork } from "../uow/MongooseUnitOfWork";
 import { InviteRepository } from "../database/repositories/InviteRepository";
 import { SendCompanyInviteUseCase } from "../../core/use-cases/SendCompanyInviteUseCase";
 import { NodemailerService } from "../services/NodemailerService";
+import { InviteController } from "../http/controllers/InviteController";
+import { VerifyTokenUseCase } from "../../core/use-cases/VerifyTokenUseCase";
 
 export const container = new Container();
 
@@ -41,6 +43,7 @@ container.bind(Types.LoginUseCase).to(LoginUseCase);
 container.bind(Types.SignupUseCase).to(SignupUseCase);
 container.bind(Types.RefreshTokenUseCase).to(RefreshTokenUseCase);
 container.bind(Types.SendCompanyInviteUseCase).to(SendCompanyInviteUseCase);
+container.bind(Types.VerifyTokenUseCase).to(VerifyTokenUseCase);
 
 //Services
 
@@ -59,3 +62,4 @@ container.bind(Types.UnitOfWork).to(MongooseUnitOfWork).inTransientScope();
 //Controllers
 
 container.bind(Types.AuthController).to(AuthController);
+container.bind(Types.InviteController).to(InviteController);

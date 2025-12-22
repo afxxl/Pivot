@@ -1,4 +1,4 @@
-import { sendCompanyInviteInput } from "../../shared/validation/authSchemas";
+import { sendCompanyInviteInput } from "../../shared/validation/inviteSchema";
 
 export type SendCompanyInviteRequestDTO = sendCompanyInviteInput;
 

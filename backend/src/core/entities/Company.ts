@@ -12,7 +12,7 @@ export interface Company {
     zipCode?: string;
     country?: string;
   };
-  status: "active" | "inactive" | "trial";
+  status: "active" | "inactive" | "trial" | "suspended" | "deleted";
   subscriptionPlan:
     | "free"
     | "trial"

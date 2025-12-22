@@ -21,7 +21,9 @@ export const Types = {
   SignupUseCase: "SignupUseCase",
   RefreshTokenUseCase: "RefreshTokenUseCase",
   SendCompanyInviteUseCase: "SendCompanyInviteUseCase",
+  VerifyTokenUseCase: "VerifyTokenUseCase",
 
   //Controllers
   AuthController: "AuthController",
+  InviteController: "InviteController",
 };

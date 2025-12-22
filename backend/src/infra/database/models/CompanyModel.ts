@@ -14,7 +14,7 @@ interface ICompany {
     zipCode?: string;
     country?: string;
   };
-  status: "active" | "inactive" | "trial";
+  status: "active" | "inactive" | "trial" | "suspended" | "deleted";
   subscriptionPlan:
     | "free"
     | "trial"
@@ -46,7 +46,7 @@ const CompanySchema = new Schema<ICompany>(
     },
     status: {
       type: String,
-      enum: ["active", "inactive", "trial"],
+      enum: ["active", "inactive", "trial", "suspended", "deleted"],
       default: "active",
     },
     subscriptionPlan: {

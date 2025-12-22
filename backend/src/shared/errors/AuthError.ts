@@ -66,28 +66,17 @@ export class TokenExpiredError extends AppError {
   }
 }
 
+export class CompanySuspendedError extends AppError {
+  constructor(
+    message: string = "The company account is currently suspended. Please contact support for assistance.",
+  ) {
+    super(403, "COMPANY_SUSPENDED", message);
+  }
+}
+export class WorkspaceNotFoundError extends AppError {
+  constructor(message: string = "Workspace not found") {
+    super(404, "WORKSPACE_NOT_FOUND", message);
+  }
+}
+
 // Invite Errors
-
-export class InviteNotFoundError extends AppError {
-  constructor(message: string = "Invite not found") {
-    super(404, "INVITE_NOT_FOUND", message);
-  }
-}
-
-export class InviteAlreadyExists extends AppError {
-  constructor(message: string = "Invite already exists") {
-    super(400, "INVITE_EXISTS", message);
-  }
-}
-
-export class InviteAlreadySentError extends AppError {
-  constructor(message: string = "Invite already send") {
-    super(400, "INVITE_ALREADY_SEND", message);
-  }
-}
-
-export class CannotInviteSelfError extends AppError {
-  constructor(message: string = "You cannot invite yourself") {
-    super(400, "CANNOT_INVITE_SELF", message);
-  }
-}

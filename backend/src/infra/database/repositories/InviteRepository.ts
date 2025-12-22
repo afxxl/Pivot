@@ -3,7 +3,7 @@ import { IInviteRepository } from "../../../core/repositories/IInviteRepository"
 import InviteModel from "../models/InviteModel";
 import { v4 as uuidv4 } from "uuid";
 import { injectable } from "inversify";
-import { InviteNotFoundError } from "../../../shared/errors/AuthError";
+import { InviteNotFoundError } from "../../../shared/errors/inviteError";
 
 @injectable()
 export class InviteRepository implements IInviteRepository {
