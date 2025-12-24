@@ -3,7 +3,7 @@ export interface Workspace {
   name: string;
   description?: string;
   companyId: string;
-  memberCount?: number;
+  memberCount: number;
   projectCount?: number;
   createdBy?: string;
   createdAt: Date;

@@ -1,5 +1,13 @@
 import { loginInput } from "../../shared/validation/authSchemas";
 
+export interface UserPermissions {
+  manageBilling: boolean;
+  manageWorkspaceAdmins: boolean;
+  viewAllWorkspaces: boolean;
+  manageCompanySettings: boolean;
+  viewAuditLogs: boolean;
+}
+
 export type LoginRequestDTO = loginInput;
 
 export interface LoginResponseDTO {
@@ -16,16 +24,11 @@ export interface LoginResponseDTO {
       company: {
         id: string;
         name: string;
-        subdomain:string;
       };
-      workspaces?: Array<{
-        id: string;
-        name: string;
-      }>;
+      permissions: UserPermissions;
     };
-    accessToken: string;
-    expiresIn: number;
-    tokenType: string;
+    token: string;
+    expiresAt: string;
+    redirectTo: string;
   };
-  redirectTo: string;
 }

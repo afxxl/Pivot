@@ -6,7 +6,7 @@ import { SignupRequestDTO, SignupResponseDTO } from "../dto/SignupDTO";
 import { ICompanyRepository } from "../repositories/ICompanyRepository";
 import { IUserRepository } from "../repositories/IUserRepository";
 import { IPasswordService } from "../services/IPasswordService";
-import { ITokenService, TokenResponse } from "../services/ITokenService";
+import { ITokenService } from "../services/ITokenService";
 import { Types } from "../../infra/container/types";
 import { inject, injectable } from "inversify";
 import { IUnitWork } from "../uow/IUnitWork";
@@ -63,7 +63,7 @@ export class SignupUseCase {
           name: req.companyName,
           email: req.companyEmail,
           subdomain: req.subdomain,
-          status: "trial",
+          status: "active",
           subscriptionPlan: "trial",
           subscriptionStatus: "active",
         },
@@ -83,7 +83,7 @@ export class SignupUseCase {
         this.uow,
       );
 
-      const tokens: TokenResponse = this.tokenService.generateTokenPair({
+      const tokens = this.tokenService.generateTokenPair({
         userId: user.id,
         email: user.email,
         role: user.role,
@@ -101,7 +101,6 @@ export class SignupUseCase {
               id: company.id,
               name: company.name,
               email: company.email,
-              subdomain: company.subdomain,
               status: company.status,
               subscriptionPlan: company.subscriptionPlan,
               createdAt: company.createdAt.toISOString(),
@@ -114,11 +113,9 @@ export class SignupUseCase {
               role: user.role,
               status: user.status,
             },
-            accessToken: tokens.accessToken,
-            expiresIn: tokens.expiresIn,
-            tokenType: tokens.tokenType,
+            token: tokens.accessToken,
+            redirectTo: "/company-admin/dashboard",
           },
-          redirectTo: "/onboarding/welcome",
         },
         refreshToken: tokens.refreshToken,
       };

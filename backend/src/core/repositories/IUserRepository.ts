@@ -12,5 +12,5 @@ export interface IUserRepository {
     companyId: string,
   ): Promise<User | null>;
   findById(userId: string): Promise<User | null>;
-  update(userId: string, data: Partial<User>): Promise<User>;
+  update(userId: string, data: Partial<User>, uow?: IUnitWork): Promise<User>;
 }

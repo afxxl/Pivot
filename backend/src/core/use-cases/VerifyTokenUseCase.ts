@@ -50,14 +50,14 @@ export class VerifyTokenUseCase {
     }
 
     const token = rawToken.trim().toLowerCase();
-    let uuidV4Regex =
-      /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+    const uuidV4Regex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-    if (!uuidV4Regex.test(token.trim().toLowerCase())) {
+    if (!uuidV4Regex.test(token)) {
       throw new InvalidTokenFormatError("Invalid invitation link format");
     }
 
-    let invitation = await this.inviteRepository.findByToken(token);
+    const invitation = await this.inviteRepository.findByToken(token);
 
     if (!invitation) {
       this.logger.warn("Invite verification failed - token not found", {
@@ -70,27 +70,30 @@ export class VerifyTokenUseCase {
       throw new InvitationAlreadyAcceptedError(
         "This invitation has already been used. Please login to your account.",
       );
-    } else if (invitation.status === "cancelled") {
+    }
+
+    if (invitation.status === "cancelled") {
       throw new InviteCancelledError(
         "This invitation has been cancelled. Please contact your company administrator if you believe this is a mistake.",
       );
-    } else if (invitation.status === "expired") {
+    }
+
+    if (invitation.status === "expired") {
       throw new InviteExpiredError(
         "This invitation has expired. Please contact the person who invited you to request a new invitation.",
       );
     }
 
-    let now = new Date();
+    const now = new Date();
 
     if (invitation.expiresAt < now) {
-      invitation.status = "expired";
       await this.inviteRepository.update(invitation.id, { status: "expired" });
       throw new InviteExpiredError(
-        "This invitation has expired. Please contact the person who invited you to request a new invitation",
+        "This invitation has expired. Please contact the person who invited you to request a new invitation.",
       );
     }
 
-    let company = await this.companyRepository.findById(invitation.companyId);
+    const company = await this.companyRepository.findById(invitation.companyId);
 
     if (!company) {
       throw new CompanyNotFoundError("Company not found");
@@ -100,11 +103,15 @@ export class VerifyTokenUseCase {
       throw new CompanyInactiveError(
         "The company account is currently inactive. Please contact support for assistance.",
       );
-    } else if (company.status === "suspended") {
+    }
+
+    if (company.status === "suspended") {
       throw new CompanySuspendedError(
         "The company account is currently suspended. Please contact support for assistance.",
       );
-    } else if (company.status === "deleted") {
+    }
+
+    if (company.status === "deleted") {
       throw new CompanyNotFoundError(
         "The company associated with this invitation no longer exists.",
       );
@@ -113,7 +120,7 @@ export class VerifyTokenUseCase {
     let workspaceData: { id: string; name: string } | undefined = undefined;
 
     if (invitation.workspaceId) {
-      let workspace = await this.workspaceRepository.findById(
+      const workspace = await this.workspaceRepository.findById(
         invitation.workspaceId,
       );
 
@@ -138,35 +145,20 @@ export class VerifyTokenUseCase {
       };
     }
 
-    let warning: { code: string; message: string; action: string } | undefined =
-      undefined;
-    let inviter = await this.userRepository.findById(invitation.invitedBy);
+    const inviter = await this.userRepository.findById(invitation.invitedBy);
 
     const inviterInfo = inviter
       ? {
+          id: inviter.id,
           name: `${inviter.firstName} ${inviter.lastName}`,
-          email: inviter.email,
+          role: inviter.role,
         }
       : {
+          id: invitation.invitedBy,
           name: "Former Team Member",
-          email: "N/A",
+          role: "unknown",
         };
 
-    let user = await this.userRepository.findByEmailAndCompanyId(
-      invitation.email,
-      invitation.companyId,
-    );
-
-    if (user) {
-      if (user.status === "active") {
-        warning = {
-          code: "USER_ALREADY_EXISTS",
-          message:
-            "An account with this email already exists in this company. Please login instead ",
-          action: "Login",
-        };
-      }
-    }
     this.logger.info("Invite verified successfully", {
       invitationId: invitation.id,
       email: invitation.email,
@@ -183,17 +175,13 @@ export class VerifyTokenUseCase {
           lastName: invitation.lastName,
           role: invitation.role,
           company: {
-            id: invitation.companyId,
+            id: company.id,
             name: company.name,
-            subdomain: company.subdomain,
           },
           ...(workspaceData && { workspace: workspaceData }),
           invitedBy: inviterInfo,
+          invitedAt: invitation.createdAt.toISOString(),
           expiresAt: invitation.expiresAt.toISOString(),
-          expiresInHours: Math.ceil(
-            (invitation.expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60),
-          ),
-          ...(warning && { warning }),
         },
       },
     };

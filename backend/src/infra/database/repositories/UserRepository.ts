@@ -41,11 +41,17 @@ export class UserRepository implements IUserRepository {
     return user ? this.toEntity(user) : null;
   }
 
-  async update(userId: string, data: Partial<User>): Promise<User> {
+  async update(
+    userId: string,
+    data: Partial<User>,
+    uow?: IUnitWork,
+  ): Promise<User> {
+    const session =
+      uow instanceof MongooseUnitOfWork ? uow.getSession() : undefined;
     const user = await UserModel.findByIdAndUpdate(
       userId,
       { $set: data },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true, session: session },
     );
 
     if (!user) {

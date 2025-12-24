@@ -9,12 +9,12 @@ import {
 import { LoginResponseDTO, LoginRequestDTO } from "../dto/LoginDTO";
 import { ICompanyRepository } from "../repositories/ICompanyRepository";
 import { IUserRepository } from "../repositories/IUserRepository";
-import { IWorkspaceRepository } from "../repositories/IWorkspaceRepository";
 import { IPasswordService } from "../services/IPasswordService";
-import { ITokenService, TokenResponse } from "../services/ITokenService";
+import { ITokenService } from "../services/ITokenService";
 import { injectable, inject } from "inversify";
 import { Types } from "../../infra/container/types";
 import { ILogger } from "../services/ILogger";
+import { UserPermissions } from "../dto/LoginDTO";
 
 @injectable()
 export class LoginUseCase {
@@ -25,9 +25,6 @@ export class LoginUseCase {
     @inject(Types.CompanyRepository)
     private companyRepository: ICompanyRepository,
 
-    @inject(Types.WorkspaceRepository)
-    private workspaceRepository: IWorkspaceRepository,
-
     @inject(Types.PasswordService)
     private passwordService: IPasswordService,
 
@@ -37,6 +34,35 @@ export class LoginUseCase {
     @inject(Types.Logger)
     private logger: ILogger,
   ) {}
+
+  private getPermissions(role: string): UserPermissions {
+    const defaultPermissions: UserPermissions = {
+      manageBilling: false,
+      manageWorkspaceAdmins: false,
+      viewAllWorkspaces: false,
+      manageCompanySettings: false,
+      viewAuditLogs: false,
+    };
+
+    if (role === "company_admin") {
+      return {
+        manageBilling: true,
+        manageWorkspaceAdmins: true,
+        viewAllWorkspaces: true,
+        manageCompanySettings: true,
+        viewAuditLogs: true,
+      };
+    }
+
+    if (role === "workspace_admin") {
+      return {
+        ...defaultPermissions,
+        viewAllWorkspaces: true,
+      };
+    }
+
+    return defaultPermissions;
+  }
 
   async execute(
     req: LoginRequestDTO,
@@ -50,6 +76,7 @@ export class LoginUseCase {
     if (!company) {
       throw new SubdomainNotFoundError("Please check the URL");
     }
+
     if (company.status === "inactive") {
       throw new CompanyInactiveError(
         "This company account is inactive. Please contact support.",
@@ -60,6 +87,7 @@ export class LoginUseCase {
       req.email,
       company.id,
     );
+
     if (!user) {
       throw new InvalidCredentialsError();
     }
@@ -85,7 +113,7 @@ export class LoginUseCase {
     if (!isPasswordValid) {
       this.logger.warn("Login failed - Invalid credentials", {
         email: req.email,
-        companyid: company.id,
+        companyId: company.id,
         subdomain: subdomain,
         timestamp: new Date().toISOString(),
       });
@@ -96,7 +124,7 @@ export class LoginUseCase {
     this.logger.info("Login successful", {
       userId: user.id,
       email: user.email,
-      companyid: company.id,
+      companyId: company.id,
       subdomain: subdomain,
       timestamp: new Date().toISOString(),
     });
@@ -104,7 +132,7 @@ export class LoginUseCase {
     if (!user.companyId || user.companyId !== company.id) {
       this.logger.error("User companyId mismatch or missing", {
         userId: user.id,
-        usercompanyId: user.companyId,
+        userCompanyId: user.companyId,
         expectedCompanyId: company.id,
       });
 
@@ -115,22 +143,7 @@ export class LoginUseCase {
       lastLogin: new Date(),
     });
 
-    let workspaceEntities;
-
-    if (user.role === "company_admin") {
-      workspaceEntities = await this.workspaceRepository.findByCompanyId(
-        company.id,
-      );
-    } else {
-      workspaceEntities = await this.workspaceRepository.findByUserId(user.id);
-    }
-
-    const workspaces = workspaceEntities.map((ws) => ({
-      id: ws.id,
-      name: ws.name,
-    }));
-
-    const tokens: TokenResponse = this.tokenService.generateTokenPair({
+    const tokens = this.tokenService.generateTokenPair({
       userId: user.id,
       email: user.email,
       role: user.role,
@@ -144,15 +157,9 @@ export class LoginUseCase {
       member: "/member/dashboard",
     };
 
-    let redirectTo = roleRedirects[user.role] || "/member/dashboard";
+    const redirectTo = roleRedirects[user.role] || "/member/dashboard";
 
-    if (workspaces.length === 0 && user.role !== "company_admin") {
-      redirectTo = "/benched";
-    }
-
-    if (workspaces.length === 0 && user.role === "company_admin") {
-      redirectTo = "/onboarding/create-workspace";
-    }
+    const expiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
 
     return {
       response: {
@@ -169,15 +176,13 @@ export class LoginUseCase {
             company: {
               id: company.id,
               name: company.name,
-              subdomain: company.subdomain,
             },
-            workspaces,
+            permissions: this.getPermissions(user.role),
           },
-          accessToken: tokens.accessToken,
-          expiresIn: tokens.expiresIn,
-          tokenType: tokens.tokenType,
+          token: tokens.accessToken,
+          expiresAt: expiresAt.toISOString(),
+          redirectTo,
         },
-        redirectTo,
       },
       refreshToken: tokens.refreshToken,
     };

@@ -1,4 +1,5 @@
 import { WorkspaceMember } from "../entities/WorkspaceMember";
+import { IUnitWork } from "../uow/IUnitWork";
 
 export interface IWorkspaceMemberRepository {
   create(
@@ -6,6 +7,7 @@ export interface IWorkspaceMemberRepository {
       WorkspaceMember,
       "id" | "createdAt" | "updatedAt"
     >,
+    uow?: IUnitWork,
   ): Promise<WorkspaceMember>;
 
   findByWorkspaceId(workspaceId: string): Promise<WorkspaceMember[]>;

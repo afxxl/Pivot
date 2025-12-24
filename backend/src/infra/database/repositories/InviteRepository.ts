@@ -4,6 +4,8 @@ import InviteModel from "../models/InviteModel";
 import { v4 as uuidv4 } from "uuid";
 import { injectable } from "inversify";
 import { InviteNotFoundError } from "../../../shared/errors/inviteError";
+import { IUnitWork } from "../../../core/uow/IUnitWork";
+import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
 
 @injectable()
 export class InviteRepository implements IInviteRepository {
@@ -75,11 +77,17 @@ export class InviteRepository implements IInviteRepository {
     return doc ? this.toEntity(doc) : null;
   }
 
-  async update(inviteId: string, inviteData: Partial<Invite>): Promise<Invite> {
+  async update(
+    inviteId: string,
+    inviteData: Partial<Invite>,
+    uow?: IUnitWork,
+  ): Promise<Invite> {
+    let session =
+      uow instanceof MongooseUnitOfWork ? uow.getSession() : undefined;
     const doc = await InviteModel.findByIdAndUpdate(
       inviteId,
       { $set: inviteData },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true, session: session },
     );
 
     if (!doc) {

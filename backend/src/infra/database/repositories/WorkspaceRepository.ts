@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 import workspaceMemberModel from "../models/WorkspaceMemberModel";
 import { AppError } from "../../../shared/errors/AppError";
 import { injectable } from "inversify";
+import { IUnitWork } from "../../../core/uow/IUnitWork";
+import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
 
 @injectable()
 export class WorkspaceRepository implements IWorkspaceRepository {
@@ -28,11 +30,14 @@ export class WorkspaceRepository implements IWorkspaceRepository {
   async update(
     workspaceId: string,
     data: Partial<Workspace>,
+    uow?: IUnitWork,
   ): Promise<Workspace> {
+    let session =
+      uow instanceof MongooseUnitOfWork ? uow.getSession() : undefined;
     const workspace = await WorkspaceModel.findByIdAndUpdate(
       workspaceId,
       { $set: data },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true, session: session },
     );
 
     if (!workspace) {

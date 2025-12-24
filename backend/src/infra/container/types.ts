@@ -22,6 +22,7 @@ export const Types = {
   RefreshTokenUseCase: "RefreshTokenUseCase",
   SendCompanyInviteUseCase: "SendCompanyInviteUseCase",
   VerifyTokenUseCase: "VerifyTokenUseCase",
+  AcceptInviteUseCase: "AcceptInviteUseCase",
 
   //Controllers
   AuthController: "AuthController",

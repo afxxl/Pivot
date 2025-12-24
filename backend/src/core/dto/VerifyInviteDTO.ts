@@ -12,22 +12,17 @@ export interface VerifyInviteResponseDTO {
     company: {
       id: string;
       name: string;
-      subdomain: string;
     };
     workspace?: {
       id: string;
       name: string;
     };
     invitedBy: {
+      id: string;
       name: string;
-      email: string;
+      role: string;
     };
+    invitedAt: string;
     expiresAt: string;
-    expiresInHours: number;
-    warning?: {
-      code: string;
-      message: string;
-      action: string;
-    };
   };
 }

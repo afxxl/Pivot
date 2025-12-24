@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { container } from "../../container/inversify.container";
 import { validateRequest } from "../middlewares/validateRequest";
-import { sendCompanyInviteSchema } from "../../../shared/validation/inviteSchema";
+import {
+  acceptInviteSchema,
+  sendCompanyInviteSchema,
+} from "../../../shared/validation/inviteSchema";
 import { Types } from "../../container/types";
 import { authenticate, requireCompanyAdmin } from "../middlewares/authenticate";
 import { InviteController } from "../controllers/InviteController";
@@ -22,5 +25,11 @@ router.post(
 );
 
 router.get("/verify/:token", verifyTokenLimiter, inviteController.verifyToken);
+
+router.post(
+  "/accept",
+  validateRequest(acceptInviteSchema),
+  inviteController.acceptInvite,
+);
 
 export default router;

@@ -8,7 +8,7 @@ import { TokenExpiredError } from "../../../shared/errors/AuthError";
 export const authenticate = async (
   req: Request,
   res: Response,
-  _next: NextFunction,
+  next: NextFunction,
 ): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
@@ -31,14 +31,14 @@ export const authenticate = async (
     }
 
     req.user = decoded;
-    _next();
+    next();
   } catch (error: any) {
     if (error.name === "TokenExpiredError") {
-      _next(new TokenExpiredError("Token has expired. Please refresh. "));
+      next(new TokenExpiredError("Token has expired. Please refresh."));
     } else if (error.name === "JsonWebTokenError") {
-      _next(new UnauthorizedError("Invalid token"));
+      next(new UnauthorizedError("Invalid token"));
     } else {
-      _next(error);
+      next(error);
     }
   }
 };
@@ -46,36 +46,36 @@ export const authenticate = async (
 export const requireCompanyAdmin = (
   req: Request,
   res: Response,
-  _next: NextFunction,
+  next: NextFunction,
 ): void => {
   if (!req.user) {
-    return _next(new UnauthorizedError("User not authenticated"));
+    return next(new UnauthorizedError("User not authenticated"));
   }
 
   if (req.user.role !== "company_admin") {
-    return _next(new UnauthorizedError("Company admin access required"));
+    return next(new UnauthorizedError("Company admin access required"));
   }
-  _next();
+  next();
 };
 
 export const requireWorkspaceAdmin = (
   req: Request,
   res: Response,
-  _next: NextFunction,
+  next: NextFunction,
 ): void => {
   if (!req.user) {
-    return _next(new UnauthorizedError("User not authenticated"));
+    return next(new UnauthorizedError("User not authenticated"));
   }
 
   if (
     req.user.role !== "workspace_admin" &&
     req.user.role !== "company_admin"
   ) {
-    return _next(
+    return next(
       new UnauthorizedError("Workspace admin or company admin access required"),
     );
   }
-  _next();
+  next();
 };
 
 export const requireAuth = authenticate;

@@ -1,0 +1,124 @@
+# API Tests for Your Auth System
+
+
+### Test 1 - Signup
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "TechCorp Inc.",
+  "companyEmail": "contact@techcorp.com",
+  "adminFirstName": "Rahul",
+  "adminLastName": "Kumar",
+  "adminEmail": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "subdomain": "techcorp",
+  "agreeToTerms": true
+}
+
+
+### Test 2 - Login
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: techcorp
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": true
+}
+
+
+### Test 3 - Send Invite
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5YmRkNjliZS03YTNkLTQ5MzEtOGEzNy1mOTJkN2RjMTRjOGIiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJjb21wYW55X2FkbWluIiwiY29tcGFueUlkIjoiZjBhN2Y1MjYtNmZjMS00MDRlLWIxNzQtYTEzOGMxOThhOWNlIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc2NjU1OTU4OSwiZXhwIjoxNzY2NTYwNDg5fQ.23ypoMQgznr0AmZ2Bn4PR_Qg4mEX1FZTvbjB8NxPCjM 
+
+{
+  "email": "sarah@techcorp.com",
+  "firstName": "Sarah",
+  "lastName": "Kim",
+  "role": "workspace_admin"
+}
+
+
+### Test 4 - Verify Invite
+GET http://localhost:5000/invite/verify/1cb9536f-bf8a-405e-93ba-854fcfd0883f/
+
+
+### Test 5 - Accept Invite
+POST http://localhost:5000/invite/accept
+Content-Type: application/json
+
+{
+  "token": "1cb9536f-bf8a-405e-93ba-854fcfd0883f",
+  "password": "NewPass123!",
+  "confirmPassword": "NewPass123!",
+  "agreeToTerms": true
+}
+
+
+### Test 6 - Login as Sarah
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: techcorp
+
+{
+  "email": "sarah@techcorp.com",
+  "password": "NewPass123!",
+  "rememberMe": false
+}
+
+
+### Test 7 - Logout
+POST http://localhost:5000/auth/logout
+Authorization: Bearer PASTE_WS_ADMIN_TOKEN_HERE
+
+
+### Error Test 1 - Duplicate Subdomain
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "Another Corp",
+  "companyEmail": "another@test.com",
+  "adminFirstName": "Test",
+  "adminLastName": "User",
+  "adminEmail": "test@test.com",
+  "password": "SecurePass123!",
+  "subdomain": "techcorp",
+  "agreeToTerms": true
+}
+
+###
+
+### Error Test 2 - Wrong Password
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: techcorp
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "WrongPassword",
+  "rememberMe": false
+}
+
+###
+
+### Error Test 3 - Weak Password
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "Test Corp",
+  "companyEmail": "test2@test.com",
+  "adminFirstName": "Test",
+  "adminLastName": "User",
+  "adminEmail": "test2@test.com",
+  "password": "weak",
+  "subdomain": "testcorp2",
+  "agreeToTerms": true
+}
+
+###
+

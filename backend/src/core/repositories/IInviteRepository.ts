@@ -1,4 +1,5 @@
 import { Invite } from "../entities/Invite";
+import { IUnitWork } from "../uow/IUnitWork";
 
 export interface IInviteRepository {
   create(
@@ -27,7 +28,11 @@ export interface IInviteRepository {
 
   findById(inviteId: string): Promise<Invite | null>;
 
-  update(inviteId: string, inviteData: Partial<Invite>): Promise<Invite>;
+  update(
+    inviteId: string,
+    inviteData: Partial<Invite>,
+    uow?: IUnitWork,
+  ): Promise<Invite>;
 
   delete(inviteId: string): Promise<void>;
 }

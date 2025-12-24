@@ -18,6 +18,7 @@ import { SendCompanyInviteUseCase } from "../../core/use-cases/SendCompanyInvite
 import { NodemailerService } from "../services/NodemailerService";
 import { InviteController } from "../http/controllers/InviteController";
 import { VerifyTokenUseCase } from "../../core/use-cases/VerifyTokenUseCase";
+import { AcceptInviteUseCase } from "../../core/use-cases/AcceptInviteUseCase";
 
 export const container = new Container();
 
@@ -44,6 +45,7 @@ container.bind(Types.SignupUseCase).to(SignupUseCase);
 container.bind(Types.RefreshTokenUseCase).to(RefreshTokenUseCase);
 container.bind(Types.SendCompanyInviteUseCase).to(SendCompanyInviteUseCase);
 container.bind(Types.VerifyTokenUseCase).to(VerifyTokenUseCase);
+container.bind(Types.AcceptInviteUseCase).to(AcceptInviteUseCase);
 
 //Services
 

@@ -64,3 +64,9 @@ export class InviterNotFoundError extends AppError {
     super(404, "INVITER_NOT_FOUND", message);
   }
 }
+
+export class InvalidInviteStatusError extends AppError {
+  constructor(message: string = "Invalid Invite Status") {
+    super(400, "INVALID_INVITE_STATUS", message);
+  }
+}

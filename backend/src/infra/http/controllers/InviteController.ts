@@ -3,6 +3,7 @@ import { Types } from "../../container/types";
 import { SendCompanyInviteUseCase } from "../../../core/use-cases/SendCompanyInviteUseCase";
 import { NextFunction, Request, Response } from "express";
 import { VerifyTokenUseCase } from "../../../core/use-cases/VerifyTokenUseCase";
+import { AcceptInviteUseCase } from "../../../core/use-cases/AcceptInviteUseCase";
 
 @injectable()
 export class InviteController {
@@ -11,12 +12,15 @@ export class InviteController {
     private sendCompanyInviteUseCase: SendCompanyInviteUseCase,
     @inject(Types.VerifyTokenUseCase)
     private verifyTokenUseCase: VerifyTokenUseCase,
+    @inject(Types.AcceptInviteUseCase)
+    private acceptInviteUseCase: AcceptInviteUseCase,
   ) {}
+
   sendCompanyInvite = async (
     req: Request,
     res: Response,
     next: NextFunction,
-  ) => {
+  ): Promise<void> => {
     try {
       const result = await this.sendCompanyInviteUseCase.execute(
         req.body,
@@ -30,11 +34,37 @@ export class InviteController {
     }
   };
 
-  verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+  verifyToken = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      let token = req.params.token;
-      let result = await this.verifyTokenUseCase.execute({ token });
+      const token = req.params.token;
+      const result = await this.verifyTokenUseCase.execute({ token });
       res.status(200).json(result.response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  acceptInvite = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const result = await this.acceptInviteUseCase.execute(req.body);
+
+      res.cookie("refreshToken", result.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: "/auth",
+      });
+
+      res.status(201).json(result.response);
     } catch (error) {
       next(error);
     }

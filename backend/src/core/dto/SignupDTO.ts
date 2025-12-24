@@ -10,7 +10,6 @@ export interface SignupResponseDTO {
       id: string;
       name: string;
       email: string;
-      subdomain: string;
       status: string;
       subscriptionPlan: string;
       createdAt: string;
@@ -23,9 +22,7 @@ export interface SignupResponseDTO {
       role: string;
       status: string;
     };
-    accessToken: string;
-    expiresIn: number;
-    tokenType: string;
+    token: string;
+    redirectTo: string;
   };
-  redirectTo: string;
 }

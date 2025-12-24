@@ -3,6 +3,8 @@ import { WorkspaceMember } from "../../../core/entities/WorkspaceMember";
 import { v4 as uuidv4 } from "uuid";
 import workspaceMemberModel from "../models/WorkspaceMemberModel";
 import { injectable } from "inversify";
+import { IUnitWork } from "../../../core/uow/IUnitWork";
+import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
 
 @injectable()
 export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
@@ -11,14 +13,18 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
       WorkspaceMember,
       "id" | "createdAt" | "updatedAt"
     >,
+    uow?: IUnitWork,
   ): Promise<WorkspaceMember> {
+    let session =
+      uow instanceof MongooseUnitOfWork ? uow.getSession() : undefined;
+
     const doc = new workspaceMemberModel({
       _id: uuidv4(),
       ...workspaceMemberData,
       joinedAt: new Date(),
     });
 
-    await doc.save();
+    await doc.save({ session });
     return this.toEntity(doc);
   }
 
