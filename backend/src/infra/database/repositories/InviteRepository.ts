@@ -77,6 +77,14 @@ export class InviteRepository implements IInviteRepository {
     return doc ? this.toEntity(doc) : null;
   }
 
+  async findByWorkspaceIdAndEmail(
+    workspaceId: any,
+    email: any,
+  ): Promise<Invite | null> {
+    const doc = await InviteModel.findOne({ workspaceId, email });
+    return doc ? this.toEntity(doc) : null;
+  }
+
   async update(
     inviteId: string,
     inviteData: Partial<Invite>,

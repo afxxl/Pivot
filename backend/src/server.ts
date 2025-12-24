@@ -19,4 +19,23 @@ const startServer = async () => {
   }
 };
 
+const requiredEnvVars = [
+  "MONGO_URI",
+  "JWT_SECRET",
+  "JWT_REFRESH_SECRET",
+  "JWT_EXPIRES_IN",
+  "JWT_REFRESH_EXPIRES_IN",
+  "BCRYPT_SALT_ROUNDS",
+  "MAIL_USER",
+  "MAIL_PASSWORD",
+  "NODE_ENV",
+];
+
+requiredEnvVars.forEach((varName) => {
+  if (!process.env[varName]) {
+    console.error(`Missing required environment variable: ${varName}`);
+    process.exit(1);
+  }
+});
+
 startServer();

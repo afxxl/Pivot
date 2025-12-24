@@ -62,6 +62,7 @@ export class SendCompanyInviteUseCase {
     );
 
     if (user) {
+      console.log(user);
       if (user.status === "active") {
         throw new EmailAlreadyExistsError(
           "User with this email is already active in your company",

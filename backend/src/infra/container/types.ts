@@ -23,6 +23,7 @@ export const Types = {
   SendCompanyInviteUseCase: "SendCompanyInviteUseCase",
   VerifyTokenUseCase: "VerifyTokenUseCase",
   AcceptInviteUseCase: "AcceptInviteUseCase",
+  SendWorkspaceInviteUseCase: "SendWorkspaceInviteUseCase",
 
   //Controllers
   AuthController: "AuthController",

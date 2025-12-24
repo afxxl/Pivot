@@ -19,6 +19,7 @@ import { NodemailerService } from "../services/NodemailerService";
 import { InviteController } from "../http/controllers/InviteController";
 import { VerifyTokenUseCase } from "../../core/use-cases/VerifyTokenUseCase";
 import { AcceptInviteUseCase } from "../../core/use-cases/AcceptInviteUseCase";
+import { SendWorkspaceInviteUseCase } from "../../core/use-cases/SendWorkspaceInviteUseCase";
 
 export const container = new Container();
 
@@ -36,7 +37,6 @@ container
   .bind(Types.WorkspaceMemberRepository)
   .to(WorkspaceMemberRepository)
   .inSingletonScope();
-
 container.bind(Types.InviteRepository).to(InviteRepository).inSingletonScope();
 
 //UseCases
@@ -46,6 +46,7 @@ container.bind(Types.RefreshTokenUseCase).to(RefreshTokenUseCase);
 container.bind(Types.SendCompanyInviteUseCase).to(SendCompanyInviteUseCase);
 container.bind(Types.VerifyTokenUseCase).to(VerifyTokenUseCase);
 container.bind(Types.AcceptInviteUseCase).to(AcceptInviteUseCase);
+container.bind(Types.SendWorkspaceInviteUseCase).to(SendWorkspaceInviteUseCase);
 
 //Services
 

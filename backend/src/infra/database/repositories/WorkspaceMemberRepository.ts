@@ -41,10 +41,12 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
   async findWorkspaceAndUser(
     workspaceId: string,
     userId: string,
+    role?: string,
   ): Promise<WorkspaceMember | null> {
     const workspacemember = await workspaceMemberModel.findOne({
       workspaceId,
       userId,
+      role,
     });
     return workspacemember ? this.toEntity(workspacemember) : null;
   }

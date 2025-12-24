@@ -1,7 +1,6 @@
-# API Tests for Your Auth System
 
-
-### Test 1 - Signup
+### Test 1.1 - Successful Signup (Company Admin)
+# @name signup
 POST http://localhost:5000/auth/signup
 Content-Type: application/json
 
@@ -17,7 +16,9 @@ Content-Type: application/json
 }
 
 
-### Test 2 - Login
+
+### Test 1.2 - Login as Company Admin
+# @name loginCompanyAdmin
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 x-company-subdomain: techcorp
@@ -29,10 +30,71 @@ x-company-subdomain: techcorp
 }
 
 
-### Test 3 - Send Invite
+
+### Test 1.3 - Login with Remember Me = false
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: techcorp
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": false
+}
+
+
+
+### Test 1.4 - Refresh Access Token
+# @name refreshToken
+POST http://localhost:5000/auth/refresh
+
+
+
+### Test 1.5 - Logout
+POST http://localhost:5000/auth/logout
+
+
+### Test 1.6 - Login with Query Subdomain (Local Dev)
+POST http://localhost:5000/auth/login?subdomain=techcorp
+Content-Type: application/json
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": false
+}
+
+
+### Test 1.7 - Verify Permissions in Login Response
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: techcorp
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": false
+}
+
+
+### Test 1.8 - Check Last Login Update
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: techcorp
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": false
+}
+
+
+
+### Test 2.1 - Send Company Invite (Workspace Admin)
+# @name sendCompanyInvite
 POST http://localhost:5000/invite
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5YmRkNjliZS03YTNkLTQ5MzEtOGEzNy1mOTJkN2RjMTRjOGIiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJjb21wYW55X2FkbWluIiwiY29tcGFueUlkIjoiZjBhN2Y1MjYtNmZjMS00MDRlLWIxNzQtYTEzOGMxOThhOWNlIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc2NjU1OTU4OSwiZXhwIjoxNzY2NTYwNDg5fQ.23ypoMQgznr0AmZ2Bn4PR_Qg4mEX1FZTvbjB8NxPCjM 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyODU2MDIwZC1hMmUyLTRhMWQtODlhNy1hZWU2YjkwMTE1ZGUiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJjb21wYW55X2FkbWluIiwiY29tcGFueUlkIjoiMDI2ODJlMzQtODg2OS00YWE0LWIyN2ItNDBhMjY2NjdmMmRiIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc2NjU4Mzg2MCwiZXhwIjoxNzY2NTg0NzYwfQ._RyVDJr7APf_K9g4ZWPKzd0DQG2UVV_gyD8kjHPrxH4 
 
 {
   "email": "sarah@techcorp.com",
@@ -42,23 +104,70 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5YmRkN
 }
 
 
-### Test 4 - Verify Invite
-GET http://localhost:5000/invite/verify/1cb9536f-bf8a-405e-93ba-854fcfd0883f/
+###
+
+### Test 2.2 - Send Company Invite (Project Manager)
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyODU2MDIwZC1hMmUyLTRhMWQtODlhNy1hZWU2YjkwMTE1ZGUiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJjb21wYW55X2FkbWluIiwiY29tcGFueUlkIjoiMDI2ODJlMzQtODg2OS00YWE0LWIyN2ItNDBhMjY2NjdmMmRiIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc2NjU4Mzg2MCwiZXhwIjoxNzY2NTg0NzYwfQ._RyVDJr7APf_K9g4ZWPKzd0DQG2UVV_gyD8kjHPrxH4 
+ 
+{
+  "email": "john@techcorp.com",
+  "firstName": "John",
+  "lastName": "Doe",
+  "role": "project_manager"
+}
 
 
-### Test 5 - Accept Invite
+###
+
+### Test 2.3 - Send Company Invite (Team Member)
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyODU2MDIwZC1hMmUyLTRhMWQtODlhNy1hZWU2YjkwMTE1ZGUiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJjb21wYW55X2FkbWluIiwiY29tcGFueUlkIjoiMDI2ODJlMzQtODg2OS00YWE0LWIyN2ItNDBhMjY2NjdmMmRiIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc2NjU4Mzg2MCwiZXhwIjoxNzY2NTg0NzYwfQ._RyVDJr7APf_K9g4ZWPKzd0DQG2UVV_gyD8kjHPrxH4 
+ 
+
+{
+  "email": "mike@techcorp.com",
+  "firstName": "Mike",
+  "lastName": "Ross",
+  "role": "member"
+}
+
+
+###
+
+### Test 2.4 - Verify Company Invite Token (Valid)
+# @name verifyCompanyInvite
+GET http://localhost:5000/invite/verify/7a2f621b-a6ab-43ee-9acc-3b6bfa81873b
+
+
+###
+
+### Test 2.5 - Verify Invite Token with Rate Limiting
+# Run this 51 times quickly to test rate limiter
+GET http://localhost:5000/invite/verify/7a2f621b-a6ab-43ee-9acc-3b6bfa81873b
+
+
+###
+
+### Test 2.6 - Accept Company Invite (Workspace Admin)
+# @name acceptCompanyInvite
 POST http://localhost:5000/invite/accept
 Content-Type: application/json
 
 {
-  "token": "1cb9536f-bf8a-405e-93ba-854fcfd0883f",
+  "token": "7a2f621b-a6ab-43ee-9acc-3b6bfa81873b",
   "password": "NewPass123!",
   "confirmPassword": "NewPass123!",
   "agreeToTerms": true
 }
 
 
-### Test 6 - Login as Sarah
+###
+
+### Test 2.7 - Login as Newly Accepted User (Sarah)
+# @name loginSarah
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 x-company-subdomain: techcorp
@@ -70,55 +179,958 @@ x-company-subdomain: techcorp
 }
 
 
-### Test 7 - Logout
-POST http://localhost:5000/auth/logout
-Authorization: Bearer PASTE_WS_ADMIN_TOKEN_HERE
+###
+
+### Test 2.8 - Verify User Reactivation (Inactive → Active)
+# First, manually set sarah@techcorp.com status to "inactive" in DB
+# Then send new invite and accept
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyODU2MDIwZC1hMmUyLTRhMWQtODlhNy1hZWU2YjkwMTE1ZGUiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJjb21wYW55X2FkbWluIiwiY29tcGFueUlkIjoiMDI2ODJlMzQtODg2OS00YWE0LWIyN2ItNDBhMjY2NjdmMmRiIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc2NjU4ODc5NywiZXhwIjoxNzY2NTg5Njk3fQ.2dPpdMhb2NH_fWzERXsilpuvyLB-Hbec833-QgmtkT0 
+
+{
+  "email": "sarah@techcorp.com",
+  "firstName": "Sarah",
+  "lastName": "Kim",
+  "role": "workspace_admin"
+}
 
 
-### Error Test 1 - Duplicate Subdomain
+
+### Test 3.1 - Send Workspace Invite (New User)
+# @name sendWorkspaceInvite
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4ODRiZjU2MC04NTE1LTQyZGMtYWVhYS03NWE4NmEwZGJmY2MiLCJlbWFpbCI6InNhcmFoQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJ3b3Jrc3BhY2VfYWRtaW4iLCJjb21wYW55SWQiOiIwMjY4MmUzNC04ODY5LTRhYTQtYjI3Yi00MGEyNjY2N2YyZGIiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzY2NTkwMzMwLCJleHAiOjE3NjY1OTEyMzB9.-fbZD-dhXrX1I4smNtSuvFqewAWsWX1B90E-xXG9ZKc
+
+{
+  "email": "alex@techcorp.com",
+  "firstName": "Alex",
+  "lastName": "Lee",
+  "role": "member",
+  "workspaceId": ""
+}
+
+
+###
+
+### Test 3.2 - Send Workspace Invite (Existing Active User - Direct Add)
+# First accept company invite for emma@techcorp.com
+# Then add to workspace
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "sarah@techcorp.com",
+  "firstName": "Sarah",
+  "lastName": "Kim",
+  "role": "project_manager",
+  "workspaceId": "{{WORKSPACE_ID}}"
+}
+
+
+###
+
+### Test 3.3 - Verify Workspace Invite Token
+GET http://localhost:5000/invite/verify/{{WORKSPACE_INVITE_TOKEN}}
+
+
+###
+
+### Test 3.4 - Accept Workspace Invite
+POST http://localhost:5000/invite/accept
+Content-Type: application/json
+
+{
+  "token": "{{WORKSPACE_INVITE_TOKEN}}",
+  "password": "AlexPass123!",
+  "confirmPassword": "AlexPass123!",
+  "agreeToTerms": true
+}
+
+
+###
+
+### Test 3.5 - Workspace Admin Invite to Their Own Workspace
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_ID_SARAH_IS_ADMIN}}"
+}
+
+
+###
+
+### Test 3.6 - Workspace Admin Invite to Different Workspace (Unauthorized)
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "test2@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User2",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_ID_SARAH_NOT_ADMIN}}"
+}
+
+
+###
+
+### Test 3.7 - Company Admin Can Invite to Any Workspace
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "test3@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User3",
+  "role": "member",
+  "workspaceId": "{{ANY_WORKSPACE_ID}}"
+}
+
+
+###
+
+### Test 3.8 - Multiple Pending Invites to Different Workspaces (Allowed)
+# Send invite to workspace A
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "multi@techcorp.com",
+  "firstName": "Multi",
+  "lastName": "Workspace",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_A_ID}}"
+}
+
+###
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "multi@techcorp.com",
+  "firstName": "Multi",
+  "lastName": "Workspace",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_B_ID}}"
+}
+
+
+###
+
+
+
+### Error 4.1 - Duplicate Company Email
 POST http://localhost:5000/auth/signup
 Content-Type: application/json
 
 {
   "companyName": "Another Corp",
-  "companyEmail": "another@test.com",
+  "companyEmail": "contact@techcorp.com",
   "adminFirstName": "Test",
   "adminLastName": "User",
-  "adminEmail": "test@test.com",
+  "adminEmail": "test@example.com",
+  "password": "SecurePass123!",
+  "subdomain": "anothercorp",
+  "agreeToTerms": true
+}
+
+
+###
+
+### Error 4.2 - Duplicate Subdomain
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "New Corp",
+  "companyEmail": "new@example.com",
+  "adminFirstName": "Test",
+  "adminLastName": "User",
+  "adminEmail": "newadmin@example.com",
   "password": "SecurePass123!",
   "subdomain": "techcorp",
   "agreeToTerms": true
 }
 
+
+
 ###
 
-### Error Test 2 - Wrong Password
+### Error 4.3 - Duplicate Admin Email
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "Test Corp",
+  "companyEmail": "testcorp@example.com",
+  "adminFirstName": "Test",
+  "adminLastName": "User",
+  "adminEmail": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "subdomain": "testcorp",
+  "agreeToTerms": true
+}
+
+
+
+###
+
+### Error 4.4 - Reserved Subdomain
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "Admin Corp",
+  "companyEmail": "admin@example.com",
+  "adminFirstName": "Admin",
+  "adminLastName": "User",
+  "adminEmail": "admin@example.com",
+  "password": "SecurePass123!",
+  "subdomain": "admin",
+  "agreeToTerms": true
+}
+
+
+###
+
+### Error 4.5 - Invalid Subdomain Format (spaces)
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "Test Corp",
+  "companyEmail": "test@example.com",
+  "adminFirstName": "Test",
+  "adminLastName": "User",
+  "adminEmail": "test@example.com",
+  "password": "SecurePass123!",
+  "subdomain": "my company",
+  "agreeToTerms": true
+}
+
+
+###
+
+### Error 4.6 - Weak Password
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "Weak Corp",
+  "companyEmail": "weak@example.com",
+  "adminFirstName": "Weak",
+  "adminLastName": "User",
+  "adminEmail": "weak@example.com",
+  "password": "weak",
+  "subdomain": "weakcorp",
+  "agreeToTerms": true
+}
+
+
+###
+
+### Error 4.7 - Password Without Special Character
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "Test Corp",
+  "companyEmail": "test2@example.com",
+  "adminFirstName": "Test",
+  "adminLastName": "User",
+  "adminEmail": "test2@example.com",
+  "password": "Password123",
+  "subdomain": "testcorp2",
+  "agreeToTerms": true
+}
+
+
+
+###
+
+### Error 4.8 - Terms Not Agreed
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "Test Corp",
+  "companyEmail": "test3@example.com",
+  "adminFirstName": "Test",
+  "adminLastName": "User",
+  "adminEmail": "test3@example.com",
+  "password": "SecurePass123!",
+  "subdomain": "testcorp3",
+  "agreeToTerms": false
+}
+
+
+###
+
+### Error 4.9 - Login with Wrong Password
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 x-company-subdomain: techcorp
 
 {
   "email": "rahul@techcorp.com",
-  "password": "WrongPassword",
+  "password": "WrongPassword123!",
+  "rememberMe": false
+}
+
+
+###
+
+### Error 4.10 - Login with Non-Existent Email
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: techcorp
+
+{
+  "email": "nonexistent@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": false
+}
+
+
+###
+
+### Error 4.11 - Login with Wrong Subdomain
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: wrongsubdomain
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": false
+}
+
+
+###
+
+
+### Error 4.12 - Login Without Subdomain
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": false
+}
+
+
+###
+
+### Error 4.13 - Login as Invited User (Not Accepted)
+
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+x-company-subdomain: techcorp
+
+{
+  "email": "invited@techcorp.com",
+  "password": "AnyPassword123!",
   "rememberMe": false
 }
 
 ###
 
-### Error Test 3 - Weak Password
+### Error 4.14 - Send Invite Without Authentication
+POST http://localhost:5000/invite
+Content-Type: application/json
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member"
+}
+
+###
+
+
+### Error 4.15 - Send Invite with Invalid Token
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer invalid_token_here
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member"
+}
+###
+
+### Error 4.16 - Send Invite with Expired Token
+# Use an old/expired token
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{EXPIRED_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member"
+}
+
+###
+
+### Error 4.17 - Non-Admin Send Company Invite
+# Login as member/PM, try to send invite
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{MEMBER_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member"
+}
+###
+
+
+### Error 4.18 - Invite Self (Company Invite)
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "rahul@techcorp.com",
+  "firstName": "Rahul",
+  "lastName": "Kumar",
+  "role": "member"
+}
+
+###
+
+### Error 4.19 - Invite Already Active User
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer 
+
+{
+  "email": "sarah@techcorp.com",
+  "firstName": "Sarah",
+ "lastName": "Kim",
+  "role": "workspace_admin"
+}
+
+###
+
+### Error 4.20 - Duplicate Pending Invite (Same Email)
+# Send invite twice to same email
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "duplicate@techcorp.com",
+  "firstName": "Duplicate",
+  "lastName": "Test",
+  "role": "member"
+}
+
+# Then send again immediately
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "duplicate@techcorp.com",
+  "firstName": "Duplicate",
+  "lastName": "Test",
+  "role": "member"
+}
+
+# Expected: 400 Bad Request
+# Error code: INVITE_ALREADY_SEND
+# Message: "Invite already sent. Use resend feature"
+
+###
+
+### Error 4.21 - Verify Invalid Token Format
+GET http://localhost:5000/invite/verify/not-a-uuid
+
+# Expected: 400 Bad Request
+# Error code: INVALID_TOKEN_FORMAT
+# Message: "Invalid invitation link format"
+
+###
+
+### Error 4.22 - Verify Non-Existent Token
+GET http://localhost:5000/invite/verify/12345678-1234-1234-1234-123456789012
+
+# Expected: 404 Not Found
+# Error code: INVALID_INVITE_TOKEN
+# Message: "Invalid invite token"
+
+###
+
+### Error 4.23 - Verify Already Accepted Invite
+# Accept an invite, then try to verify it again
+GET http://localhost:5000/invite/verify/{{ACCEPTED_INVITE_TOKEN}}
+
+# Expected: 400 Bad Request
+# Error code: INVITATION_ALREADY_ACCEPTED
+# Message: "This invitation has already been used"
+
+###
+
+### Error 4.24 - Verify Expired Invite
+# Create invite with past expiry date, then verify
+GET http://localhost:5000/invite/verify/{{EXPIRED_INVITE_TOKEN}}
+
+# Expected: 410 Gone
+# Error code: INVITE_EXPIRED
+# Message: "This invitation has expired"
+
+###
+
+### Error 4.25 - Verify Cancelled Invite
+# Cancel invite (set status to cancelled), then verify
+GET http://localhost:5000/invite/verify/{{CANCELLED_INVITE_TOKEN}}
+
+# Expected: 410 Gone
+# Error code: INVITE_CANCELLED
+# Message: "This invitation has been cancelled"
+
+###
+
+### Error 4.26 - Accept Invite with Mismatched Passwords
+POST http://localhost:5000/invite/accept
+Content-Type: application/json
+
+{
+  "token": "{{VALID_INVITE_TOKEN}}",
+  "password": "NewPass123!",
+  "confirmPassword": "DifferentPass123!",
+  "agreeToTerms": true
+}
+
+# Expected: 400 Bad Request
+# Validation error: "Passwords don't match"
+
+###
+
+### Error 4.27 - Accept Invite Without Agreeing to Terms
+POST http://localhost:5000/invite/accept
+Content-Type: application/json
+
+{
+  "token": "{{VALID_INVITE_TOKEN}}",
+  "password": "NewPass123!",
+  "confirmPassword": "NewPass123!",
+  "agreeToTerms": false
+}
+
+# Expected: 400 Bad Request
+# Validation error: "You must agree to the terms and conditions"
+
+###
+
+### Error 4.28 - Accept Already Accepted Invite
+POST http://localhost:5000/invite/accept
+Content-Type: application/json
+
+{
+  "token": "{{ACCEPTED_INVITE_TOKEN}}",
+  "password": "NewPass123!",
+  "confirmPassword": "NewPass123!",
+  "agreeToTerms": true
+}
+
+# Expected: 400 Bad Request
+# Error code: INVITATION_ALREADY_ACCEPTED
+
+###
+
+### Error 4.29 - Accept Expired Invite
+POST http://localhost:5000/invite/accept
+Content-Type: application/json
+
+{
+  "token": "{{EXPIRED_INVITE_TOKEN}}",
+  "password": "NewPass123!",
+  "confirmPassword": "NewPass123!",
+  "agreeToTerms": true
+}
+
+# Expected: 410 Gone
+# Error code: INVITE_EXPIRED
+
+###
+
+### Error 4.30 - Workspace Invite with Invalid Workspace ID
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member",
+  "workspaceId": "not-a-uuid"
+}
+
+# Expected: 400 Bad Request
+# Validation error: "Invalid workspace id format"
+
+###
+
+### Error 4.31 - Workspace Invite to Non-Existent Workspace
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member",
+  "workspaceId": "12345678-1234-1234-1234-123456789012"
+}
+
+# Expected: 404 Not Found
+# Error code: WORKSPACE_NOT_FOUND
+# Message: "Workspace not found"
+
+###
+
+### Error 4.32 - Workspace Invite - Self Invite
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "sarah@techcorp.com",
+  "firstName": "Sarah",
+  "lastName": "Kim",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_ID}}"
+}
+
+# Expected: 400 Bad Request
+# Error code: CANNOT_INVITE_SELF
+
+###
+
+### Error 4.33 - Workspace Invite - User Already Member
+# Add user to workspace first, then try to invite again
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "existing-member@techcorp.com",
+  "firstName": "Existing",
+  "lastName": "Member",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_ID}}"
+}
+
+# Expected: 400 Bad Request
+# Error code: EMAIL_EXISTS
+# Message: "User is already a member of this workspace"
+
+###
+
+### Error 4.34 - Workspace Invite - Duplicate Pending Invite (Same Workspace)
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "newuser@techcorp.com",
+  "firstName": "New",
+  "lastName": "User",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_ID}}"
+}
+
+# Send again
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
+
+{
+  "email": "newuser@techcorp.com",
+  "firstName": "New",
+  "lastName": "User",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_ID}}"
+}
+
+# Expected: 400 Bad Request
+# Error code: INVITE_ALREADY_SEND
+
+###
+
+### Error 4.35 - Workspace Invite - Workspace from Different Company
+# Try to invite to workspace that belongs to different company
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member",
+  "workspaceId": "{{DIFFERENT_COMPANY_WORKSPACE_ID}}"
+}
+
+# Expected: 404 Not Found
+# Error code: WORKSPACE_NOT_FOUND
+
+###
+
+### Error 4.36 - Member Try to Send Workspace Invite
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{MEMBER_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_ID}}"
+}
+
+# Expected: 401 Unauthorized
+# Error code: UNAUTHORIZED
+# Message: "Workspace admin or company admin access required"
+
+###
+
+### Error 4.37 - Project Manager Try to Send Workspace Invite
+POST http://localhost:5000/invite/workspace-invite
+Content-Type: application/json
+Authorization: Bearer {{PM_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member",
+  "workspaceId": "{{WORKSPACE_ID}}"
+}
+
+# Expected: 401 Unauthorized
+
+###
+
+### Error 4.38 - Invalid Email Format
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "not-an-email",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member"
+}
+
+# Expected: 400 Bad Request
+# Validation error: "Invalid email address"
+
+###
+
+### Error 4.39 - Missing Required Fields
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "test@techcorp.com"
+}
+
+# Expected: 400 Bad Request
+# Validation errors for missing firstName, lastName, role
+
+###
+
+### Error 4.40 - Invalid Role
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "invalid_role"
+}
+
+# Expected: 400 Bad Request
+# Validation error on role field
+
+###
+
+### Error 4.41 - Refresh Token Without Cookie
+POST http://localhost:5000/auth/refresh
+
+# Expected: 401 Unauthorized
+# Error code: NO_REFRESH_TOKEN
+# Message: "Refresh token not found"
+
+###
+
+### Error 4.42 - Invalid Content-Type
+POST http://localhost:5000/auth/login
+Content-Type: text/plain
+x-company-subdomain: techcorp
+
+This is not JSON
+
+# Expected: 400 Bad Request or JSON parse error
+
+###
+
+### Error 4.43 - Invalid Authorization Scheme
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Basic dGVzdDp0ZXN0
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "Test",
+  "lastName": "User",
+  "role": "member"
+}
+
+# Expected: 401 Unauthorized
+# Error code: UNAUTHORIZED
+# Message: "Invalid authorization format"
+
+###
+
+### Error 4.44 - Name Too Short
+POST http://localhost:5000/invite
+Content-Type: application/json
+Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
+
+{
+  "email": "test@techcorp.com",
+  "firstName": "A",
+  "lastName": "B",
+  "role": "member"
+}
+
+# Expected: 400 Bad Request
+# Validation error: "First Name must be at least 2 characters"
+
+###
+
+### Error 4.45 - 404 Route Not Found
+GET http://localhost:5000/invalid/route
+
+# Expected: 404 Not Found
+# Error code: NOT_FOUND
+# Message: "Route not found"
+
+###
+
+# ─────────────────────────────────────────────────────────────
+# 📋 SECTION 5: TRANSACTION & DATA INTEGRITY TESTS
+# ─────────────────────────────────────────────────────────────
+
+### Test 5.1 - Verify Transaction Rollback on Error
+# This tests if signup transaction rolls back on error
+# Manually kill MongoDB during signup to test rollback
 POST http://localhost:5000/auth/signup
 Content-Type: application/json
 
 {
-  "companyName": "Test Corp",
-  "companyEmail": "test2@test.com",
-  "adminFirstName": "Test",
-  "adminLastName": "User",
-  "adminEmail": "test2@test.com",
-  "password": "weak",
-  "subdomain": "testcorp2",
+  "companyName": "Rollback Test",
+  "companyEmail": "rollback@test.com",
+  "adminFirstName": "Rollback",
+  "adminLastName": "Test",
+  "adminEmail": "rollback@test.com",
+  "password": "SecurePass123!",
+  "subdomain": "rollbacktest",
   "agreeToTerms": true
 }
 
+# Expected: If error occurs mid-transaction, both company and user should NOT be created
+
 ###
+
+### Test 5.2 - Verify Workspace Member Count Update
+# After accepting workspace invite, check workspace memberCount
+POST http://localhost:5000/invite/accept
+Content-Type: application/json
+
+{
+  "token": "{{WORKSPACE_INVITE_TOKEN}}",
+  "password": "TestPass123!",
+  "confirmPassword": "TestPass123!",
+  "agreeToTerms": true
+}
+
+# Then query workspace and verify memberCount increased by 1
+
+###
+
+### Test 5.3 - Concurrent Invite Accepts (Race Condition)
+# Send same invite token from 2 different requests simultaneously
+# Only one should succeed
+POST http://localhost:5000/invite/accept
+Content-Type: application/json
+
+{
+  "token": "{{SAME_INVITE_TOKEN}}",
+  "password": "Pass123!",
+  "confirmPassword": "Pass123!",
+  "agreeToTerms": true
+}
+
+# Expected: First request succeeds, second gets INVITATION_ALREADY_ACCEPTED
+
+###
+
+# ═══════════════════════════════════════════════════════════════
+# 🎯 END OF TEST SUITE
+# ═══════════════════════════════════════════════════════════════
+# 
+# Total Tests: 48 (Success + Error scenarios)
+# 
+# Test Execution Tips:
+# 1. Run tests in order (1.x → 2.x → 3.x → 4.x)
+# 2. Save tokens from @name responses
+# 3. Replace {{PLACEHOLDERS}} with actual values
+# 4. Clear database before full test run
+# 5. Check email logs for invite emails
+# 6. Verify MongoDB data after each critical test
+# 
+# Coverage:
+# ✅ Signup & Login
+# ✅ Token Management
+# ✅ Company Invites
+# ✅ Workspace Invites
+# ✅ Permissions & Authorization
+# ✅ Validation Errors
+# ✅ Business Logic Errors
+# ✅ Edge Cases
+# ✅ Transaction Integrity
+# ═══════════════════════════════════════════════════════════════
 

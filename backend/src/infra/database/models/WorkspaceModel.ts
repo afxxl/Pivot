@@ -6,6 +6,7 @@ interface IWorkspace {
   description?: string;
   companyId: string;
   memberCount?: number;
+  status: "active" | "archived" | "deleted";
   projectCount?: number;
   createdBy?: string;
   createdAt: Date;
@@ -19,6 +20,12 @@ const WorkspaceSchema = new Schema<IWorkspace>(
     description: { type: String },
     companyId: { type: String, required: true },
     memberCount: { type: Number, default: 0 },
+    status: {
+      type: String,
+      enum: ["active", "archived", "deleted"],
+      default: "active",
+    },
+
     projectCount: { type: Number, default: 0 },
     createdBy: { type: String },
   },

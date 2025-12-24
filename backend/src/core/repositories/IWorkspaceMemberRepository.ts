@@ -17,6 +17,7 @@ export interface IWorkspaceMemberRepository {
   findWorkspaceAndUser(
     workspaceId: string,
     userId: string,
+    role?: string,
   ): Promise<WorkspaceMember | null>;
 
   updateRole(

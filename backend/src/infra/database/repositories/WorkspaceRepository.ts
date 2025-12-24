@@ -76,6 +76,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
       description: doc.description,
       companyId: doc.companyId,
       memberCount: doc.memberCount,
+      status: doc.status,
       projectCount: doc.projectCount,
       createdBy: doc.createdBy,
       createdAt: doc.createdAt,

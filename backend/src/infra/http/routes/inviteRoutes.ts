@@ -4,9 +4,14 @@ import { validateRequest } from "../middlewares/validateRequest";
 import {
   acceptInviteSchema,
   sendCompanyInviteSchema,
+  sendWorkspaceInviteSchema,
 } from "../../../shared/validation/inviteSchema";
 import { Types } from "../../container/types";
-import { authenticate, requireCompanyAdmin } from "../middlewares/authenticate";
+import {
+  authenticate,
+  requireCompanyAdmin,
+  requireWorkspaceAdmin,
+} from "../middlewares/authenticate";
 import { InviteController } from "../controllers/InviteController";
 import { verifyTokenLimiter } from "../middlewares/rateLimiter";
 
@@ -22,6 +27,14 @@ router.post(
   requireCompanyAdmin,
   validateRequest(sendCompanyInviteSchema),
   inviteController.sendCompanyInvite,
+);
+
+router.post(
+  "/workspace-invite",
+  authenticate,
+  requireWorkspaceAdmin,
+  validateRequest(sendWorkspaceInviteSchema),
+  inviteController.sendWorkspaceInvite,
 );
 
 router.get("/verify/:token", verifyTokenLimiter, inviteController.verifyToken);

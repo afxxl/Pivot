@@ -3,6 +3,7 @@ export interface Workspace {
   name: string;
   description?: string;
   companyId: string;
+  status: "active" | "archived" | "deleted";
   memberCount: number;
   projectCount?: number;
   createdBy?: string;

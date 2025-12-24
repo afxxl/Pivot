@@ -4,6 +4,7 @@ import { SendCompanyInviteUseCase } from "../../../core/use-cases/SendCompanyInv
 import { NextFunction, Request, Response } from "express";
 import { VerifyTokenUseCase } from "../../../core/use-cases/VerifyTokenUseCase";
 import { AcceptInviteUseCase } from "../../../core/use-cases/AcceptInviteUseCase";
+import { SendWorkspaceInviteUseCase } from "../../../core/use-cases/SendWorkspaceInviteUseCase";
 
 @injectable()
 export class InviteController {
@@ -14,6 +15,8 @@ export class InviteController {
     private verifyTokenUseCase: VerifyTokenUseCase,
     @inject(Types.AcceptInviteUseCase)
     private acceptInviteUseCase: AcceptInviteUseCase,
+    @inject(Types.SendWorkspaceInviteUseCase)
+    private sendWorkspaceInviteUseCase: SendWorkspaceInviteUseCase,
   ) {}
 
   sendCompanyInvite = async (
@@ -28,6 +31,23 @@ export class InviteController {
         req.user?.companyId as string,
       );
 
+      res.status(201).json(result.response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  sendWorkspaceInvite = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const result = await this.sendWorkspaceInviteUseCase.execute(
+        req.body,
+        req.user?.userId as string,
+        req.user?.companyId as string,
+      );
       res.status(201).json(result.response);
     } catch (error) {
       next(error);
@@ -61,7 +81,7 @@ export class InviteController {
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        path: "/auth",
+        path: "/",
       });
 
       res.status(201).json(result.response);

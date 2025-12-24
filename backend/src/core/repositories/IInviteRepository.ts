@@ -28,6 +28,11 @@ export interface IInviteRepository {
 
   findById(inviteId: string): Promise<Invite | null>;
 
+  findByWorkspaceIdAndEmail(
+    workspaceId: string,
+    email: string,
+  ): Promise<Invite | null>;
+
   update(
     inviteId: string,
     inviteData: Partial<Invite>,

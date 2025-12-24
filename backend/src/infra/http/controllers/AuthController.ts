@@ -31,7 +31,7 @@ export class AuthController {
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        path: "/auth",
+        path: "/",
       });
 
       res.status(201).json(result.response);
@@ -60,7 +60,7 @@ export class AuthController {
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         maxAge: cookieMaxAge,
-        path: "/auth",
+        path: "/",
       });
 
       res.status(200).json(result.response);
@@ -106,7 +106,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        path: "/auth",
+        path: "/",
       });
 
       res.status(200).json({
