@@ -647,7 +647,7 @@ Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
   "role": "member"
 }
 
-# Then send again immediately
+### Then send again immediately
 POST http://localhost:5000/invite
 Content-Type: application/json
 Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
@@ -659,27 +659,18 @@ Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
   "role": "member"
 }
 
-# Expected: 400 Bad Request
-# Error code: INVITE_ALREADY_SEND
-# Message: "Invite already sent. Use resend feature"
 
 ###
 
 ### Error 4.21 - Verify Invalid Token Format
 GET http://localhost:5000/invite/verify/not-a-uuid
 
-# Expected: 400 Bad Request
-# Error code: INVALID_TOKEN_FORMAT
-# Message: "Invalid invitation link format"
 
 ###
 
 ### Error 4.22 - Verify Non-Existent Token
 GET http://localhost:5000/invite/verify/12345678-1234-1234-1234-123456789012
 
-# Expected: 404 Not Found
-# Error code: INVALID_INVITE_TOKEN
-# Message: "Invalid invite token"
 
 ###
 
@@ -687,9 +678,6 @@ GET http://localhost:5000/invite/verify/12345678-1234-1234-1234-123456789012
 # Accept an invite, then try to verify it again
 GET http://localhost:5000/invite/verify/{{ACCEPTED_INVITE_TOKEN}}
 
-# Expected: 400 Bad Request
-# Error code: INVITATION_ALREADY_ACCEPTED
-# Message: "This invitation has already been used"
 
 ###
 
@@ -697,9 +685,6 @@ GET http://localhost:5000/invite/verify/{{ACCEPTED_INVITE_TOKEN}}
 # Create invite with past expiry date, then verify
 GET http://localhost:5000/invite/verify/{{EXPIRED_INVITE_TOKEN}}
 
-# Expected: 410 Gone
-# Error code: INVITE_EXPIRED
-# Message: "This invitation has expired"
 
 ###
 
@@ -707,9 +692,6 @@ GET http://localhost:5000/invite/verify/{{EXPIRED_INVITE_TOKEN}}
 # Cancel invite (set status to cancelled), then verify
 GET http://localhost:5000/invite/verify/{{CANCELLED_INVITE_TOKEN}}
 
-# Expected: 410 Gone
-# Error code: INVITE_CANCELLED
-# Message: "This invitation has been cancelled"
 
 ###
 
@@ -724,8 +706,6 @@ Content-Type: application/json
   "agreeToTerms": true
 }
 
-# Expected: 400 Bad Request
-# Validation error: "Passwords don't match"
 
 ###
 
@@ -740,8 +720,6 @@ Content-Type: application/json
   "agreeToTerms": false
 }
 
-# Expected: 400 Bad Request
-# Validation error: "You must agree to the terms and conditions"
 
 ###
 
@@ -756,8 +734,6 @@ Content-Type: application/json
   "agreeToTerms": true
 }
 
-# Expected: 400 Bad Request
-# Error code: INVITATION_ALREADY_ACCEPTED
 
 ###
 
@@ -772,8 +748,6 @@ Content-Type: application/json
   "agreeToTerms": true
 }
 
-# Expected: 410 Gone
-# Error code: INVITE_EXPIRED
 
 ###
 
@@ -790,8 +764,6 @@ Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
   "workspaceId": "not-a-uuid"
 }
 
-# Expected: 400 Bad Request
-# Validation error: "Invalid workspace id format"
 
 ###
 
@@ -808,9 +780,6 @@ Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
   "workspaceId": "12345678-1234-1234-1234-123456789012"
 }
 
-# Expected: 404 Not Found
-# Error code: WORKSPACE_NOT_FOUND
-# Message: "Workspace not found"
 
 ###
 
@@ -827,8 +796,6 @@ Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
   "workspaceId": "{{WORKSPACE_ID}}"
 }
 
-# Expected: 400 Bad Request
-# Error code: CANNOT_INVITE_SELF
 
 ###
 
@@ -846,9 +813,6 @@ Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
   "workspaceId": "{{WORKSPACE_ID}}"
 }
 
-# Expected: 400 Bad Request
-# Error code: EMAIL_EXISTS
-# Message: "User is already a member of this workspace"
 
 ###
 
@@ -865,7 +829,7 @@ Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
   "workspaceId": "{{WORKSPACE_ID}}"
 }
 
-# Send again
+### Send again
 POST http://localhost:5000/invite/workspace-invite
 Content-Type: application/json
 Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
@@ -878,8 +842,6 @@ Authorization: Bearer {{WORKSPACE_ADMIN_TOKEN}}
   "workspaceId": "{{WORKSPACE_ID}}"
 }
 
-# Expected: 400 Bad Request
-# Error code: INVITE_ALREADY_SEND
 
 ###
 
@@ -897,8 +859,6 @@ Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
   "workspaceId": "{{DIFFERENT_COMPANY_WORKSPACE_ID}}"
 }
 
-# Expected: 404 Not Found
-# Error code: WORKSPACE_NOT_FOUND
 
 ###
 
@@ -915,9 +875,6 @@ Authorization: Bearer {{MEMBER_TOKEN}}
   "workspaceId": "{{WORKSPACE_ID}}"
 }
 
-# Expected: 401 Unauthorized
-# Error code: UNAUTHORIZED
-# Message: "Workspace admin or company admin access required"
 
 ###
 
@@ -934,7 +891,6 @@ Authorization: Bearer {{PM_TOKEN}}
   "workspaceId": "{{WORKSPACE_ID}}"
 }
 
-# Expected: 401 Unauthorized
 
 ###
 
@@ -950,8 +906,6 @@ Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
   "role": "member"
 }
 
-# Expected: 400 Bad Request
-# Validation error: "Invalid email address"
 
 ###
 
@@ -964,8 +918,6 @@ Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
   "email": "test@techcorp.com"
 }
 
-# Expected: 400 Bad Request
-# Validation errors for missing firstName, lastName, role
 
 ###
 
@@ -981,17 +933,12 @@ Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
   "role": "invalid_role"
 }
 
-# Expected: 400 Bad Request
-# Validation error on role field
 
 ###
 
 ### Error 4.41 - Refresh Token Without Cookie
 POST http://localhost:5000/auth/refresh
 
-# Expected: 401 Unauthorized
-# Error code: NO_REFRESH_TOKEN
-# Message: "Refresh token not found"
 
 ###
 
@@ -1002,7 +949,6 @@ x-company-subdomain: techcorp
 
 This is not JSON
 
-# Expected: 400 Bad Request or JSON parse error
 
 ###
 
@@ -1018,10 +964,6 @@ Authorization: Basic dGVzdDp0ZXN0
   "role": "member"
 }
 
-# Expected: 401 Unauthorized
-# Error code: UNAUTHORIZED
-# Message: "Invalid authorization format"
-
 ###
 
 ### Error 4.44 - Name Too Short
@@ -1036,8 +978,6 @@ Authorization: Bearer {{COMPANY_ADMIN_TOKEN}}
   "role": "member"
 }
 
-# Expected: 400 Bad Request
-# Validation error: "First Name must be at least 2 characters"
 
 ###
 
@@ -1048,15 +988,8 @@ GET http://localhost:5000/invalid/route
 # Error code: NOT_FOUND
 # Message: "Route not found"
 
-###
-
-# ─────────────────────────────────────────────────────────────
-# 📋 SECTION 5: TRANSACTION & DATA INTEGRITY TESTS
-# ─────────────────────────────────────────────────────────────
 
 ### Test 5.1 - Verify Transaction Rollback on Error
-# This tests if signup transaction rolls back on error
-# Manually kill MongoDB during signup to test rollback
 POST http://localhost:5000/auth/signup
 Content-Type: application/json
 
@@ -1071,9 +1004,6 @@ Content-Type: application/json
   "agreeToTerms": true
 }
 
-# Expected: If error occurs mid-transaction, both company and user should NOT be created
-
-###
 
 ### Test 5.2 - Verify Workspace Member Count Update
 # After accepting workspace invite, check workspace memberCount
@@ -1087,7 +1017,6 @@ Content-Type: application/json
   "agreeToTerms": true
 }
 
-# Then query workspace and verify memberCount increased by 1
 
 ###
 
@@ -1104,33 +1033,12 @@ Content-Type: application/json
   "agreeToTerms": true
 }
 
-# Expected: First request succeeds, second gets INVITATION_ALREADY_ACCEPTED
-
 ###
+POST http://localhost:5000/auth/forgot-password
+Content-Type: application/json
 
-# ═══════════════════════════════════════════════════════════════
-# 🎯 END OF TEST SUITE
-# ═══════════════════════════════════════════════════════════════
-# 
-# Total Tests: 48 (Success + Error scenarios)
-# 
-# Test Execution Tips:
-# 1. Run tests in order (1.x → 2.x → 3.x → 4.x)
-# 2. Save tokens from @name responses
-# 3. Replace {{PLACEHOLDERS}} with actual values
-# 4. Clear database before full test run
-# 5. Check email logs for invite emails
-# 6. Verify MongoDB data after each critical test
-# 
-# Coverage:
-# ✅ Signup & Login
-# ✅ Token Management
-# ✅ Company Invites
-# ✅ Workspace Invites
-# ✅ Permissions & Authorization
-# ✅ Validation Errors
-# ✅ Business Logic Errors
-# ✅ Edge Cases
-# ✅ Transaction Integrity
-# ═══════════════════════════════════════════════════════════════
+{
+  "email": "afsalmohd393@gmail.com"
+}
+###
 

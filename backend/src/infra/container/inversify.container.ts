@@ -20,6 +20,8 @@ import { InviteController } from "../http/controllers/InviteController";
 import { VerifyTokenUseCase } from "../../core/use-cases/VerifyTokenUseCase";
 import { AcceptInviteUseCase } from "../../core/use-cases/AcceptInviteUseCase";
 import { SendWorkspaceInviteUseCase } from "../../core/use-cases/SendWorkspaceInviteUseCase";
+import { PasswordResetRepository } from "../database/repositories/PasswordResetRepository";
+import { ForgotPasswordUseCase } from "../../core/use-cases/ForgotPasswordUseCase";
 
 export const container = new Container();
 
@@ -38,6 +40,10 @@ container
   .to(WorkspaceMemberRepository)
   .inSingletonScope();
 container.bind(Types.InviteRepository).to(InviteRepository).inSingletonScope();
+container
+  .bind(Types.PasswordResetRepository)
+  .to(PasswordResetRepository)
+  .inSingletonScope();
 
 //UseCases
 container.bind(Types.LoginUseCase).to(LoginUseCase);
@@ -47,6 +53,7 @@ container.bind(Types.SendCompanyInviteUseCase).to(SendCompanyInviteUseCase);
 container.bind(Types.VerifyTokenUseCase).to(VerifyTokenUseCase);
 container.bind(Types.AcceptInviteUseCase).to(AcceptInviteUseCase);
 container.bind(Types.SendWorkspaceInviteUseCase).to(SendWorkspaceInviteUseCase);
+container.bind(Types.ForgotPasswordUseCase).to(ForgotPasswordUseCase);
 
 //Services
 

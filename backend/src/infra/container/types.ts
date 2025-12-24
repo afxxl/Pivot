@@ -5,6 +5,7 @@ export const Types = {
   WorkspaceRepository: "WorkspaceRepository",
   WorkspaceMemberRepository: "WorkspaceMemberRepository",
   InviteRepository: "InviteRepository",
+  PasswordResetRepository: "PasswordResetRepository",
 
   //Services
   PasswordService: "PasswordService",
@@ -24,6 +25,7 @@ export const Types = {
   VerifyTokenUseCase: "VerifyTokenUseCase",
   AcceptInviteUseCase: "AcceptInviteUseCase",
   SendWorkspaceInviteUseCase: "SendWorkspaceInviteUseCase",
+  ForgotPasswordUseCase: "ForgotPasswordUseCase",
 
   //Controllers
   AuthController: "AuthController",

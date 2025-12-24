@@ -88,3 +88,9 @@ export const loginSchema = z.object({
 });
 
 export type loginInput = z.infer<typeof loginSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().trim().email("Invalid email address").toLowerCase(),
+});
+
+export type forgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
