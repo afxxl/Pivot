@@ -3,9 +3,9 @@ import { IInviteRepository } from "../../../core/repositories/IInviteRepository"
 import InviteModel from "../models/InviteModel";
 import { v4 as uuidv4 } from "uuid";
 import { injectable } from "inversify";
-import { InviteNotFoundError } from "../../../shared/errors/inviteError";
 import { IUnitWork } from "../../../core/uow/IUnitWork";
 import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
+import { InviteNotFoundError } from "../../../shared/errors";
 
 @injectable()
 export class InviteRepository implements IInviteRepository {

@@ -3,10 +3,10 @@ import { IWorkspaceRepository } from "../../../core/repositories/IWorkspaceRepos
 import WorkspaceModel from "../models/WorkspaceModel";
 import { v4 as uuidv4 } from "uuid";
 import workspaceMemberModel from "../models/WorkspaceMemberModel";
-import { AppError } from "../../../shared/errors/AppError";
 import { injectable } from "inversify";
 import { IUnitWork } from "../../../core/uow/IUnitWork";
 import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
+import { WorkspaceNotFoundError } from "../../../shared/errors";
 
 @injectable()
 export class WorkspaceRepository implements IWorkspaceRepository {
@@ -41,7 +41,7 @@ export class WorkspaceRepository implements IWorkspaceRepository {
     );
 
     if (!workspace) {
-      throw new AppError(404, "WORKSPACE_NOT_FOUND", "Workspace not found");
+      throw new WorkspaceNotFoundError();
     }
 
     return this.toEntity(workspace);

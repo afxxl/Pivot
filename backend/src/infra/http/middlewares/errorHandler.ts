@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { ValidationError } from "../../../shared/errors/ValidationError";
-import { AppError } from "../../../shared/errors/AppError";
+import { ValidationError } from "../../../shared/errors/common/ValidationError";
+import { AppError } from "../../../shared/errors";
 
 export const errorHandler = (
   error: Error,

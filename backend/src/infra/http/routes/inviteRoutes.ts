@@ -12,7 +12,7 @@ import {
   requireCompanyAdmin,
   requireWorkspaceAdmin,
 } from "../middlewares/authenticate";
-import { InviteController } from "../controllers/InviteController";
+import { InviteController } from "../controllers/invite/InviteController";
 import { verifyTokenLimiter } from "../middlewares/rateLimiter";
 
 const router = Router();

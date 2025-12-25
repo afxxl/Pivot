@@ -8,7 +8,7 @@ import {
   signupSchema,
 } from "../../../shared/validation/authSchemas";
 import { Types } from "../../container/types";
-import { AuthController } from "../controllers/AuthController";
+import { AuthController } from "../controllers/auth/AuthController";
 import { resolveSubdomain } from "../middlewares/resolveSubdomain";
 import {
   forgotPasswordIpLimiter,

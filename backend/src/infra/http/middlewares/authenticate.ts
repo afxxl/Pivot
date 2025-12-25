@@ -1,9 +1,8 @@
 import { NextFunction, Response, Request } from "express";
-import { UnauthorizedError } from "../../../shared/errors/AuthError";
 import { container } from "../../container/inversify.container";
 import { Types } from "../../container/types";
 import { ITokenService } from "../../../core/services/ITokenService";
-import { TokenExpiredError } from "../../../shared/errors/AuthError";
+import { UnauthorizedError, TokenExpiredError } from "../../../shared/errors";
 
 export const authenticate = async (
   req: Request,

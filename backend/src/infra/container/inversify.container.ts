@@ -6,23 +6,27 @@ import { WorkspaceRepository } from "../database/repositories/WorkspaceRepositor
 import { WorkspaceMemberRepository } from "../database/repositories/WorkspaceMemberRepository";
 import { BcryptPasswordService } from "../services/BcryptPasswordService";
 import { JwtTokenService } from "../services/JwtTokenService";
-import { LoginUseCase } from "../../core/use-cases/LoginUseCase";
-import { SignupUseCase } from "../../core/use-cases/SignupUseCase";
-import { RefreshTokenUseCase } from "../../core/use-cases/RefreshTokenUseCase";
-import { AuthController } from "../http/controllers/AuthController";
+import {
+  LoginUseCase,
+  SignupUseCase,
+  RefreshTokenUseCase,
+  ForgotPasswordUseCase,
+  ResetPasswordUseCase,
+} from "../../core/use-cases/auth";
+import { AuthController } from "../http/controllers/auth/AuthController";
 import { WinstonService } from "../services/WinstonService";
 import { ILogger } from "../../core/services/ILogger";
 import { MongooseUnitOfWork } from "../uow/MongooseUnitOfWork";
-import { InviteRepository } from "../database/repositories/InviteRepository";
-import { SendCompanyInviteUseCase } from "../../core/use-cases/SendCompanyInviteUseCase";
-import { NodemailerService } from "../services/NodemailerService";
-import { InviteController } from "../http/controllers/InviteController";
-import { VerifyTokenUseCase } from "../../core/use-cases/VerifyTokenUseCase";
-import { AcceptInviteUseCase } from "../../core/use-cases/AcceptInviteUseCase";
-import { SendWorkspaceInviteUseCase } from "../../core/use-cases/SendWorkspaceInviteUseCase";
+import { InviteController } from "../http/controllers/invite/InviteController";
+import {
+  SendCompanyInviteUseCase,
+  VerifyTokenUseCase,
+  SendWorkspaceInviteUseCase,
+  AcceptInviteUseCase,
+} from "../../core/use-cases/invite";
 import { PasswordResetRepository } from "../database/repositories/PasswordResetRepository";
-import { ForgotPasswordUseCase } from "../../core/use-cases/ForgotPasswordUseCase";
-import { ResetPasswordUseCase } from "../../core/use-cases/ResetPasswordUseCase";
+import { NodemailerService } from "../services/NodemailerService";
+import { InviteRepository } from "../database/repositories/InviteRepository";
 
 export const container = new Container();
 

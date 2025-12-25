@@ -1,6 +1,6 @@
 import z, { ZodError } from "zod";
 import { Request, Response, NextFunction } from "express";
-import { ValidationError } from "../../../shared/errors/ValidationError";
+import { ValidationError } from "../../../shared/errors/common/ValidationError";
 
 export const validateRequest = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction): void => {

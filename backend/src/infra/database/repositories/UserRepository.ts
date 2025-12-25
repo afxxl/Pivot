@@ -2,10 +2,10 @@ import { IUserRepository } from "../../../core/repositories/IUserRepository";
 import UserModel from "../models/UserModel";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../../../core/entities/User";
-import { UserNotFoundError } from "../../../shared/errors/AuthError";
 import { injectable } from "inversify";
 import { IUnitWork } from "../../../core/uow/IUnitWork";
 import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
+import { UserNotFoundError } from "../../../shared/errors";
 
 @injectable()
 export class UserRepository implements IUserRepository {

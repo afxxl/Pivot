@@ -5,11 +5,8 @@ import {
   TokenResponse,
 } from "../../core/services/ITokenService";
 import type { StringValue } from "ms";
-import {
-  TokenExpiredError,
-  UnauthorizedError,
-} from "../../shared/errors/AuthError";
 import { injectable } from "inversify";
+import { TokenExpiredError, UnauthorizedError } from "../../shared/errors";
 
 @injectable()
 export class JwtTokenService implements ITokenService {

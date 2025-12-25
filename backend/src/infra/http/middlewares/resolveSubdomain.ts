@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { SubdomainNotFoundError } from "../../../shared/errors/AuthError";
+import { SubdomainNotFoundError } from "../../../shared/errors";
 
 export const resolveSubdomain = () => {
   return (req: Request, res: Response, next: NextFunction): void => {
