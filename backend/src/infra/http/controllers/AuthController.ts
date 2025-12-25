@@ -5,6 +5,7 @@ import { NextFunction, Request, Response } from "express";
 import { injectable, inject } from "inversify";
 import { Types } from "../../container/types";
 import { ForgotPasswordUseCase } from "../../../core/use-cases/ForgotPasswordUseCase";
+import { ResetPasswordUseCase } from "../../../core/use-cases/ResetPasswordUseCase";
 
 @injectable()
 export class AuthController {
@@ -20,6 +21,9 @@ export class AuthController {
 
     @inject(Types.ForgotPasswordUseCase)
     private forgotPasswordUseCase: ForgotPasswordUseCase,
+
+    @inject(Types.ResetPasswordUseCase)
+    private resetPasswordUseCase: ResetPasswordUseCase,
   ) {}
 
   signup = async (
@@ -129,6 +133,19 @@ export class AuthController {
   ): Promise<void> => {
     try {
       let result = await this.forgotPasswordUseCase.execute(req.body);
+      res.status(200).json(result.response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  resetPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      let result = await this.resetPasswordUseCase.execute(req.body);
       res.status(200).json(result.response);
     } catch (error) {
       next(error);

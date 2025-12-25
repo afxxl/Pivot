@@ -4,6 +4,7 @@ import { validateRequest } from "../middlewares/validateRequest";
 import {
   forgotPasswordSchema,
   loginSchema,
+  resetPasswordSchema,
   signupSchema,
 } from "../../../shared/validation/authSchemas";
 import { Types } from "../../container/types";
@@ -12,6 +13,7 @@ import { resolveSubdomain } from "../middlewares/resolveSubdomain";
 import {
   forgotPasswordIpLimiter,
   forgotPasswordLimiter,
+  resetPasswordLimiter,
 } from "../middlewares/rateLimiter";
 
 const router = Router();
@@ -35,4 +37,12 @@ router.post(
   forgotPasswordLimiter,
   authController.forgotPassword,
 );
+
+router.post(
+  "/reset-password",
+  resetPasswordLimiter,
+  validateRequest(resetPasswordSchema),
+  authController.resetPassword,
+);
+
 export default router;

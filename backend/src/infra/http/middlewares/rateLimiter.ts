@@ -41,3 +41,17 @@ export const forgotPasswordIpLimiter = rateLimit({
     },
   },
 });
+
+export const resetPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: {
+    success: false,
+    error: {
+      code: "TOO_MANY_REQUESTS",
+      message: "Too many password reset attempts. Please try again later.",
+    },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

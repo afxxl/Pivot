@@ -105,7 +105,7 @@ export class SendWorkspaceInviteUseCase {
         );
       }
 
-      this.uow.begin();
+      await this.uow.begin();
       try {
         await this.workspaceMember.create(
           {
@@ -128,9 +128,9 @@ export class SendWorkspaceInviteUseCase {
           );
         }
 
-        this.uow.commit();
+        await this.uow.commit();
       } catch (error) {
-        this.uow.rollback();
+        await this.uow.rollback();
         throw error;
       }
 

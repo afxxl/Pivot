@@ -1,4 +1,5 @@
 import { PasswordReset } from "../entities/PasswordReset";
+import { IUnitWork } from "../uow/IUnitWork";
 
 export interface IPasswordResetRepository {
   create(
@@ -8,6 +9,7 @@ export interface IPasswordResetRepository {
   update(
     id: string,
     passwordReset: Partial<PasswordReset>,
+    uow?: IUnitWork,
   ): Promise<PasswordReset>;
 
   findByToken(token: string): Promise<PasswordReset | null>;

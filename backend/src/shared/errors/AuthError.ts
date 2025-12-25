@@ -78,5 +78,20 @@ export class WorkspaceNotFoundError extends AppError {
     super(404, "WORKSPACE_NOT_FOUND", message);
   }
 }
+export class InvalidTokenError extends AppError {
+  constructor(message: string = "Invalid Token ") {
+    super(400, "INVALID_TOKEN", message);
+  }
+}
 
-// Invite Errors
+export class TokenAlreadyUsedError extends AppError {
+  constructor(message: string = "Token has already been used") {
+    super(400, "TOKEN_ALREADY_USED", message);
+  }
+}
+
+export class PasswordReuseError extends AppError {
+  constructor(message: string = "Password has already been used") {
+    super(400, "PASSWORD_REUSE", message);
+  }
+}

@@ -22,6 +22,7 @@ import { AcceptInviteUseCase } from "../../core/use-cases/AcceptInviteUseCase";
 import { SendWorkspaceInviteUseCase } from "../../core/use-cases/SendWorkspaceInviteUseCase";
 import { PasswordResetRepository } from "../database/repositories/PasswordResetRepository";
 import { ForgotPasswordUseCase } from "../../core/use-cases/ForgotPasswordUseCase";
+import { ResetPasswordUseCase } from "../../core/use-cases/ResetPasswordUseCase";
 
 export const container = new Container();
 
@@ -54,6 +55,7 @@ container.bind(Types.VerifyTokenUseCase).to(VerifyTokenUseCase);
 container.bind(Types.AcceptInviteUseCase).to(AcceptInviteUseCase);
 container.bind(Types.SendWorkspaceInviteUseCase).to(SendWorkspaceInviteUseCase);
 container.bind(Types.ForgotPasswordUseCase).to(ForgotPasswordUseCase);
+container.bind(Types.ResetPasswordUseCase).to(ResetPasswordUseCase);
 
 //Services
 

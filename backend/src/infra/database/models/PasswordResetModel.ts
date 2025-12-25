@@ -6,6 +6,7 @@ interface IPasswordReset {
   token: string;
   expiresAt: Date;
   isUsed: boolean;
+  usedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,6 +18,7 @@ const IPasswordSchema = new Schema<IPasswordReset>(
     userId: { type: String, required: true },
     expiresAt: { type: Date, required: true },
     isUsed: { type: Boolean, default: false },
+    usedAt: { type: Date },
   },
   {
     timestamps: true,

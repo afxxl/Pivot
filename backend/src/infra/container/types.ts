@@ -26,6 +26,7 @@ export const Types = {
   AcceptInviteUseCase: "AcceptInviteUseCase",
   SendWorkspaceInviteUseCase: "SendWorkspaceInviteUseCase",
   ForgotPasswordUseCase: "ForgotPasswordUseCase",
+  ResetPasswordUseCase: "ResetPasswordUseCase",
 
   //Controllers
   AuthController: "AuthController",

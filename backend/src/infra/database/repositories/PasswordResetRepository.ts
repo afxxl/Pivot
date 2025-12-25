@@ -3,6 +3,8 @@ import { IPasswordResetRepository } from "../../../core/repositories/IPasswordRe
 import PasswordResetModel from "../models/PasswordResetModel";
 import { v4 as uuidv4 } from "uuid";
 import { injectable } from "inversify";
+import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
+import { IUnitWork } from "../../../core/uow/IUnitWork";
 
 @injectable()
 export class PasswordResetRepository implements IPasswordResetRepository {
@@ -21,11 +23,15 @@ export class PasswordResetRepository implements IPasswordResetRepository {
   async update(
     id: string,
     passwordReset: Partial<PasswordReset>,
+    uow?: IUnitWork,
   ): Promise<PasswordReset> {
+    let session =
+      uow instanceof MongooseUnitOfWork ? uow.getSession() : undefined;
+
     let doc = await PasswordResetModel.findByIdAndUpdate(
       id,
       { $set: passwordReset },
-      { new: true, runValidators: true },
+      { new: true, runValidators: true, session },
     );
 
     if (!doc) {
@@ -68,6 +74,7 @@ export class PasswordResetRepository implements IPasswordResetRepository {
       expiresAt: doc.expiresAt,
       isUsed: doc.isUsed,
       createdAt: doc.createdAt,
+      usedAt: doc.usedAt,
       updatedAt: doc.updatedAt,
     };
   }
