@@ -27,6 +27,9 @@ import {
 import { PasswordResetRepository } from "../database/repositories/PasswordResetRepository";
 import { NodemailerService } from "../services/NodemailerService";
 import { InviteRepository } from "../database/repositories/InviteRepository";
+import { SuperAdminLoginUseCase } from "../../core/use-cases/super-admin/SuperAdminLoginUseCase";
+import { SuperAdminController } from "../http/controllers/super-admin/SuperAdminController";
+import { GetAllCompaniesUseCase } from "../../core/use-cases/super-admin";
 
 export const container = new Container();
 
@@ -60,6 +63,8 @@ container.bind(Types.AcceptInviteUseCase).to(AcceptInviteUseCase);
 container.bind(Types.SendWorkspaceInviteUseCase).to(SendWorkspaceInviteUseCase);
 container.bind(Types.ForgotPasswordUseCase).to(ForgotPasswordUseCase);
 container.bind(Types.ResetPasswordUseCase).to(ResetPasswordUseCase);
+container.bind(Types.SuperAdminLoginUseCase).to(SuperAdminLoginUseCase);
+container.bind(Types.GetAllCompaniesUseCase).to(GetAllCompaniesUseCase);
 
 //Services
 
@@ -79,3 +84,4 @@ container.bind(Types.UnitOfWork).to(MongooseUnitOfWork).inTransientScope();
 
 container.bind(Types.AuthController).to(AuthController);
 container.bind(Types.InviteController).to(InviteController);
+container.bind(Types.SuperAdminController).to(SuperAdminController);

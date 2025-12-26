@@ -5,8 +5,15 @@ import { ValidationError } from "../../../shared/errors/common/ValidationError";
 export const validateRequest = (schema: z.ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      const validatedData = schema.parse(req.body);
-      req.body = validatedData;
+      const dataToValidate = req.method === "GET" ? req.query : req.body;
+
+      const validatedData = schema.parse(dataToValidate);
+
+      if (req.method === "GET") {
+        req.query = validatedData as any;
+      } else {
+        req.body = validatedData;
+      }
       next();
     } catch (error) {
       if (error instanceof ZodError) {

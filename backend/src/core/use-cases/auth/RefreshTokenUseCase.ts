@@ -27,6 +27,10 @@ export class RefreshTokenUseCase {
       throw new UnauthorizedError("Invalid refresh token");
     }
 
+    if (!decoded.userId) {
+      throw new UnauthorizedError("Invalid token payload - userId missing");
+    }
+
     const user = await this.userRepository.findById(decoded.userId);
     if (!user) {
       throw new UnauthorizedError("User not found");

@@ -60,14 +60,13 @@ export class SendCompanyInviteUseCase {
     );
 
     if (user) {
-      console.log(user);
       if (user.status === "active") {
         throw new EmailAlreadyExistsError(
           "User with this email is already active in your company",
         );
       } else if (user.status === "invited") {
         throw new InviteAlreadyExistsError(
-          "User already has a pending invitatiion. Use resend feature instead.",
+          "User already has a pending invitation. Use resend feature instead.",
         );
       }
     }

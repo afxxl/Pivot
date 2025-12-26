@@ -29,6 +29,8 @@ const requiredEnvVars = [
   "MAIL_USER",
   "MAIL_PASSWORD",
   "NODE_ENV",
+  "SUPER_ADMIN_EMAIL",
+  "SUPER_ADMIN_PASSWORD",
 ];
 
 requiredEnvVars.forEach((varName) => {
@@ -37,5 +39,7 @@ requiredEnvVars.forEach((varName) => {
     process.exit(1);
   }
 });
+
+console.log("All required environment variables are set");
 
 startServer();

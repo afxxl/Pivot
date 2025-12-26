@@ -2,9 +2,8 @@ import "reflect-metadata";
 import express, { Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import authRoutes from "./infra/http/routes/authRoutes";
 import { errorHandler } from "./infra/http/middlewares/errorHandler";
-import inviteRoutes from "./infra/http/routes/inviteRoutes";
+import routes from "./infra/http/routes";
 
 const app = express();
 
@@ -19,8 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/auth", authRoutes);
-app.use("/invite", inviteRoutes);
+app.use("/", routes);
 
 // 404
 app.use((req: Request, res: Response) => {

@@ -27,8 +27,11 @@ export const Types = {
   SendWorkspaceInviteUseCase: "SendWorkspaceInviteUseCase",
   ForgotPasswordUseCase: "ForgotPasswordUseCase",
   ResetPasswordUseCase: "ResetPasswordUseCase",
+  SuperAdminLoginUseCase: "SuperAdminLoginUseCase",
+  GetAllCompaniesUseCase: "GetAllCompaniesUseCase",
 
   //Controllers
   AuthController: "AuthController",
   InviteController: "InviteController",
+  SuperAdminController: "SuperAdminController",
 };
