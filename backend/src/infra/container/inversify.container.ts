@@ -29,7 +29,17 @@ import { NodemailerService } from "../services/NodemailerService";
 import { InviteRepository } from "../database/repositories/InviteRepository";
 import { SuperAdminLoginUseCase } from "../../core/use-cases/super-admin/SuperAdminLoginUseCase";
 import { SuperAdminController } from "../http/controllers/super-admin/SuperAdminController";
-import { GetAllCompaniesUseCase } from "../../core/use-cases/super-admin";
+import {
+  CreateSubscriptionPlanUseCase,
+  DeleteSubscriptionPlanUseCase,
+  GetAllCompaniesUseCase,
+  GetAllSubscriptionPlansUseCase,
+  GetSubscriptionPlanByIdUseCase,
+  UpdateSubscriptionPlanUseCase,
+} from "../../core/use-cases/super-admin";
+import { GetCompanyUseCase } from "../../core/use-cases/super-admin/GetCompanyUseCase";
+import { SubscriptionPlanRepository } from "../database/repositories/SubscriptionPlanRepository";
+import { UpdateCompanySubscriptionUseCase } from "../../core/use-cases/super-admin/UpdateCompanySubscriptionUseCase";
 
 export const container = new Container();
 
@@ -52,6 +62,10 @@ container
   .bind(Types.PasswordResetRepository)
   .to(PasswordResetRepository)
   .inSingletonScope();
+container
+  .bind(Types.SubscriptionPlanRepository)
+  .to(SubscriptionPlanRepository)
+  .inSingletonScope();
 
 //UseCases
 container.bind(Types.LoginUseCase).to(LoginUseCase);
@@ -65,6 +79,25 @@ container.bind(Types.ForgotPasswordUseCase).to(ForgotPasswordUseCase);
 container.bind(Types.ResetPasswordUseCase).to(ResetPasswordUseCase);
 container.bind(Types.SuperAdminLoginUseCase).to(SuperAdminLoginUseCase);
 container.bind(Types.GetAllCompaniesUseCase).to(GetAllCompaniesUseCase);
+container.bind(Types.GetCompanyUseCase).to(GetCompanyUseCase);
+container
+  .bind(Types.GetAllSubscriptionPlansUseCase)
+  .to(GetAllSubscriptionPlansUseCase);
+container
+  .bind(Types.GetSubscriptionPlanByIdUseCase)
+  .to(GetSubscriptionPlanByIdUseCase);
+container
+  .bind(Types.CreateSubscriptionPlanUseCase)
+  .to(CreateSubscriptionPlanUseCase);
+container
+  .bind(Types.UpdateSubscriptionPlanUseCase)
+  .to(UpdateSubscriptionPlanUseCase);
+container
+  .bind(Types.DeleteSubscriptionPlanUseCase)
+  .to(DeleteSubscriptionPlanUseCase);
+container
+  .bind(Types.UpdateCompanySubscriptionUseCase)
+  .to(UpdateCompanySubscriptionUseCase);
 
 //Services
 

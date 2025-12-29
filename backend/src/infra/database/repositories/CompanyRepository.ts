@@ -7,6 +7,7 @@ import { IUnitWork } from "../../../core/uow/IUnitWork";
 import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
 import UserModel from "../models/UserModel";
 import WorkspaceModel from "../models/WorkspaceModel";
+import { CompanyNotFoundError } from "../../../shared/errors/company/CompanyNotFoundError";
 
 @injectable()
 export class CompanyRepository implements ICompanyRepository {
@@ -122,6 +123,20 @@ export class CompanyRepository implements ICompanyRepository {
     };
   }
 
+  async update(companyId: string, data: Partial<Company>): Promise<Company> {
+    const company = await CompanyModel.findByIdAndUpdate(
+      companyId,
+      { $set: data },
+      { new: true, runValidators: true },
+    );
+
+    if (!company) {
+      throw new CompanyNotFoundError();
+    }
+
+    return this.toEntity(company);
+  }
+
   private toEntity(doc: any): Company {
     return {
       id: doc._id,
@@ -135,8 +150,13 @@ export class CompanyRepository implements ICompanyRepository {
       subscriptionPlan: doc.subscriptionPlan,
       subscriptionStatus: doc.subscriptionStatus,
       billingCycle: doc.billingCycle,
+      subscriptionStartDate: doc.subscriptionStartDate,
+      subscriptionEndDate: doc.subscriptionEndDate,
+      nextBillingDate: doc.nextBillingDate,
+      monthlyPrice: doc.monthlyPrice,
       storageUsed: doc.storageUsed,
       storageLimit: doc.storageLimit,
+      lastActiveAt: doc.lastActiveAt,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };

@@ -1,0 +1,130 @@
+import SubscriptionPlanModel from "../models/SubscriptionPlanModel";
+import { v4 as uuidv4 } from "uuid";
+
+export const seedSubscriptionPlans = async () => {
+  const existingPlans = await SubscriptionPlanModel.countDocuments();
+
+  if (existingPlans > 0) {
+    return;
+  }
+
+  const plans = [
+    {
+      _id: uuidv4(),
+      name: "free",
+      description: "Perfect for trying out PIVOT",
+      monthlyPrice: "0.00",
+      annualPrice: "0.00",
+      features: {
+        maxUsers: 5,
+        maxWorkspaces: 1,
+        maxProjects: 3,
+        maxStorageGB: 5,
+        supportLevel: "community",
+        customFields: false,
+        integrations: [],
+        advancedReports: false,
+        apiAccess: false,
+        sso: false,
+        customDomain: false,
+        auditLogs: false,
+        trialDays: 0,
+      },
+      isActive: true,
+    },
+    {
+      _id: uuidv4(),
+      name: "trial",
+      description: "14-day trial of professional features",
+      monthlyPrice: "0.00",
+      annualPrice: "0.00",
+      features: {
+        maxUsers: 10,
+        maxWorkspaces: 2,
+        maxProjects: 5,
+        maxStorageGB: 10,
+        supportLevel: "email",
+        customFields: false,
+        integrations: ["Slack"],
+        advancedReports: false,
+        apiAccess: false,
+        sso: false,
+        customDomain: false,
+        auditLogs: false,
+        trialDays: 14,
+      },
+      isActive: true,
+    },
+    {
+      _id: uuidv4(),
+      name: "starter",
+      description: "For small teams getting started",
+      monthlyPrice: "99.00",
+      annualPrice: "990.00",
+      features: {
+        maxUsers: 15,
+        maxWorkspaces: 2,
+        maxProjects: 10,
+        maxStorageGB: 20,
+        supportLevel: "email",
+        customFields: true,
+        integrations: ["Slack", "GitHub"],
+        advancedReports: false,
+        apiAccess: false,
+        sso: false,
+        customDomain: false,
+        auditLogs: false,
+        trialDays: 0,
+      },
+      isActive: true,
+    },
+    {
+      _id: uuidv4(),
+      name: "professional",
+      description: "For growing teams",
+      monthlyPrice: "499.00",
+      annualPrice: "4990.00",
+      features: {
+        maxUsers: 50,
+        maxWorkspaces: 5,
+        maxProjects: 50,
+        maxStorageGB: 100,
+        supportLevel: "priority",
+        customFields: true,
+        integrations: ["Slack", "GitHub", "Jira", "Trello"],
+        advancedReports: true,
+        apiAccess: true,
+        sso: false,
+        customDomain: false,
+        auditLogs: false,
+        trialDays: 0,
+      },
+      isActive: true,
+    },
+    {
+      _id: uuidv4(),
+      name: "enterprise",
+      description: "For large organizations",
+      monthlyPrice: "999.00",
+      annualPrice: "9990.00",
+      features: {
+        maxUsers: -1,
+        maxWorkspaces: -1,
+        maxProjects: -1,
+        maxStorageGB: -1,
+        supportLevel: "dedicated",
+        customFields: true,
+        integrations: "all",
+        advancedReports: true,
+        apiAccess: true,
+        sso: true,
+        customDomain: true,
+        auditLogs: true,
+        trialDays: 0,
+      },
+      isActive: true,
+    },
+  ];
+
+  await SubscriptionPlanModel.insertMany(plans);
+};

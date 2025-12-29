@@ -115,17 +115,6 @@ export class SendWorkspaceInviteUseCase {
           this.uow,
         );
 
-        const workspace = await this.workspaceRepository.findById(
-          req.workspaceId,
-        );
-        if (workspace) {
-          await this.workspaceRepository.update(
-            req.workspaceId,
-            { memberCount: workspace.memberCount + 1 },
-            this.uow,
-          );
-        }
-
         await this.uow.commit();
       } catch (error) {
         await this.uow.rollback();

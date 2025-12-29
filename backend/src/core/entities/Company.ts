@@ -21,8 +21,19 @@ export interface Company {
     | "enterprise";
   subscriptionStatus?: "active" | "cancelled" | "expired";
   billingCycle?: "monthly" | "annual";
+
+  subscriptionStartDate?: Date;
+  subscriptionEndDate?: Date;
+
+  nextBillingDate?: Date;
+
+  monthlyPrice?: number;
+
   storageUsed?: number;
   storageLimit?: number;
+
+  lastActiveAt?: Date;
+
   createdAt: Date;
   updatedAt: Date;
 }

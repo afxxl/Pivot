@@ -6,6 +6,7 @@ export const Types = {
   WorkspaceMemberRepository: "WorkspaceMemberRepository",
   InviteRepository: "InviteRepository",
   PasswordResetRepository: "PasswordResetRepository",
+  SubscriptionPlanRepository: "SubscriptionPlanRepository",
 
   //Services
   PasswordService: "PasswordService",
@@ -29,6 +30,14 @@ export const Types = {
   ResetPasswordUseCase: "ResetPasswordUseCase",
   SuperAdminLoginUseCase: "SuperAdminLoginUseCase",
   GetAllCompaniesUseCase: "GetAllCompaniesUseCase",
+  GetCompanyUseCase: "GetCompanyUseCase",
+  GetAllSubscriptionPlansUseCase: "GetAllSubscriptionPlansUseCase",
+  GetSubscriptionPlanByIdUseCase: "GetSubscriptionPlanByIdUseCase",
+  CreateSubscriptionPlanUseCase: "CreateSubscriptionPlanUseCase",
+  UpdateSubscriptionPlanUseCase: "UpdateSubscriptionPlanUseCase",
+  DeleteSubscriptionPlanUseCase: "DeleteSubscriptionPlanUseCase",
+
+  UpdateCompanySubscriptionUseCase: "UpdateCompanySubscriptionUseCase",
 
   //Controllers
   AuthController: "AuthController",

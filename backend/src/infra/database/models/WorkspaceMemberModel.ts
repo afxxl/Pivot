@@ -10,12 +10,16 @@ interface IWorkspaceMember {
   updatedAt: Date;
 }
 
-const workspaceMemberSchema = new Schema<IWorkspaceMember>(
+const WorkspaceMemberSchema = new Schema<IWorkspaceMember>(
   {
     _id: { type: String, required: true },
     workspaceId: { type: String, required: true },
     userId: { type: String, required: true },
-    role: { type: String },
+    role: {
+      type: String,
+      enum: ["workspace_admin", "project_manager", "member"],
+      default: "member",
+    },
     joinedAt: { type: Date, required: true },
   },
   {
@@ -24,11 +28,13 @@ const workspaceMemberSchema = new Schema<IWorkspaceMember>(
   },
 );
 
-workspaceMemberSchema.index({ workspaceId: 1, userId: 1 }, { unique: true });
+WorkspaceMemberSchema.index({ workspaceId: 1, userId: 1 }, { unique: true });
+WorkspaceMemberSchema.index({ workspaceId: 1 });
+WorkspaceMemberSchema.index({ userId: 1 });
 
-const workspaceMemberModel = model<IWorkspaceMember>(
+const WorkspaceMemberModel = model<IWorkspaceMember>(
   "WorkspaceMember",
-  workspaceMemberSchema,
+  WorkspaceMemberSchema,
 );
 
-export default workspaceMemberModel;
+export default WorkspaceMemberModel;

@@ -4,8 +4,6 @@ export interface Workspace {
   description?: string;
   companyId: string;
   status: "active" | "archived" | "deleted";
-  memberCount: number;
-  projectCount?: number;
   createdBy?: string;
   createdAt: Date;
   updatedAt: Date;

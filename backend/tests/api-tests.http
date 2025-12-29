@@ -16,7 +16,6 @@ Content-Type: application/json
 }
 
 
-
 ### Test 1.2 - Login as Company Admin
 # @name loginCompanyAdmin
 POST http://localhost:5000/auth/login
@@ -1054,3 +1053,96 @@ Content-Type: application/json
   "confirmPassword": "NewPass1234!"
 }
 ###
+
+
+###
+POST http://localhost:5000/super-admin/login
+Content-Type: application/json
+
+{
+  "email":"admin@pivot.com",
+  "password":"pivot@321"
+}
+
+###
+
+
+###
+GET http://localhost:5000/super-admin/companies?page=2&limit=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NjY3NTU5MDcsImV4cCI6MTc2Njc1NjgwN30.eMOjr8mjXKL_572aAqgRBQ5HztQ1EpPnLMKhQQHwRSg
+
+
+
+
+###
+GET http://localhost:5000/super-admin/companies/8e670f67-1863-4aea-849a-128776008ee6
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NjY5OTc0MDgsImV4cCI6MTc2Njk5ODMwOH0.rxyhivUiGbO1EGz04gHJSLR5E1j74xqRDdpfMegNK0I
+
+###
+GET http://localhost:5000/super-admin/subscription-plans
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NjcwMTI4NjgsImV4cCI6MTc2NzAxMzc2OH0.O62O-KXnN2mScyvJzR-uTCp4LK5k1rkE5hFbIEFvIf4 
+
+###
+GET http://localhost:5000/super-admin/subscription-plans/9fc93edb-10d5-40c3-9e8f-2537edd045f7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NjcwMTI4NjgsImV4cCI6MTc2NzAxMzc2OH0.O62O-KXnN2mScyvJzR-uTCp4LK5k1rkE5hFbIEFvIf4 
+
+###
+POST http://localhost:5000/super-admin/subscription-plans
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NjcwMTI4NjgsImV4cCI6MTc2NzAxMzc2OH0.O62O-KXnN2mScyvJzR-uTCp4LK5k1rkE5hFbIEFvIf4 
+
+
+{
+  "name": "Pro Plus",
+  "description": "Enhanced professional plan for power users",
+  "monthlyPrice": "699.00",
+  "annualPrice": "6990.00",
+  "features": {
+    "maxUsers": 75,
+    "maxWorkspaces": 10,
+    "maxProjects": 100,
+    "maxStorageGB": 200,
+    "supportLevel": "priority",
+    "customFields": true,
+    "integrations": ["Slack", "GitHub", "Jira", "Trello", "Asana"],
+    "advancedReports": true,
+    "apiAccess": true,
+    "sso": false,
+    "customDomain": false,
+    "auditLogs": true,
+    "trialDays": 0
+  },
+  "isActive": true
+}
+
+###
+###
+PUT http://localhost:5000/super-admin/subscription-plans/8caed57f-7613-4322-91f8-894c1f9c08cc
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NjcwMTI4NjgsImV4cCI6MTc2NzAxMzc2OH0.O62O-KXnN2mScyvJzR-uTCp4LK5k1rkE5hFbIEFvIf4 
+
+
+
+{
+  "monthlyPrice": "749.00",
+  "annualPrice": "7490.00"
+}
+
+
+###
+DELETE http://localhost:5000/super-admin/subscription-plans/8caed57f-7613-4322-91f8-894c1f9c08cc/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NjcwMTI4NjgsImV4cCI6MTc2NzAxMzc2OH0.O62O-KXnN2mScyvJzR-uTCp4LK5k1rkE5hFbIEFvIf4 
+
+###
+PUT http://localhost:5000/super-admin/companies/8e670f67-1863-4aea-849a-128776008ee6/subscription
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NjcwMjUyNjYsImV4cCI6MTc2NzAyNjE2Nn0.c3nWGLh2Aq31XbGK-L8FQlwwD90Hn1ZZ8jwf0Ig4AMA 
+
+{
+  "plan":"professional"
+}
+

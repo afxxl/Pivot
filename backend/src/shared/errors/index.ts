@@ -16,3 +16,6 @@ export * from "./workspace";
 
 // Invite errors
 export * from "./invite";
+
+// Subscription errors
+export * from "./subscription-plan";

@@ -20,9 +20,9 @@ export class GetAllCompaniesUseCase {
   async execute(
     req: GetAllCompaniesRequestDTO,
   ): Promise<{ response: GetAllCompaniesResponseDTO }> {
-    let { page, limit, search, status, plan, sortBy, sortOrder } = req;
+    const { page, limit, search, status, plan, sortBy, sortOrder } = req;
 
-    let filters: any = {};
+    const filters: any = {};
 
     if (search) {
       filters.$or = [
@@ -39,9 +39,9 @@ export class GetAllCompaniesUseCase {
       filters.subscriptionPlan = plan;
     }
 
-    let skip = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-    let { companies, total } =
+    const { companies, total } =
       await this.companyRepository.findAllWithPagination(
         filters,
         skip,
@@ -64,9 +64,13 @@ export class GetAllCompaniesUseCase {
           totalUsers: stats.totalUser,
           totalWorkspaces: stats.totalWorkspaces,
           totalProjects: stats.totalProjects,
-          monthlyRevenue: this.getMonthlyRevenue(company.subscriptionPlan),
-          lastActiveAt: company.updatedAt,
-          createdAt: company.createdAt,
+          monthlyRevenue:
+            company.monthlyPrice ||
+            this.getMonthlyRevenue(company.subscriptionPlan),
+          lastActiveAt: (
+            company.lastActiveAt || company.updatedAt
+          ).toISOString(),
+          createdAt: company.createdAt.toISOString(),
         };
       }),
     );

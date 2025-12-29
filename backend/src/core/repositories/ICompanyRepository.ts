@@ -29,4 +29,6 @@ export interface ICompanyRepository {
     trialCompanies: number;
     totalMonthlyRevenue: number;
   }>;
+
+  update(companyId: string, data: Partial<Company>): Promise<Company>;
 }

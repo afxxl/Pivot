@@ -15,6 +15,7 @@ interface ICompany {
     country?: string;
   };
   status: "active" | "inactive" | "trial" | "suspended" | "deleted";
+
   subscriptionPlan:
     | "free"
     | "trial"
@@ -23,8 +24,16 @@ interface ICompany {
     | "enterprise";
   subscriptionStatus?: "active" | "cancelled" | "expired";
   billingCycle?: "monthly" | "annual";
+  subscriptionStartDate?: Date;
+  subscriptionEndDate?: Date;
+  nextBillingDate?: Date;
+  monthlyPrice?: number;
+
   storageUsed?: number;
   storageLimit?: number;
+
+  lastActiveAt?: Date;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -49,6 +58,7 @@ const CompanySchema = new Schema<ICompany>(
       enum: ["active", "inactive", "trial", "suspended", "deleted"],
       default: "active",
     },
+
     subscriptionPlan: {
       type: String,
       enum: ["free", "trial", "starter", "professional", "enterprise"],
@@ -59,15 +69,30 @@ const CompanySchema = new Schema<ICompany>(
       enum: ["active", "cancelled", "expired"],
       default: "active",
     },
-    billingCycle: { type: String, enum: ["monthly", "annual"] },
+    billingCycle: {
+      type: String,
+      enum: ["monthly", "annual"],
+    },
+    subscriptionStartDate: { type: Date },
+    subscriptionEndDate: { type: Date },
+    nextBillingDate: { type: Date },
+    monthlyPrice: { type: Number },
+
     storageUsed: { type: Number, default: 0 },
-    storageLimit: { type: Number, default: 5368709120 },
+    storageLimit: { type: Number, default: 5368709120 }, // 5GB in bytes
+
+    lastActiveAt: { type: Date },
   },
   {
     timestamps: true,
     _id: false,
   },
 );
+
+CompanySchema.index({ email: 1 });
+CompanySchema.index({ subdomain: 1 });
+CompanySchema.index({ status: 1 });
+CompanySchema.index({ subscriptionPlan: 1 });
 
 const CompanyModel = model<ICompany>("Company", CompanySchema);
 

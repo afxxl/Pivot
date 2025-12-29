@@ -5,9 +5,7 @@ interface IWorkspace {
   name: string;
   description?: string;
   companyId: string;
-  memberCount?: number;
   status: "active" | "archived" | "deleted";
-  projectCount?: number;
   createdBy?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -19,14 +17,11 @@ const WorkspaceSchema = new Schema<IWorkspace>(
     name: { type: String, required: true },
     description: { type: String },
     companyId: { type: String, required: true },
-    memberCount: { type: Number, default: 0 },
     status: {
       type: String,
       enum: ["active", "archived", "deleted"],
       default: "active",
     },
-
-    projectCount: { type: Number, default: 0 },
     createdBy: { type: String },
   },
   {
@@ -34,6 +29,10 @@ const WorkspaceSchema = new Schema<IWorkspace>(
     _id: false,
   },
 );
+
+WorkspaceSchema.index({ companyId: 1 });
+WorkspaceSchema.index({ status: 1 });
+WorkspaceSchema.index({ companyId: 1, status: 1 });
 
 const WorkspaceModel = model<IWorkspace>("Workspace", WorkspaceSchema);
 

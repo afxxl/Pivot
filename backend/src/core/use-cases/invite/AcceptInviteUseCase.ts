@@ -243,18 +243,6 @@ export class AcceptInviteUseCase {
             this.uow,
           );
 
-          const workspace = await this.workspaceRepository.findById(
-            invitation.workspaceId,
-          );
-
-          if (workspace) {
-            await this.workspaceRepository.update(
-              invitation.workspaceId,
-              { memberCount: workspace.memberCount + 1 },
-              this.uow,
-            );
-          }
-
           this.logger.info("User added to workspace", {
             userId: finalUser.id,
             workspaceId: invitation.workspaceId,

@@ -13,4 +13,6 @@ export interface IUserRepository {
   ): Promise<User | null>;
   findById(userId: string): Promise<User | null>;
   update(userId: string, data: Partial<User>, uow?: IUnitWork): Promise<User>;
+  findCompanyAdmin(companyId: string): Promise<User | null>;
+  countActiveUser(companyId: string, days: number): Promise<number>;
 }

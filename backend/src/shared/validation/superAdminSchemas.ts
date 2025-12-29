@@ -24,3 +24,20 @@ export const getAllCompaniesSchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
 });
 export type getAllCompaniesInput = z.infer<typeof getAllCompaniesSchema>;
+
+export const updateCompanySubscriptionSchema = z
+  .object({
+    plan: z
+      .enum(["free", "trial", "starter", "professional", "enterprise"])
+      .optional(),
+    billingCycle: z.enum(["monthly", "annual"]).optional(),
+    subscriptionStatus: z.enum(["active", "cancelled", "expired"]).optional(),
+    startDate: z.string().datetime().optional(), // ISO string
+  })
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided for update",
+  });
+
+export type UpdateCompanySubscriptionInput = z.infer<
+  typeof updateCompanySubscriptionSchema
+>;

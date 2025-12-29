@@ -1,4 +1,4 @@
-import { resetPasswordInput } from "../../shared/validation/authSchemas";
+import { resetPasswordInput } from "../../../shared/validation/authSchemas";
 
 export type ResetPasswordRequestDTO = resetPasswordInput;
 

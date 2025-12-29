@@ -31,4 +31,6 @@ export interface IWorkspaceMemberRepository {
   removeAllByUserId(userId: string): Promise<void>;
 
   isMember(workspaceId: string, userId: string): Promise<boolean>;
+
+  countByWorkspaceId(workspaceId: string): Promise<number>;
 }

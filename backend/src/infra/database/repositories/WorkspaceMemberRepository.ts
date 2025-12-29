@@ -85,6 +85,10 @@ export class WorkspaceMemberRepository implements IWorkspaceMemberRepository {
     return count > 0;
   }
 
+  async countByWorkspaceId(workspaceId: string): Promise<number> {
+    return await workspaceMemberModel.countDocuments({ workspaceId });
+  }
+
   private toEntity(doc: any): WorkspaceMember {
     return {
       id: doc._id,
