@@ -76,7 +76,7 @@ export class SignupUseCase {
           lastName: req.adminLastName,
           email: req.adminEmail,
           password: hashedPassword,
-          role: "company_admin",
+          role: "admin",
           status: "active",
           companyId: company.id,
         },
@@ -92,6 +92,8 @@ export class SignupUseCase {
 
       await this.uow.commit();
 
+      const expiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
+
       return {
         response: {
           success: true,
@@ -102,7 +104,6 @@ export class SignupUseCase {
               name: company.name,
               email: company.email,
               status: company.status,
-              subscriptionPlan: company.subscriptionPlan,
               createdAt: company.createdAt.toISOString(),
             },
             user: {
@@ -114,7 +115,7 @@ export class SignupUseCase {
               status: user.status,
             },
             token: tokens.accessToken,
-            redirectTo: "/company-admin/dashboard",
+            expiresAt: expiresAt.toISOString(),
           },
         },
         refreshToken: tokens.refreshToken,

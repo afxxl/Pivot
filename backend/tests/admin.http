@@ -1,0 +1,79 @@
+### Admin API Tests
+### Base URL: http://localhost:5000/api/admin
+### Requires: Admin authentication token
+
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYzdkOGEyNC01Y2RlLTQ0YTctOTM2MS01MjYzNjU4ODc3YzQiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjU1YWZkN2ZmLTgzNDYtNDA5YS1hZDYxLTQxMDkyZWE2ZTk3YyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Njc0MTY1MzgsImV4cCI6MTc2NzQxNzQzOH0.Tn2A3ftTAvgUS8V1jtEE2zK5ji_AD30CqbEVQPSyDbk 
+
+##########################################################
+# 1. INVITE TEAM MEMBER
+##########################################################
+
+### Test 1.1 - Invite Member Successfully
+# @name inviteMember
+POST http://localhost:5000/api/admin/members/invite
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "Sarah",
+  "lastName": "Kim",
+  "email": "afsalmohd393@gmail.com",
+  "role": "member"
+}
+
+### Test 1.2 - Invite - Email Already Exists
+POST http://localhost:5000/api/admin/members/invite
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "rahul@techcorp.com",
+  "role": "member"
+}
+
+### Test 1.3 - Invite - Invalid Email Format
+POST http://localhost:5000/api/admin/members/invite
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "Mike",
+  "lastName": "Ross",
+  "email": "invalid-email",
+  "role": "member"
+}
+
+### Test 1.4 - Invite - Missing Required Fields
+POST http://localhost:5000/api/admin/members/invite
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "firstName": "Jane",
+  "email": "jane@techcorp.com"
+}
+
+### Test 1.5 - Invite - Unauthorized (No Token)
+POST http://localhost:5000/api/admin/members/invite
+Content-Type: application/json
+
+{
+  "firstName": "Test",
+  "lastName": "User",
+  "email": "test@techcorp.com",
+  "role": "member"
+}
+
+### Test 1.6 - Invite - Invalid Token
+POST http://localhost:5000/api/admin/members/invite
+Content-Type: application/json
+Authorization: Bearer invalid_token_here
+
+{
+  "firstName": "Test",
+  "lastName": "User",
+  "email": "test@techcorp.com",
+  "role": "member"
+}

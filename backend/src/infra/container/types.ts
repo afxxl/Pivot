@@ -2,8 +2,6 @@ export const Types = {
   //Repositories
   UserRepository: "UserRepository",
   CompanyRepository: "CompanyRepository",
-  WorkspaceRepository: "WorkspaceRepository",
-  WorkspaceMemberRepository: "WorkspaceMemberRepository",
   InviteRepository: "InviteRepository",
   PasswordResetRepository: "PasswordResetRepository",
   SubscriptionPlanRepository: "SubscriptionPlanRepository",
@@ -15,7 +13,6 @@ export const Types = {
   EmailService: "EmailService",
 
   //Uow (Unit of Work)
-
   UnitOfWork: "UnitOfWork",
 
   //Use Cases
@@ -25,7 +22,6 @@ export const Types = {
   SendCompanyInviteUseCase: "SendCompanyInviteUseCase",
   VerifyTokenUseCase: "VerifyTokenUseCase",
   AcceptInviteUseCase: "AcceptInviteUseCase",
-  SendWorkspaceInviteUseCase: "SendWorkspaceInviteUseCase",
   ForgotPasswordUseCase: "ForgotPasswordUseCase",
   ResetPasswordUseCase: "ResetPasswordUseCase",
   SuperAdminLoginUseCase: "SuperAdminLoginUseCase",
@@ -36,7 +32,6 @@ export const Types = {
   CreateSubscriptionPlanUseCase: "CreateSubscriptionPlanUseCase",
   UpdateSubscriptionPlanUseCase: "UpdateSubscriptionPlanUseCase",
   DeleteSubscriptionPlanUseCase: "DeleteSubscriptionPlanUseCase",
-
   UpdateCompanySubscriptionUseCase: "UpdateCompanySubscriptionUseCase",
 
   //Controllers

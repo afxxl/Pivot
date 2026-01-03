@@ -20,24 +20,12 @@ export interface IInviteRepository {
     limit?: number,
   ): Promise<{ invites: Invite[]; total: number }>;
 
-  findPendingByWorkspace(
-    workspaceId: string,
-    page?: number,
-    limit?: number,
-  ): Promise<{ invites: Invite[]; total: number }>;
-
   findById(inviteId: string): Promise<Invite | null>;
-
-  findByWorkspaceIdAndEmail(
-    workspaceId: string,
-    email: string,
-  ): Promise<Invite | null>;
 
   update(
     inviteId: string,
     inviteData: Partial<Invite>,
     uow?: IUnitWork,
   ): Promise<Invite>;
-
   delete(inviteId: string): Promise<void>;
 }

@@ -62,11 +62,14 @@ export class UserRepository implements IUserRepository {
   }
 
   async findCompanyAdmin(companyId: string): Promise<User | null> {
-    const user = await UserModel.findOne({
-      $and: [{ role: "company_admin" }, { companyId: companyId }],
-    });
+    const userDoc = await UserModel.findOne({
+      companyId,
+      role: "admin",
+      status: "active",
+    }).exec();
 
-    return user ? this.toEntity(user) : null;
+    if (!userDoc) return null;
+    return this.toEntity(userDoc);
   }
 
   async countActiveUser(companyId: string, days: number): Promise<number> {

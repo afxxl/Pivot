@@ -2,20 +2,13 @@ export interface SendCompanyInviteProps {
   firstName: string;
   inviterName: string;
   companyName: string;
-  role: string;
   inviteLink: string;
   expiresInDays: number;
 }
 
 export const sendCompanyInviteTemplate = (props: SendCompanyInviteProps) => {
-  const {
-    firstName,
-    inviterName,
-    companyName,
-    role,
-    inviteLink,
-    expiresInDays,
-  } = props;
+  const { firstName, inviterName, companyName, inviteLink, expiresInDays } =
+    props;
 
   return {
     subject: `You've been invited to join ${companyName} on Pivot`,
@@ -30,8 +23,7 @@ export const sendCompanyInviteTemplate = (props: SendCompanyInviteProps) => {
 
           <p>
             <strong>${inviterName}</strong> has invited you to join
-            <strong>${companyName}</strong> on <strong>Pivot</strong> as a
-            <strong>${role.replace(/_/g, " ")}</strong>.
+            <strong>${companyName}</strong> on <strong>Pivot</strong>.
           </p>
 
           <p style="margin: 30px 0;">
@@ -50,7 +42,7 @@ export const sendCompanyInviteTemplate = (props: SendCompanyInviteProps) => {
 
           <p style="font-size: 14px; color: #666;">
             <strong>What's Pivot?</strong><br>
-            Pivot helps teams collaborate, manage workspaces, and track projects efficiently.
+            Pivot helps teams collaborate, manage projects, and track tasks efficiently.
           </p>
 
           <p style="font-size: 12px; color: #999; margin-top: 30px;">

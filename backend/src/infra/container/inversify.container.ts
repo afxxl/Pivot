@@ -2,8 +2,6 @@ import { Container } from "inversify";
 import { Types } from "./types";
 import { UserRepository } from "../database/repositories/UserRepository";
 import { CompanyRepository } from "../database/repositories/CompanyRepository";
-import { WorkspaceRepository } from "../database/repositories/WorkspaceRepository";
-import { WorkspaceMemberRepository } from "../database/repositories/WorkspaceMemberRepository";
 import { BcryptPasswordService } from "../services/BcryptPasswordService";
 import { JwtTokenService } from "../services/JwtTokenService";
 import {
@@ -21,7 +19,6 @@ import { InviteController } from "../http/controllers/invite/InviteController";
 import {
   SendCompanyInviteUseCase,
   VerifyTokenUseCase,
-  SendWorkspaceInviteUseCase,
   AcceptInviteUseCase,
 } from "../../core/use-cases/invite";
 import { PasswordResetRepository } from "../database/repositories/PasswordResetRepository";
@@ -49,14 +46,6 @@ container
   .bind(Types.CompanyRepository)
   .to(CompanyRepository)
   .inSingletonScope();
-container
-  .bind(Types.WorkspaceRepository)
-  .to(WorkspaceRepository)
-  .inSingletonScope();
-container
-  .bind(Types.WorkspaceMemberRepository)
-  .to(WorkspaceMemberRepository)
-  .inSingletonScope();
 container.bind(Types.InviteRepository).to(InviteRepository).inSingletonScope();
 container
   .bind(Types.PasswordResetRepository)
@@ -74,7 +63,6 @@ container.bind(Types.RefreshTokenUseCase).to(RefreshTokenUseCase);
 container.bind(Types.SendCompanyInviteUseCase).to(SendCompanyInviteUseCase);
 container.bind(Types.VerifyTokenUseCase).to(VerifyTokenUseCase);
 container.bind(Types.AcceptInviteUseCase).to(AcceptInviteUseCase);
-container.bind(Types.SendWorkspaceInviteUseCase).to(SendWorkspaceInviteUseCase);
 container.bind(Types.ForgotPasswordUseCase).to(ForgotPasswordUseCase);
 container.bind(Types.ResetPasswordUseCase).to(ResetPasswordUseCase);
 container.bind(Types.SuperAdminLoginUseCase).to(SuperAdminLoginUseCase);

@@ -6,7 +6,7 @@ interface IUser {
   lastName: string;
   email: string;
   password: string;
-  role: "company_admin" | "workspace_admin" | "project_manager" | "member";
+  role: "admin" | "member";
   status: "active" | "inactive" | "invited";
   companyId: string;
   phone?: string;
@@ -38,7 +38,7 @@ const UserSchema = new Schema<IUser>(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["company_admin", "workspace_admin", "project_manager", "member"],
+      enum: ["admin", "member"],
       required: true,
     },
     status: {

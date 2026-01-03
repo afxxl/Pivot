@@ -55,35 +55,14 @@ export class InviteRepository implements IInviteRepository {
     return { invites: docs.map((x) => this.toEntity(x)), total };
   }
 
-  async findPendingByWorkspace(
-    workspaceId: string,
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<{ invites: Invite[]; total: number }> {
-    const skip = (page - 1) * limit;
 
-    const [docs, total] = await Promise.all([
-      InviteModel.find({ workspaceId, status: "pending" })
-        .skip(skip)
-        .limit(limit)
-        .sort({ createdAt: -1 }),
-      InviteModel.countDocuments({ workspaceId, status: "pending" }),
-    ]);
-    return { invites: docs.map((x) => this.toEntity(x)), total };
-  }
 
   async findById(inviteId: string): Promise<Invite | null> {
     const doc = await InviteModel.findById(inviteId);
     return doc ? this.toEntity(doc) : null;
   }
 
-  async findByWorkspaceIdAndEmail(
-    workspaceId: any,
-    email: any,
-  ): Promise<Invite | null> {
-    const doc = await InviteModel.findOne({ workspaceId, email });
-    return doc ? this.toEntity(doc) : null;
-  }
+
 
   async update(
     inviteId: string,
@@ -121,7 +100,6 @@ export class InviteRepository implements IInviteRepository {
       lastName: doc.lastName,
       role: doc.role,
       companyId: doc.companyId,
-      workspaceId: doc.workspaceId,
       invitedBy: doc.invitedBy,
       status: doc.status,
       expiresAt: doc.expiresAt,

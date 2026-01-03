@@ -4,9 +4,8 @@ export interface Invite {
   email: string;
   firstName: string;
   lastName: string;
-  role: "workspace_admin" | "project_manager" | "member";
+  role: "member";
   companyId: string;
-  workspaceId?: string;
   invitedBy: string;
   status: "pending" | "accepted" | "expired" | "cancelled";
   expiresAt: Date;

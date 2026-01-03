@@ -8,12 +8,8 @@ export interface VerifyInviteResponseDTO {
     email: string;
     firstName: string;
     lastName: string;
-    role: "workspace_admin" | "project_manager" | "member";
+    role: string;
     company: {
-      id: string;
-      name: string;
-    };
-    workspace?: {
       id: string;
       name: string;
     };

@@ -38,27 +38,18 @@ export class LoginUseCase {
 
   private getPermissions(role: string): UserPermissions {
     const defaultPermissions: UserPermissions = {
-      manageBilling: false,
-      manageWorkspaceAdmins: false,
-      viewAllWorkspaces: false,
-      manageCompanySettings: false,
-      viewAuditLogs: false,
+      manageUsers: false,
+      manageProjects: false,
+      manageTasks: false,
+      viewAnalytics: false,
     };
 
-    if (role === "company_admin") {
+    if (role === "admin") {
       return {
-        manageBilling: true,
-        manageWorkspaceAdmins: true,
-        viewAllWorkspaces: true,
-        manageCompanySettings: true,
-        viewAuditLogs: true,
-      };
-    }
-
-    if (role === "workspace_admin") {
-      return {
-        ...defaultPermissions,
-        viewAllWorkspaces: true,
+        manageUsers: true,
+        manageProjects: true,
+        manageTasks: true,
+        viewAnalytics: true,
       };
     }
 
@@ -101,7 +92,7 @@ export class LoginUseCase {
       }
       if (user.status === "inactive") {
         throw new UserInactiveError(
-          "Your account is deactivated. Please contact your workspace admin.",
+          "Your account is deactivated. Please contact your admin.",
         );
       }
     }
@@ -152,9 +143,7 @@ export class LoginUseCase {
     });
 
     const roleRedirects: Record<string, string> = {
-      company_admin: "/company-admin/dashboard",
-      workspace_admin: "/workspace-admin/dashboard",
-      project_manager: "/pm/dashboard",
+      admin: "/admin/dashboard",
       member: "/member/dashboard",
     };
 

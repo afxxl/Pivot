@@ -1,6 +1,13 @@
-import { getAllCompaniesInput } from "../../../shared/validation/superAdminSchemas";
+export interface GetAllCompaniesRequestDTO {
+  page: number;
+  limit: number;
+  search?: string;
+  status?: string;
+  plan?: string;
+  sortBy: string;
+  sortOrder: "asc" | "desc";
+}
 
-export type GetAllCompaniesRequestDTO = getAllCompaniesInput;
 export interface CompanySummary {
   id: string;
   name: string;
@@ -8,21 +15,17 @@ export interface CompanySummary {
   status: string;
   subscriptionPlan: string;
   subscriptionStatus?: string;
-
   totalUsers: number;
-  totalWorkspaces: number;
   totalProjects: number;
   monthlyRevenue: number;
-
-  lastActiveAt: Date | string;
-  createdAt: Date | string;
+  lastActiveAt: string;
+  createdAt: string;
 }
 
 export interface GetAllCompaniesResponseDTO {
   success: boolean;
   data: {
     companies: CompanySummary[];
-
     pagination: {
       currentPage: number;
       totalPages: number;
@@ -31,12 +34,14 @@ export interface GetAllCompaniesResponseDTO {
       hasNextPage: boolean;
       hasPrevPage: boolean;
     };
-
     stats: {
       totalCompanies: number;
       activeCompanies: number;
+      inactiveCompanies: number;
+      suspendedCompanies: number;
       trialCompanies: number;
-      totalMonthlyRevenue: number;
+      totalUsers: number;
+      totalProjects: number;
     };
   };
 }

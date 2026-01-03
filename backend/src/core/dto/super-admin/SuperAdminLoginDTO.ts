@@ -6,10 +6,21 @@ export interface SuperAdminLoginResponseDTO {
   success: boolean;
   message: string;
   data: {
-    accessToken: string;
     user: {
+      id: string;
       email: string;
+      firstName: string;
+      lastName: string;
       role: string;
+      status: string;
+      permissions: {
+        managePlatform: boolean;
+        manageCompanies: boolean;
+        manageSubscriptions: boolean;
+        viewAllData: boolean;
+      };
     };
+    token: string;
+    expiresAt: string;
   };
 }

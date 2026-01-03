@@ -40,15 +40,13 @@ export class SuperAdminLoginUseCase {
       });
       throw new InvalidSuperAdminCredentialsError("Invalid email or password");
     }
+
     let isPasswordMatch = await this.passwordService.compare(
       req.password,
       superAdminPassword,
     );
 
-    console.log(isPasswordMatch);
-
     if (!isPasswordMatch) {
-      console.log("pass word is not matching", req.password);
       this.logger.warn("Invalid super admin login attempt", {
         email: req.email,
         timestamp: new Date().toISOString(),
@@ -56,10 +54,12 @@ export class SuperAdminLoginUseCase {
       throw new InvalidSuperAdminCredentialsError("Invalid email or password");
     }
 
-    let accessToken = this.tokenService.generateAccessToken({
+    const tokens = this.tokenService.generateTokenPair({
       email: req.email,
       role: "super_admin",
     });
+
+    const expiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
 
     this.logger.info("Super admin logged in successfully", {
       email: req.email,
@@ -69,13 +69,24 @@ export class SuperAdminLoginUseCase {
     return {
       response: {
         success: true,
-        message: "Super admin logged in successfully",
+        message: "Login successful",
         data: {
-          accessToken,
           user: {
-            email: req.email,
+            id: "super_001",
+            email: superAdminEmail,
+            firstName: "Super",
+            lastName: "Admin",
             role: "super_admin",
+            status: "active",
+            permissions: {
+              managePlatform: true,
+              manageCompanies: true,
+              manageSubscriptions: true,
+              viewAllData: true,
+            },
           },
+          token: tokens.accessToken,
+          expiresAt: expiresAt.toISOString(),
         },
       },
     };

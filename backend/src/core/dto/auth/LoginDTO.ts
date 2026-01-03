@@ -1,11 +1,10 @@
 import { loginInput } from "../../../shared/validation/authSchemas";
 
 export interface UserPermissions {
-  manageBilling: boolean;
-  manageWorkspaceAdmins: boolean;
-  viewAllWorkspaces: boolean;
-  manageCompanySettings: boolean;
-  viewAuditLogs: boolean;
+  manageUsers: boolean;
+  manageProjects: boolean;
+  manageTasks: boolean;
+  viewAnalytics: boolean;
 }
 
 export type LoginRequestDTO = loginInput;

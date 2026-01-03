@@ -1,13 +1,13 @@
 import { Schema, model } from "mongoose";
+
 interface IInvite {
   _id: string;
   token: string;
   email: string;
   firstName: string;
   lastName: string;
-  role: "workspace_admin" | "project_manager" | "member";
+  role: "member";
   companyId: string;
-  workspaceId?: string;
   invitedBy: string;
   status: "pending" | "accepted" | "expired" | "cancelled";
   expiresAt: Date;
@@ -25,11 +25,10 @@ const InviteSchema = new Schema<IInvite>(
     lastName: { type: String, required: true },
     role: {
       type: String,
-      enum: ["workspace_admin", "project_manager", "member"],
+      enum: ["member"],
       required: true,
     },
     companyId: { type: String, required: true },
-    workspaceId: { type: String },
     invitedBy: { type: String, required: true },
     status: {
       type: String,
@@ -45,7 +44,6 @@ const InviteSchema = new Schema<IInvite>(
 
 InviteSchema.index({ email: 1, companyId: 1 });
 InviteSchema.index({ companyId: 1, status: 1 });
-InviteSchema.index({ workspaceId: 1, status: 1 });
 InviteSchema.index({ expiresAt: 1 });
 InviteSchema.index({ token: 1 });
 

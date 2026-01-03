@@ -11,9 +11,6 @@ export * from "./user";
 // Company errors
 export * from "./company";
 
-// Workspace errors
-export * from "./workspace";
-
 // Invite errors
 export * from "./invite";
 

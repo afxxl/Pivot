@@ -1,4 +1,5 @@
 import { acceptInviteInput } from "../../../shared/validation/inviteSchema";
+
 export type AcceptInviteRequestDTO = acceptInviteInput;
 
 export interface AcceptInviteResponseDTO {
@@ -16,12 +17,8 @@ export interface AcceptInviteResponseDTO {
         id: string;
         name: string;
       };
-      workspace?: {
-        id: string;
-        name: string;
-      };
     };
     token: string;
-    redirectTo: string;
+    expiresAt: string;
   };
 }

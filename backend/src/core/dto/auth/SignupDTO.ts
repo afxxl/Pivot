@@ -1,4 +1,5 @@
 import { signupInput } from "../../../shared/validation/authSchemas";
+
 export type SignupRequestDTO = signupInput;
 
 export interface SignupResponseDTO {
@@ -10,7 +11,6 @@ export interface SignupResponseDTO {
       name: string;
       email: string;
       status: string;
-      subscriptionPlan: string;
       createdAt: string;
     };
     user: {
@@ -22,6 +22,6 @@ export interface SignupResponseDTO {
       status: string;
     };
     token: string;
-    redirectTo: string;
+    expiresAt: string;
   };
 }

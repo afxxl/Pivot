@@ -9,6 +9,7 @@ import {
 } from "../../../shared/validation/authSchemas";
 import { Types } from "../../container/types";
 import { AuthController } from "../controllers/auth/AuthController";
+import { InviteController } from "../controllers/invite/InviteController";
 import { resolveSubdomain } from "../middlewares/resolveSubdomain";
 import {
   forgotPasswordIpLimiter,
@@ -19,6 +20,9 @@ import {
 const router = Router();
 
 const authController = container.get<AuthController>(Types.AuthController);
+const inviteController = container.get<InviteController>(
+  Types.InviteController,
+);
 
 router.post("/signup", validateRequest(signupSchema), authController.signup);
 router.post(
@@ -29,6 +33,8 @@ router.post(
 );
 router.post("/refresh", authController.refreshToken);
 router.post("/logout", authController.logout);
+router.get("/validate-invite", inviteController.verifyToken);
+router.post("/accept-invitation", inviteController.acceptInvite);
 
 router.post(
   "/forgot-password",

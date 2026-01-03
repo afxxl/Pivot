@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from "uuid";
 import { IUnitWork } from "../../../core/uow/IUnitWork";
 import { MongooseUnitOfWork } from "../../uow/MongooseUnitOfWork";
 import UserModel from "../models/UserModel";
-import WorkspaceModel from "../models/WorkspaceModel";
 import { CompanyNotFoundError } from "../../../shared/errors/company/CompanyNotFoundError";
 
 @injectable()
@@ -69,57 +68,63 @@ export class CompanyRepository implements ICompanyRepository {
 
   async getCompanyStats(companyId: string): Promise<{
     totalUser: number;
-    totalWorkspaces: number;
+    activeUsers: number;
     totalProjects: number;
+    activeProjects: number;
   }> {
-    //TODO: total projects should be added
+    //TODO: total projects should be added when project entity is created
 
     let totalProjects = 0;
+    let activeProjects = 0;
 
-    const [totalUser, totalWorkspaces] = await Promise.all([
+    const [totalUser, activeUsers] = await Promise.all([
       UserModel.countDocuments({ companyId }),
-      WorkspaceModel.countDocuments({ companyId }),
+      UserModel.countDocuments({ companyId, status: "active" }),
     ]);
 
     return {
       totalUser,
-      totalWorkspaces,
+      activeUsers,
       totalProjects,
+      activeProjects,
     };
   }
   async getPlatformStatus(): Promise<{
     totalCompanies: number;
     activeCompanies: number;
+    inactiveCompanies: number;
+    suspendedCompanies: number;
     trialCompanies: number;
-    totalMonthlyRevenue: number;
+    totalUsers: number;
+    totalProjects: number;
   }> {
-    const [totalCompanies, activeCompanies, trialCompanies] = await Promise.all(
-      [
-        CompanyModel.countDocuments({}),
-        CompanyModel.countDocuments({ status: "active" }),
-        CompanyModel.countDocuments({ status: "trial" }),
-      ],
-    );
+    const [
+      totalCompanies,
+      activeCompanies,
+      inactiveCompanies,
+      suspendedCompanies,
+      trialCompanies,
+      totalUsers,
+    ] = await Promise.all([
+      CompanyModel.countDocuments({}),
+      CompanyModel.countDocuments({ status: "active" }),
+      CompanyModel.countDocuments({ status: "inactive" }),
+      CompanyModel.countDocuments({ status: "suspended" }),
+      CompanyModel.countDocuments({ status: "trial" }),
+      UserModel.countDocuments({}),
+    ]);
 
-    const activeCompaniesData = await CompanyModel.find({ status: "active" });
-
-    const pricing: Record<string, number> = {
-      free: 0,
-      trial: 0,
-      starter: 99,
-      professional: 499,
-      enterprise: 999,
-    };
-
-    const totalMonthlyRevenue = activeCompaniesData.reduce((acc, company) => {
-      return acc + (pricing[company.subscriptionPlan] || 0);
-    }, 0);
+    //TODO: Add totalProjects when project entity is created
+    const totalProjects = 0;
 
     return {
       totalCompanies,
       activeCompanies,
+      inactiveCompanies,
+      suspendedCompanies,
       trialCompanies,
-      totalMonthlyRevenue,
+      totalUsers,
+      totalProjects,
     };
   }
 

@@ -19,15 +19,19 @@ export interface ICompanyRepository {
 
   getCompanyStats(companyId: string): Promise<{
     totalUser: number;
-    totalWorkspaces: number;
+    activeUsers: number;
     totalProjects: number;
+    activeProjects: number;
   }>;
 
   getPlatformStatus(): Promise<{
     totalCompanies: number;
     activeCompanies: number;
+    inactiveCompanies: number;
+    suspendedCompanies: number;
     trialCompanies: number;
-    totalMonthlyRevenue: number;
+    totalUsers: number;
+    totalProjects: number;
   }>;
 
   update(companyId: string, data: Partial<Company>): Promise<Company>;

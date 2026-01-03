@@ -1,0 +1,262 @@
+### Super Admin API Tests
+### Base URL: http://localhost:5000/api/super-admin
+
+##########################################################
+# 1. SUPER ADMIN LOGIN
+##########################################################
+
+### Test 1.1 - Successful Super Admin Login
+# @name superAdminLogin
+POST http://localhost:5000/api/super-admin/login
+Content-Type: application/json
+
+{
+  "email": "admin@pivot.com",
+  "password": "pivot@321"
+}
+
+### Test 1.2 - Super Admin Login - Invalid Credentials
+POST http://localhost:5000/api/super-admin/login
+Content-Type: application/json
+
+{
+  "email": "superadmin@pivot.com",
+  "password": "WrongPassword123!"
+}
+
+### Test 1.3 - Super Admin Login - Non-Super Admin User
+POST http://localhost:5000/api/super-admin/login
+Content-Type: application/json
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!"
+}
+
+##########################################################
+# 2. GET ALL COMPANIES
+##########################################################
+
+@superToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Njc0MjAyODgsImV4cCI6MTc2NzQyMTE4OH0.lvRtpAFIxCOgW2UxN7pPs9PW4IGv8WpFBmWJrHze_UE 
+
+### Test 2.1 - Get All Companies (Default Pagination)
+# @name getAllCompanies
+GET http://localhost:5000/api/super-admin/companies?page=1&limit=20&sortBy=createdAt&sortOrder=desc
+Authorization: Bearer {{superToken}}
+
+### Test 2.2 - Get Companies - Filter by Status
+GET http://localhost:5000/api/super-admin/companies?page=1&limit=20&status=active&sortBy=createdAt&sortOrder=desc
+Authorization: Bearer {{superToken}}
+
+### Test 2.3 - Get Companies - Filter by Plan
+GET http://localhost:5000/api/super-admin/companies?page=1&limit=20&plan=professional&sortBy=createdAt&sortOrder=desc
+Authorization: Bearer {{superToken}}
+
+### Test 2.4 - Get Companies - Search by Name
+GET http://localhost:5000/api/super-admin/companies?page=1&limit=20&search=TechCorp&sortBy=createdAt&sortOrder=desc
+Authorization: Bearer {{superToken}}
+
+### Test 2.5 - Get Companies - Unauthorized
+GET http://localhost:5000/api/super-admin/companies?page=1&limit=20&sortBy=createdAt&sortOrder=desc
+
+##########################################################
+# 3. GET COMPANY DETAILS
+##########################################################
+
+### Test 3.1 - Get Company by ID Successfully
+# @name getCompany
+GET http://localhost:5000/api/super-admin/companies/55afd7ff-8346-409a-ad61-41092ea6e97c/
+Authorization: Bearer {{superToken}}
+
+### Test 3.2 - Get Company - Invalid ID
+GET http://localhost:5000/api/super-admin/companies/invalid_company_id
+Authorization: Bearer {{superToken}}
+
+### Test 3.3 - Get Company - Non-existent ID
+GET http://localhost:5000/api/super-admin/companies/507f1f77bcf86cd799439011
+Authorization: Bearer {{superToken}}
+
+##########################################################
+# 4. UPDATE COMPANY SUBSCRIPTION
+##########################################################
+
+### Test 4.1 - Update Company Subscription Successfully
+# @name updateSubscription
+PUT http://localhost:5000/api/super-admin/companies/55afd7ff-8346-409a-ad61-41092ea6e97c/subscription
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "plan": "enterprise",
+  "billingCycle": "annual",
+  "subscriptionStatus": "active",
+  "startDate": "2026-01-15T00:00:00Z"
+}
+
+### Test 4.2 - Update Subscription - Invalid Plan
+PUT http://localhost:5000/api/super-admin/companies/55afd7ff-8346-409a-ad61-41092ea6e97c/subscription
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "plan": "invalid_plan",
+  "billingCycle": "monthly"
+}
+
+### Test 4.3 - Update Subscription - Company Not Found
+PUT http://localhost:5000/api/super-admin/companies/507f1f77bcf86cd799439011/subscription
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "plan": "professional",
+  "billingCycle": "monthly"
+}
+
+##########################################################
+# 5. GET ALL SUBSCRIPTION PLANS
+##########################################################
+
+### Test 5.1 - Get All Subscription Plans
+# @name getAllPlans
+GET http://localhost:5000/api/super-admin/subscription-plans
+Authorization: Bearer {{superToken}}
+
+### Test 5.2 - Get Plans - Unauthorized
+GET http://localhost:5000/api/super-admin/subscription-plans
+
+##########################################################
+# 6. GET SUBSCRIPTION PLAN BY ID
+##########################################################
+
+### Test 6.1 - Get Plan by ID Successfully
+# @name getPlanById
+GET http://localhost:5000/api/super-admin/subscription-plans/2d004b8d-4cf8-4b69-b447-e64bededa6f7
+Authorization: Bearer {{superToken}}
+
+### Test 6.2 - Get Plan - Invalid ID
+GET http://localhost:5000/api/super-admin/subscription-plans/invalid_plan_id
+Authorization: Bearer {{superToken}}
+
+##########################################################
+# 7. CREATE SUBSCRIPTION PLAN
+##########################################################
+
+### Test 7.1 - Create Plan Successfully
+# @name createPlan
+POST http://localhost:5000/api/super-admin/subscription-plans
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "name": "Premium",
+  "description": "Premium plan for large teams",
+  "monthlyPrice": "299.00",
+  "annualPrice": "2990.00",
+  "features": {
+    "maxUsers": 100,
+    "maxWorkspaces": 20,
+    "maxProjects": 100,
+    "maxStorageGB": 500,
+    "supportLevel": "priority",
+    "customFields": true,
+    "integrations": "all",
+    "advancedReports": true,
+    "apiAccess": true,
+    "sso": false,
+    "customDomain": true,
+    "auditLogs": true,
+    "trialDays": 14
+  },
+  "isActive": true
+}
+
+### Test 7.2 - Create Plan - Missing Required Fields
+POST http://localhost:5000/api/super-admin/subscription-plans
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "name": "Incomplete Plan",
+  "monthlyPrice": "99.00"
+}
+
+### Test 7.3 - Create Plan - Invalid Price Format
+POST http://localhost:5000/api/super-admin/subscription-plans
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "name": "Invalid Price Plan",
+  "description": "Test plan",
+  "monthlyPrice": "invalid_price",
+  "annualPrice": "1000.00",
+  "features": {
+    "maxUsers": 50,
+    "maxWorkspaces": 10,
+    "maxProjects": 50,
+    "maxStorageGB": 100,
+    "supportLevel": "email"
+  },
+  "isActive": true
+}
+
+##########################################################
+# 8. UPDATE SUBSCRIPTION PLAN
+##########################################################
+
+### Test 8.1 - Update Plan Successfully
+# @name updatePlan
+PUT http://localhost:5000/api/super-admin/subscription-plans/b96d573f-d724-4563-90a2-bc5ff21c65bd/
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "name": "Premium Plus",
+  "monthlyPrice": "399.00",
+  "annualPrice": "3990.00",
+  "features": {
+    "maxUsers": 150,
+    "sso": true
+  },
+  "isActive": true
+}
+
+### Test 8.2 - Update Plan - Plan Not Found
+PUT http://localhost:5000/api/super-admin/subscription-plans/507f1f77bcf86cd799439011
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "name": "Updated Plan",
+  "monthlyPrice": "199.00"
+}
+
+### Test 8.3 - Update Plan - Invalid ID
+PUT http://localhost:5000/api/super-admin/subscription-plans/invalid_id
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "name": "Updated Plan"
+}
+
+##########################################################
+# 9. DELETE SUBSCRIPTION PLAN
+##########################################################
+
+### Test 9.1 - Delete Plan Successfully
+# @name deletePlan
+DELETE http://localhost:5000/api/super-admin/subscription-plans/b96d573f-d724-4563-90a2-bc5ff21c65bd 
+Authorization: Bearer {{superToken}}
+
+### Test 9.2 - Delete Plan - Plan Not Found
+DELETE http://localhost:5000/api/super-admin/subscription-plans/507f1f77bcf86cd799439011
+Authorization: Bearer {{superToken}}
+
+### Test 9.3 - Delete Plan - Invalid ID
+DELETE http://localhost:5000/api/super-admin/subscription-plans/invalid_id
+Authorization: Bearer {{superToken}}
+
+### Test 9.4 - Delete Plan - Unauthorized
+DELETE http://localhost:5000/api/super-admin/subscription-plans/PLAN_ID_HERE

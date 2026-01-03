@@ -5,8 +5,6 @@ import {
 import { IInviteRepository } from "../../repositories/IInviteRepository";
 import { injectable, inject } from "inversify";
 import { Types } from "../../../infra/container/types";
-
-import { IWorkspaceRepository } from "../../repositories/IWorkspaceRepository";
 import { IUserRepository } from "../../repositories/IUserRepository";
 import { ICompanyRepository } from "../../repositories/ICompanyRepository";
 import { ILogger } from "../../services/ILogger";
@@ -19,7 +17,6 @@ import {
   InvitationAlreadyAcceptedError,
   InviteCancelledError,
   InviteExpiredError,
-  WorkspaceNotFoundError,
 } from "../../../shared/errors";
 
 @injectable()
@@ -29,8 +26,6 @@ export class VerifyTokenUseCase {
     private inviteRepository: IInviteRepository,
     @inject(Types.CompanyRepository)
     private companyRepository: ICompanyRepository,
-    @inject(Types.WorkspaceRepository)
-    private workspaceRepository: IWorkspaceRepository,
     @inject(Types.UserRepository)
     private userRepository: IUserRepository,
     @inject(Types.Logger)
@@ -116,34 +111,6 @@ export class VerifyTokenUseCase {
       );
     }
 
-    let workspaceData: { id: string; name: string } | undefined = undefined;
-
-    if (invitation.workspaceId) {
-      const workspace = await this.workspaceRepository.findById(
-        invitation.workspaceId,
-      );
-
-      if (!workspace) {
-        throw new WorkspaceNotFoundError(
-          "The workspace you were invited to no longer exists. Please contact the person who invited you.",
-        );
-      }
-
-      if (workspace.companyId !== invitation.companyId) {
-        this.logger.error("Workspace company mismatch", {
-          workspaceId: workspace.id,
-          workspaceCompanyId: workspace.companyId,
-          invitationCompanyId: invitation.companyId,
-        });
-        throw new WorkspaceNotFoundError("Workspace not found. Invalid invite");
-      }
-
-      workspaceData = {
-        id: workspace.id,
-        name: workspace.name,
-      };
-    }
-
     const inviter = await this.userRepository.findById(invitation.invitedBy);
 
     const inviterInfo = inviter
@@ -162,7 +129,6 @@ export class VerifyTokenUseCase {
       invitationId: invitation.id,
       email: invitation.email,
       companyId: invitation.companyId,
-      hasWorkspace: !!workspaceData,
     });
 
     return {
@@ -177,7 +143,6 @@ export class VerifyTokenUseCase {
             id: company.id,
             name: company.name,
           },
-          ...(workspaceData && { workspace: workspaceData }),
           invitedBy: inviterInfo,
           invitedAt: invitation.createdAt.toISOString(),
           expiresAt: invitation.expiresAt.toISOString(),

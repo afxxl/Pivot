@@ -7,8 +7,6 @@ import {
 import { GetCompanyResponseDTO } from "../../dto/super-admin/GetCompanyDTO";
 import { ICompanyRepository } from "../../repositories/ICompanyRepository";
 import { IUserRepository } from "../../repositories/IUserRepository";
-import { IWorkspaceMemberRepository } from "../../repositories/IWorkspaceMemberRepository";
-import { IWorkspaceRepository } from "../../repositories/IWorkspaceRepository";
 import { ILogger } from "../../services/ILogger";
 
 @injectable()
@@ -20,10 +18,6 @@ export class GetCompanyUseCase {
     private companyRepository: ICompanyRepository,
     @inject(Types.UserRepository)
     private userRepository: IUserRepository,
-    @inject(Types.WorkspaceRepository)
-    private workspaceRepository: IWorkspaceRepository,
-    @inject(Types.WorkspaceMemberRepository)
-    private workspaceMemberRepository: IWorkspaceMemberRepository,
   ) {}
 
   async execute(
@@ -78,41 +72,6 @@ export class GetCompanyUseCase {
       });
     }
 
-    let workspaces = await this.workspaceRepository.findByCompanyId(id);
-
-    workspaces = workspaces.filter((ws) => ws.status !== "deleted");
-
-    const workspaceStats = await Promise.all(
-      workspaces.map(async (ws) => {
-        const memberCount =
-          await this.workspaceMemberRepository.countByWorkspaceId(ws.id);
-
-        return {
-          id: ws.id,
-          name: ws.name,
-          memberCount,
-          projectCount: 0, // TODO: need to add when project implemented
-        };
-      }),
-    );
-
-    const activityStats = {
-      last7Days: {
-        activeUsers: await this.userRepository.countActiveUser(id, 7),
-        storiesCreated: 0,
-        storiesCompleted: 0,
-        hoursLogged: 0,
-      },
-      last30Days: {
-        activeUsers: await this.userRepository.countActiveUser(id, 30),
-        storiesCreated: 0,
-        storiesCompleted: 0,
-        hoursLogged: 0,
-      },
-    };
-
-    const billingHistory: any[] = [];
-
     const pricing: Record<string, number> = {
       free: 0,
       trial: 0,
@@ -153,16 +112,25 @@ export class GetCompanyUseCase {
             nextBillingDate: company.nextBillingDate?.toISOString() || null,
             monthlyRevenue,
             totalUsers: companyStats.totalUser,
-            totalWorkspaces: companyStats.totalWorkspaces,
+            activeUsers: companyStats.activeUsers,
             totalProjects: companyStats.totalProjects,
+            activeProjects: companyStats.activeProjects,
             storageUsed: company.storageUsed || 0,
             storageLimit: company.storageLimit || 5368709120,
-            companyAdmin: companyAdminData,
-            workspaces: workspaceStats,
-            activityStats,
-            billingHistory,
+            admin: companyAdminData,
+            stats: {
+              totalTasks: 0,
+              completedTasks: 0,
+            },
+            billing: {
+              monthlyRevenue,
+              lastPaymentDate: null,
+              nextBillingDate: company.nextBillingDate?.toISOString() || null,
+            },
             createdAt: company.createdAt.toISOString(),
-            updatedAt: company.updatedAt.toISOString(),
+            lastActiveAt: (
+              company.lastActiveAt || company.updatedAt
+            ).toISOString(),
           },
         },
       },

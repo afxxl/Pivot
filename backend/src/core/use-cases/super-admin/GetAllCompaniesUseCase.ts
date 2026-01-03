@@ -62,7 +62,6 @@ export class GetAllCompaniesUseCase {
           subscriptionPlan: company.subscriptionPlan,
           subscriptionStatus: company.subscriptionStatus,
           totalUsers: stats.totalUser,
-          totalWorkspaces: stats.totalWorkspaces,
           totalProjects: stats.totalProjects,
           monthlyRevenue:
             company.monthlyPrice ||

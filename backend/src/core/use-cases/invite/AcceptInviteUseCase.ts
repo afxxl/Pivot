@@ -7,11 +7,9 @@ import { inject, injectable } from "inversify";
 import { IInviteRepository } from "../../repositories/IInviteRepository";
 import { ILogger } from "../../services/ILogger";
 import { ICompanyRepository } from "../../repositories/ICompanyRepository";
-import { IWorkspaceRepository } from "../../repositories/IWorkspaceRepository";
 import { IUserRepository } from "../../repositories/IUserRepository";
 import { IUnitWork } from "../../uow/IUnitWork";
 import { IPasswordService } from "../../services/IPasswordService";
-import { IWorkspaceMemberRepository } from "../../repositories/IWorkspaceMemberRepository";
 import { ITokenService } from "../../services/ITokenService";
 import { User } from "../../entities/User";
 import { IEmailService } from "../../services/IEmailService";
@@ -25,7 +23,6 @@ import {
   InvitationAlreadyAcceptedError,
   InviteCancelledError,
   InviteExpiredError,
-  WorkspaceNotFoundError,
 } from "../../../shared/errors";
 
 @injectable()
@@ -35,16 +32,12 @@ export class AcceptInviteUseCase {
     private inviteRepository: IInviteRepository,
     @inject(Types.CompanyRepository)
     private companyRepository: ICompanyRepository,
-    @inject(Types.WorkspaceRepository)
-    private workspaceRepository: IWorkspaceRepository,
     @inject(Types.UserRepository)
     private userRepository: IUserRepository,
     @inject(Types.UnitOfWork)
     private uow: IUnitWork,
     @inject(Types.PasswordService)
     private passwordService: IPasswordService,
-    @inject(Types.WorkspaceMemberRepository)
-    private workspaceMemberRepository: IWorkspaceMemberRepository,
     @inject(Types.TokenService)
     private tokenService: ITokenService,
     @inject(Types.EmailService)
@@ -128,34 +121,6 @@ export class AcceptInviteUseCase {
       );
     }
 
-    let workspaceData: { id: string; name: string } | undefined = undefined;
-
-    if (invitation.workspaceId) {
-      const workspace = await this.workspaceRepository.findById(
-        invitation.workspaceId,
-      );
-
-      if (!workspace) {
-        throw new WorkspaceNotFoundError(
-          "The workspace you were invited to no longer exists. Please contact the person who invited you.",
-        );
-      }
-
-      if (workspace.companyId !== invitation.companyId) {
-        this.logger.error("Workspace company mismatch", {
-          workspaceId: workspace.id,
-          workspaceCompanyId: workspace.companyId,
-          invitationCompanyId: invitation.companyId,
-        });
-        throw new WorkspaceNotFoundError("Workspace not found");
-      }
-
-      workspaceData = {
-        id: workspace.id,
-        name: workspace.name,
-      };
-    }
-
     const existingUser = await this.userRepository.findByEmailAndCompanyId(
       invitation.email,
       invitation.companyId,
@@ -225,31 +190,6 @@ export class AcceptInviteUseCase {
         });
       }
 
-      if (invitation.workspaceId) {
-        const existingMembership =
-          await this.workspaceMemberRepository.findWorkspaceAndUser(
-            invitation.workspaceId,
-            finalUser.id,
-          );
-
-        if (!existingMembership) {
-          await this.workspaceMemberRepository.create(
-            {
-              workspaceId: invitation.workspaceId,
-              userId: finalUser.id,
-              role: invitation.role,
-              joinedAt: now,
-            },
-            this.uow,
-          );
-
-          this.logger.info("User added to workspace", {
-            userId: finalUser.id,
-            workspaceId: invitation.workspaceId,
-          });
-        }
-      }
-
       await this.inviteRepository.update(
         invitation.id,
         {
@@ -268,14 +208,7 @@ export class AcceptInviteUseCase {
         companyId: finalUser.companyId,
       });
 
-      const roleRedirects: Record<string, string> = {
-        company_admin: "/company-admin/dashboard",
-        workspace_admin: "/workspace-admin/dashboard",
-        project_manager: "/pm/dashboard",
-        member: "/member/dashboard",
-      };
-
-      const redirectTo = roleRedirects[finalUser.role] || "/member/dashboard";
+      const expiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
 
       this.emailService
         .sendMail({
@@ -296,16 +229,13 @@ export class AcceptInviteUseCase {
         userId: finalUser.id,
         email: finalUser.email,
         companyId: company.id,
-        workspaceId: invitation.workspaceId,
         isReactivation,
       });
 
       return {
         response: {
           success: true,
-          message: isReactivation
-            ? "Account reactivated successfully"
-            : "Account activated successfully",
+          message: `Account activated successfully. Welcome to ${company.name}!`,
           data: {
             user: {
               id: finalUser.id,
@@ -318,10 +248,9 @@ export class AcceptInviteUseCase {
                 id: company.id,
                 name: company.name,
               },
-              ...(workspaceData && { workspace: workspaceData }),
             },
             token: tokens.accessToken,
-            redirectTo,
+            expiresAt: expiresAt.toISOString(),
           },
         },
         refreshToken: tokens.refreshToken,

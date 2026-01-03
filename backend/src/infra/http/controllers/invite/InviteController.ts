@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from "express";
 import {
   AcceptInviteUseCase,
   SendCompanyInviteUseCase,
-  SendWorkspaceInviteUseCase,
   VerifyTokenUseCase,
 } from "../../../../core/use-cases/invite";
 
@@ -17,9 +16,7 @@ export class InviteController {
     private verifyTokenUseCase: VerifyTokenUseCase,
     @inject(Types.AcceptInviteUseCase)
     private acceptInviteUseCase: AcceptInviteUseCase,
-    @inject(Types.SendWorkspaceInviteUseCase)
-    private sendWorkspaceInviteUseCase: SendWorkspaceInviteUseCase,
-  ) {}
+  ) { }
 
   sendCompanyInvite = async (
     req: Request,
@@ -39,22 +36,7 @@ export class InviteController {
     }
   };
 
-  sendWorkspaceInvite = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      const result = await this.sendWorkspaceInviteUseCase.execute(
-        req.body,
-        req.user?.userId as string,
-        req.user?.companyId as string,
-      );
-      res.status(201).json(result.response);
-    } catch (error) {
-      next(error);
-    }
-  };
+
 
   verifyToken = async (
     req: Request,

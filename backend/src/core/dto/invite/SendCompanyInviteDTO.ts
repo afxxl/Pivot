@@ -6,13 +6,24 @@ export interface SendCompanyInviteResponseDTO {
   success: boolean;
   message: string;
   data: {
-    inviteId: string;
-    email: string;
-    role: string;
-    expiresAt: string;
-    invitedBy: {
-      name: string;
+    invitation: {
+      id: string;
       email: string;
+      firstName: string;
+      lastName: string;
+      role: string;
+      status: string;
+      company: {
+        id: string;
+        name: string;
+      };
+      invitedBy: {
+        id: string;
+        name: string;
+        role: string;
+      };
+      invitedAt: string;
+      expiresAt: string;
     };
   };
 }

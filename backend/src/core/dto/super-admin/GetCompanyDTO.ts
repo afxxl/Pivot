@@ -6,57 +6,40 @@ export interface GetCompanyResponseDTO {
       name: string;
       email: string;
       subdomain: string;
-      phone?: string | null;
-      website?: string | null;
-      address?: {
-        street?: string;
-        city?: string;
-        state?: string;
-        zipCode?: string;
-        country?: string;
-      } | null;
+      phone: string | null;
+      website: string | null;
+      address: any | null;
       status: string;
       subscriptionPlan: string;
-      subscriptionStatus?: string | null;
-      billingCycle?: string | null;
-      subscriptionStartDate?: string | null;
-      subscriptionEndDate?: string | null;
-      nextBillingDate?: string | null;
+      subscriptionStatus: string | null;
+      billingCycle: string | null;
+      subscriptionStartDate: string | null;
+      subscriptionEndDate: string | null;
+      nextBillingDate: string | null;
       monthlyRevenue: number;
       totalUsers: number;
-      totalWorkspaces: number;
+      activeUsers: number;
       totalProjects: number;
+      activeProjects: number;
       storageUsed: number;
       storageLimit: number;
-      companyAdmin: {
+      admin: {
         id: string;
         name: string;
         email: string;
         lastLogin: string;
       } | null;
-      workspaces: Array<{
-        id: string;
-        name: string;
-        memberCount: number;
-        projectCount: number;
-      }>;
-      activityStats: {
-        last7Days: {
-          activeUsers: number;
-          storiesCreated: number;
-          storiesCompleted: number;
-          hoursLogged: number;
-        };
-        last30Days: {
-          activeUsers: number;
-          storiesCreated: number;
-          storiesCompleted: number;
-          hoursLogged: number;
-        };
+      stats: {
+        totalTasks: number;
+        completedTasks: number;
       };
-      billingHistory: any[];
+      billing: {
+        monthlyRevenue: number;
+        lastPaymentDate: string | null;
+        nextBillingDate: string | null;
+      };
       createdAt: string;
-      updatedAt: string;
+      lastActiveAt: string;
     };
   };
 }

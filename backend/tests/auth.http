@@ -1,0 +1,249 @@
+### Authentication API Tests
+### Base URL: http://localhost:5000/api/auth
+
+##########################################################
+# 1. SIGNUP
+##########################################################
+
+### Test 1.1 - Successful Company Signup
+# @name signup
+POST http://localhost:5000/api/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "TechCorp Inc.",
+  "companyEmail": "contact@techcorp.com",
+  "adminFirstName": "Rahul",
+  "adminLastName": "Kumar",
+  "adminEmail": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "subdomain": "techcorp",
+  "agreeToTerms": true
+}
+
+### Test 1.2 - Signup - Email Already Exists
+POST http://localhost:5000/api/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "TechCorp 2",
+  "companyEmail": "contact@techcorp.com",
+  "adminFirstName": "John",
+  "adminLastName": "Doe",
+  "adminEmail": "john@techcorp2.com",
+  "password": "SecurePass123!",
+  "subdomain": "techcorp2",
+  "agreeToTerms": true
+}
+
+### Test 1.3 - Signup - Subdomain Already Exists
+POST http://localhost:5000/api/auth/signup
+Content-Type: application/json
+
+{
+  "companyName": "TechCorp 3",
+  "companyEmail": "contact@techcorp3.com",
+  "adminFirstName": "Jane",
+  "adminLastName": "Smith",
+  "adminEmail": "jane@techcorp3.com",
+  "password": "SecurePass123!",
+  "subdomain": "techcorp",
+  "agreeToTerms": true
+}
+
+##########################################################
+# 2. LOGIN
+##########################################################
+
+### Test 2.1 - Successful Admin Login
+# @name adminLogin
+POST http://localhost:5000/api/auth/login?subdomain=techcorp
+Content-Type: application/json
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": true
+}
+
+
+### Test 2.2 - Login - Invalid Credentials
+POST http://localhost:5000/api/auth/login?subdomain=techcorp
+Content-Type: application/json
+X-Subdomain: techcorp
+
+{
+  "email": "rahul@techcorp.com",
+  "password": "WrongPassword123!",
+  "rememberMe": false
+}
+
+### Test 2.3 - Login - User Not Found
+#
+POST http://localhost:5000/api/auth/login?subdomain=techcorp
+Content-Type: application/json
+X-Subdomain: techcorp
+
+{
+  "email": "nonexistent@techcorp.com",
+  "password": "SecurePass123!",
+  "rememberMe": false
+}
+
+##########################################################
+# 3. VALIDATE INVITATION
+##########################################################
+
+### Test 3.1 - Validate Invitation Token
+# @name validateInvite
+GET http://localhost:5000/api/auth/validate-invite?token=INVITE_TOKEN_HERE
+
+### Test 3.2 - Validate - Invalid Token
+GET http://localhost:5000/api/auth/validate-invite?token=invalid_token_123
+
+##########################################################
+# 4. ACCEPT INVITATION
+##########################################################
+
+### Test 4.1 - Accept Invitation Successfully
+# @name acceptInvite
+POST http://localhost:5000/api/auth/accept-invitation
+Content-Type: application/json
+
+{
+  "token": "2657339a-e54e-4a0d-9f01-02b15d8645f7",
+  "password": "NewPass123!",
+  "confirmPassword": "NewPass123!",
+  "agreeToTerms": true
+}
+
+### Test 4.2 - Accept Invitation - Password Mismatch
+POST http://localhost:5000/api/auth/accept-invitation
+Content-Type: application/json
+
+{
+  "token": "2657339a-e54e-4a0d-9f01-02b15d8645f7",
+  "password": "NewPass123!",
+  "confirmPassword": "DifferentPass123!",
+  "agreeToTerms": true
+}
+
+### Test 4.3 - Accept Invitation - Invalid Token
+POST http://localhost:5000/api/auth/accept-invitation
+Content-Type: application/json
+
+{
+  "token": "invalid_token",
+  "password": "NewPass123!",
+  "confirmPassword": "NewPass123!",
+  "agreeToTerms": true
+}
+
+##########################################################
+# 5. FORGOT PASSWORD
+##########################################################
+
+### Test 5.1 - Request Password Reset
+# @name forgotPassword
+POST http://localhost:5000/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "afsalmohd393@gmail.com"
+}
+
+### Test 5.2 - Forgot Password - Non-existent Email (Should still return success)
+POST http://localhost:5000/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "nonexistent@techcorp.com"
+}
+
+##########################################################
+# 6. RESET PASSWORD
+##########################################################
+
+### Test 6.1 - Reset Password Successfully
+# @name resetPassword
+POST http://localhost:5000/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "af2cc005-db60-41e8-b8bf-00315594372c",
+  "newPassword": "NewSecurePass456!",
+  "confirmPassword": "NewSecurePass456!"
+}
+
+### Test 6.2 - Reset Password - Invalid Token
+POST http://localhost:5000/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "invalid_reset_token",
+  "newPassword": "NewSecurePass456!",
+  "confirmPassword": "NewSecurePass456!"
+}
+
+### Test 6.3 - Reset Password - Weak Password
+POST http://localhost:5000/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "RESET_TOKEN_HERE",
+  "newPassword": "weak",
+  "confirmPassword": "weak"
+}
+
+##########################################################
+# 7. REFRESH TOKEN
+##########################################################
+
+### Test 7.1 - Refresh Access Token
+# @name refreshToken
+POST http://localhost:5000/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{adminLogin.response.body.refreshToken}}"
+}
+
+### Test 7.2 - Refresh - Invalid Token
+POST http://localhost:5000/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "invalid_refresh_token_here"
+}
+
+##########################################################
+# 8. LOGOUT
+##########################################################
+
+### Test 8.1 - Logout Successfully
+# @name logout
+POST http://localhost:5000/api/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+{
+  "logoutAllDevices": false
+}
+
+### Test 8.2 - Logout All Devices
+POST http://localhost:5000/api/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{adminLogin.response.body.data.token}}
+
+{
+  "logoutAllDevices": true
+}
+
+### Test 8.3 - Logout - Invalid Token
+POST http://localhost:5000/api/auth/logout
+Content-Type: application/json
+Authorization: Bearer invalid_token_here
+
+{
+  "logoutAllDevices": false
+}
