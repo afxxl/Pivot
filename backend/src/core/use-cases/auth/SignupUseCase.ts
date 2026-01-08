@@ -6,6 +6,7 @@ import { ITokenService } from "../../services/ITokenService";
 import { Types } from "../../../infra/container/types";
 import { inject, injectable } from "inversify";
 import { IUnitWork } from "../../uow/IUnitWork";
+import { getPermissions, getRedirectPath } from "./authHelpers";
 import {
   EmailAlreadyExistsError,
   SubdomainAlreadyExistsError,
@@ -99,13 +100,6 @@ export class SignupUseCase {
           success: true,
           message: "Company created successfully",
           data: {
-            company: {
-              id: company.id,
-              name: company.name,
-              email: company.email,
-              status: company.status,
-              createdAt: company.createdAt.toISOString(),
-            },
             user: {
               id: user.id,
               email: user.email,
@@ -113,9 +107,16 @@ export class SignupUseCase {
               lastName: user.lastName,
               role: user.role,
               status: user.status,
+              company: {
+                id: company.id,
+                name: company.name,
+              },
+              permissions: getPermissions(user.role),
             },
             token: tokens.accessToken,
             expiresAt: expiresAt.toISOString(),
+            subdomain: company.subdomain,
+            redirectTo: getRedirectPath(user.role),
           },
         },
         refreshToken: tokens.refreshToken,

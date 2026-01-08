@@ -32,7 +32,9 @@ export const resolveSubdomain = () => {
     } else {
       subdomain =
         (req.query.subdomain as string) ||
-        (req.headers["x-company-subdomain"] as string);
+        (req.headers["x-company-subdomain"] as string) ||
+        (req.headers["x-subdomain"] as string) ||
+        (req.get("X-Company-Subdomain") as string); // Try this method too
     }
 
     if (!subdomain) {

@@ -1,5 +1,4 @@
 import { LoginRequestDTO, LoginResponseDTO } from "../../dto/auth/LoginDTO";
-
 import { ICompanyRepository } from "../../repositories/ICompanyRepository";
 import { IUserRepository } from "../../repositories/IUserRepository";
 import { IPasswordService } from "../../services/IPasswordService";
@@ -7,7 +6,7 @@ import { ITokenService } from "../../services/ITokenService";
 import { injectable, inject } from "inversify";
 import { Types } from "../../../infra/container/types";
 import { ILogger } from "../../services/ILogger";
-import { UserPermissions } from "../../dto/auth/LoginDTO";
+import { getPermissions, getRedirectPath } from "./authHelpers";
 import {
   CompanyInactiveError,
   InvalidCredentialsError,
@@ -34,27 +33,7 @@ export class LoginUseCase {
 
     @inject(Types.Logger)
     private logger: ILogger,
-  ) {}
-
-  private getPermissions(role: string): UserPermissions {
-    const defaultPermissions: UserPermissions = {
-      manageUsers: false,
-      manageProjects: false,
-      manageTasks: false,
-      viewAnalytics: false,
-    };
-
-    if (role === "admin") {
-      return {
-        manageUsers: true,
-        manageProjects: true,
-        manageTasks: true,
-        viewAnalytics: true,
-      };
-    }
-
-    return defaultPermissions;
-  }
+  ) { }
 
   async execute(
     req: LoginRequestDTO,
@@ -142,13 +121,6 @@ export class LoginUseCase {
       companyId: company.id,
     });
 
-    const roleRedirects: Record<string, string> = {
-      admin: "/admin/dashboard",
-      member: "/member/dashboard",
-    };
-
-    const redirectTo = roleRedirects[user.role] || "/member/dashboard";
-
     const expiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
 
     return {
@@ -167,11 +139,11 @@ export class LoginUseCase {
               id: company.id,
               name: company.name,
             },
-            permissions: this.getPermissions(user.role),
+            permissions: getPermissions(user.role),
           },
           token: tokens.accessToken,
           expiresAt: expiresAt.toISOString(),
-          redirectTo,
+          redirectTo: getRedirectPath(user.role),
         },
       },
       refreshToken: tokens.refreshToken,

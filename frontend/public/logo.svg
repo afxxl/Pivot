@@ -1,0 +1,16 @@
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="infinityGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#382344;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4A3555;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <path
+    d="M20.2688,28.2021l-1.5169,1.7087a8.3516,8.3516,0,1,1,0-11.8216L29.2481,29.9108a8.3516,8.3516,0,1,0,0-11.8216l-1.5169,1.7087"
+    fill="none"
+    stroke="url(#infinityGradient)"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
