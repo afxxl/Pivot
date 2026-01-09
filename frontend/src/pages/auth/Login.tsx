@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from "../../api/auth.api";
 import { storage } from "../../utils/storage";
+import { getRedirectPath } from "@/utils/redirect";
 import { Logo } from "@/components/shared/Logo";
 
 import { Button } from "@/components/ui/button";
@@ -62,7 +63,7 @@ const Login = () => {
     onSuccess: (response, variables) => {
       storage.setSubdomain(variables.subdomain);
       setAuth(response.data.user, response.data.token, variables.subdomain);
-      navigate(response.data.redirectTo);
+      navigate(getRedirectPath(response.data.redirectTo));
     },
     onError: (error) => {
       console.error("Login error:", error);

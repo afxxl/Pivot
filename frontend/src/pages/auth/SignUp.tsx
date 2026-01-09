@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { authApi } from "@/api/auth.api";
 import { storage } from "@/utils/storage";
+import { getRedirectPath } from "@/utils/redirect";
 import { useState, useEffect } from "react";
 import { Logo } from "@/components/shared/Logo";
 import { PasswordStrengthIndicator } from "@/components/auth/PasswordStrengthIndicator";
@@ -81,7 +82,7 @@ const SignUp = () => {
     onSuccess: (response) => {
       storage.setSubdomain(response.data.subdomain);
       setAuth(response.data.user, response.data.token, response.data.subdomain);
-      navigate(response.data.redirectTo);
+      navigate(getRedirectPath(response.data.redirectTo));
     },
     onError: (error) => {
       console.log("Signup error:", error);

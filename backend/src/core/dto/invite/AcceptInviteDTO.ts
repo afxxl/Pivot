@@ -1,4 +1,5 @@
 import { acceptInviteInput } from "../../../shared/validation/inviteSchema";
+import { AuthUser } from "../auth/SharedAuthTypes";
 
 export type AcceptInviteRequestDTO = acceptInviteInput;
 
@@ -6,19 +7,10 @@ export interface AcceptInviteResponseDTO {
   success: boolean;
   message: string;
   data: {
-    user: {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      role: string;
-      status: string;
-      company: {
-        id: string;
-        name: string;
-      };
-    };
+    user: AuthUser;
     token: string;
     expiresAt: string;
+    subdomain: string;
+    redirectTo: string;
   };
 }

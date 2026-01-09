@@ -16,7 +16,7 @@ export class InviteController {
     private verifyTokenUseCase: VerifyTokenUseCase,
     @inject(Types.AcceptInviteUseCase)
     private acceptInviteUseCase: AcceptInviteUseCase,
-  ) { }
+  ) {}
 
   sendCompanyInvite = async (
     req: Request,
@@ -36,15 +36,14 @@ export class InviteController {
     }
   };
 
-
-
   verifyToken = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const token = req.params.token;
+      const token = req.query.token as string;
+      console.log(token);
       const result = await this.verifyTokenUseCase.execute({ token });
       res.status(200).json(result.response);
     } catch (error) {

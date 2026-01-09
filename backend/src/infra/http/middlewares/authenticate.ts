@@ -42,7 +42,7 @@ export const authenticate = async (
   }
 };
 
-export const requireCompanyAdmin = (
+export const requireAdmin = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -51,13 +51,13 @@ export const requireCompanyAdmin = (
     return next(new UnauthorizedError("User not authenticated"));
   }
 
-  if (req.user.role !== "company_admin") {
-    return next(new UnauthorizedError("Company admin access required"));
+  if (req.user.role !== "admin") {
+    return next(new UnauthorizedError("Admin access required"));
   }
   next();
 };
 
-export const requireWorkspaceAdmin = (
+export const requireMember = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -66,13 +66,8 @@ export const requireWorkspaceAdmin = (
     return next(new UnauthorizedError("User not authenticated"));
   }
 
-  if (
-    req.user.role !== "workspace_admin" &&
-    req.user.role !== "company_admin"
-  ) {
-    return next(
-      new UnauthorizedError("Workspace admin or company admin access required"),
-    );
+  if (req.user.role !== "member" && req.user.role !== "admin") {
+    return next(new UnauthorizedError("Member or admin access required"));
   }
   next();
 };

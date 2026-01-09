@@ -13,6 +13,7 @@ import { IPasswordService } from "../../services/IPasswordService";
 import { ITokenService } from "../../services/ITokenService";
 import { User } from "../../entities/User";
 import { IEmailService } from "../../services/IEmailService";
+import { getPermissions, getRedirectPath } from "../auth/authHelpers";
 import {
   CompanyInactiveError,
   CompanyNotFoundError,
@@ -44,7 +45,7 @@ export class AcceptInviteUseCase {
     private emailService: IEmailService,
     @inject(Types.Logger)
     private logger: ILogger,
-  ) {}
+  ) { }
 
   async execute(
     req: AcceptInviteRequestDTO,
@@ -232,6 +233,10 @@ export class AcceptInviteUseCase {
         isReactivation,
       });
 
+      const permissions = getPermissions(finalUser.role);
+      const redirectPath = getRedirectPath(finalUser.role);
+      const redirectTo = `https://${company.subdomain}.pivot.app${redirectPath}`;
+
       return {
         response: {
           success: true,
@@ -248,9 +253,12 @@ export class AcceptInviteUseCase {
                 id: company.id,
                 name: company.name,
               },
+              permissions,
             },
             token: tokens.accessToken,
             expiresAt: expiresAt.toISOString(),
+            subdomain: company.subdomain,
+            redirectTo,
           },
         },
         refreshToken: tokens.refreshToken,

@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { version as uuidVersion } from "uuid";
 
-export const sendCompanyInviteSchema = z.object({
+export const InviteSchema = z.object({
   email: z.string().trim().email("Invalid email address").toLowerCase(),
   firstName: z
     .string()
@@ -15,7 +14,7 @@ export const sendCompanyInviteSchema = z.object({
     .max(100, "Last Name must not exceed 100 characters"),
 });
 
-export type sendCompanyInviteInput = z.infer<typeof sendCompanyInviteSchema>;
+export type InviteInput = z.infer<typeof InviteSchema>;
 
 export const acceptInviteSchema = z
   .object({
@@ -23,10 +22,7 @@ export const acceptInviteSchema = z
       .string({ message: "Invitation token is required" })
       .trim()
       .toLowerCase()
-      .uuid({ message: "Invalid invitation token format" })
-      .refine((val) => uuidVersion(val) === 4, {
-        message: "Invalid Invitation token format",
-      }),
+      .uuid({ message: "Invalid invitation token format" }),
     password: z
       .string()
       .min(8, "Password must be at least 8 characters")
