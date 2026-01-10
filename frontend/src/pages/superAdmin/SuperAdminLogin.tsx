@@ -1,12 +1,14 @@
 import { useNavigate, Link } from "react-router-dom";
-import { useAuthStore } from "../../store/authStore";
+import { useAuthStore } from "@/store/authStore";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { loginSchema, type LoginInput } from "../../validations/authSchemas";
+import {
+  superAdminLoginSchema,
+  type superAdminLoginInput,
+} from "@/validations/superAdminSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { authApi } from "../../api/auth.api";
-import { storage } from "../../utils/storage";
+import { superAdminApi } from "@/api/superAdmin.api";
 import { getRedirectPath } from "@/utils/redirect";
 import { Logo } from "@/components/shared/Logo";
 
@@ -21,8 +23,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Checkbox } from "@/components/ui/checkbox";
-
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
 
 interface ApiErrorResponse {
@@ -35,50 +35,38 @@ interface ApiErrorResponse {
   };
 }
 
-const Login = () => {
+const SuperAdminLogin = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
-  const [subdomain, setSubdomain] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const isDev = import.meta.env.DEV;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-  } = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "", rememberMe: false },
+  } = useForm<superAdminLoginInput>({
+    resolver: zodResolver(superAdminLoginSchema),
+    defaultValues: { email: "", password: "" },
   });
 
   const loginMutation = useMutation({
-    mutationFn: ({
-      data,
-      subdomain,
-    }: {
-      data: LoginInput;
-      subdomain: string;
-    }) => authApi.login(data, subdomain),
-    onSuccess: (response, variables) => {
-      storage.setSubdomain(variables.subdomain);
-      setAuth(response.data.user, response.data.token, variables.subdomain);
+    mutationFn: (data: superAdminLoginInput) => superAdminApi.login(data),
+    onSuccess: (response) => {
+      setAuth(response.data.user, response.data.token);
       navigate(getRedirectPath(response.data.redirectTo));
     },
     onError: (error) => {
-      console.error("Login error:", error);
+      console.error("SuperAdmin login error:", error);
     },
     retry: false,
   });
 
-  const onSubmit = (data: LoginInput, event?: React.BaseSyntheticEvent) => {
+  const onSubmit = (
+    data: superAdminLoginInput,
+    event?: React.BaseSyntheticEvent,
+  ) => {
     event?.preventDefault();
-    if (isDev && !subdomain) {
-      alert("Please enter subdomain");
-      return;
-    }
-    if (isDev) storage.setSubdomain(subdomain);
-    loginMutation.mutate({ data, subdomain: isDev ? subdomain.trim() : "" });
+    loginMutation.mutate(data);
   };
 
   return (
@@ -90,10 +78,10 @@ const Login = () => {
               <Logo size="lg" showText={true} />
             </div>
             <CardTitle className="text-2xl sm:text-3xl text-center font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              Welcome Back
+              Super Admin Portal
             </CardTitle>
             <CardDescription className="text-center text-base text-muted-foreground">
-              Sign in to access your workspace
+              Platform Administration Access
             </CardDescription>
           </CardHeader>
 
@@ -103,36 +91,12 @@ const Login = () => {
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
                   {(loginMutation.error as ApiErrorResponse)?.response?.data
-                    ?.error?.message || "Invalid email or password"}
+                    ?.error?.message || "Invalid credentials"}
                 </AlertDescription>
               </Alert>
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-              {isDev && (
-                <div className="space-y-1.5">
-                  <Label htmlFor="subdomain" className="text-sm font-medium">
-                    Company Subdomain{" "}
-                    <span className="text-destructive">*</span>
-                    <span className="ml-2 text-xs px-2.5 py-1 bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 rounded-full font-medium shadow-sm">
-                      DEV MODE
-                    </span>
-                  </Label>
-                  <Input
-                    id="subdomain"
-                    type="text"
-                    value={subdomain}
-                    onChange={(e) => setSubdomain(e.target.value)}
-                    placeholder="techcorp"
-                    className="transition-all duration-200 focus:ring-2 focus:ring-purple-200"
-                    required
-                  />
-                  <p className="text-xs text-muted-foreground mt-1.5">
-                    Enter your company subdomain for local testing
-                  </p>
-                </div>
-              )}
-
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-sm font-medium">
                   Email Address *
@@ -140,7 +104,7 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@company.com"
+                  placeholder="admin@pivot.app"
                   className="transition-all duration-200 focus:ring-2 focus:ring-purple-200"
                   onFocus={() => loginMutation.reset()}
                   {...register("email")}
@@ -187,32 +151,9 @@ const Login = () => {
                 )}
               </div>
 
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="remember"
-                    onCheckedChange={(checked) =>
-                      setValue("rememberMe", checked as boolean)
-                    }
-                  />
-                  <Label
-                    htmlFor="remember"
-                    className="text-sm font-normal cursor-pointer select-none"
-                  >
-                    Remember me
-                  </Label>
-                </div>
-                <Link
-                  to="/forgot-password"
-                  className="text-sm font-medium text-primary hover:text-purple-600 transition-colors duration-200"
-                >
-                  Forgot password?
-                </Link>
-              </div>
-
               <Button
                 type="submit"
-                className="w-full mt-4 h-10 font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary"
+                className="w-full mt-4 h-11 font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary"
                 disabled={loginMutation.isPending}
               >
                 {loginMutation.isPending ? (
@@ -237,10 +178,10 @@ const Login = () => {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Signing in...
+                    Authenticating...
                   </span>
                 ) : (
-                  "Sign in"
+                  "Access Admin Portal"
                 )}
               </Button>
             </form>
@@ -251,30 +192,17 @@ const Login = () => {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-card px-3 py-1 text-muted-foreground font-medium">
-                  New to PIVOT?
+                  Platform Administration
                 </span>
               </div>
             </div>
 
             <div className="text-center">
               <Link
-                to="/signup"
-                className="group text-sm font-medium text-primary hover:text-purple-600 inline-flex items-center gap-1.5 transition-all duration-200"
+                to="/login"
+                className="text-sm font-medium text-primary hover:text-purple-600 transition-colors duration-200"
               >
-                Create a free account
-                <svg
-                  className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
+                ← Back to Regular Login
               </Link>
             </div>
           </CardContent>
@@ -288,4 +216,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SuperAdminLogin;

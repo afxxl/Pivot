@@ -25,7 +25,7 @@ export class AuthController {
 
     @inject(Types.ResetPasswordUseCase)
     private resetPasswordUseCase: ForgotPasswordUseCase,
-  ) {}
+  ) { }
 
   signup = async (
     req: Request,

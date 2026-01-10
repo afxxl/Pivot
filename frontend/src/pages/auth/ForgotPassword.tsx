@@ -50,19 +50,22 @@ const ForgotPassword = () => {
   });
 
   const forgotPasswordMutation = useMutation({
-    mutationFn: (data: forgotPasswordInput) => authApi.forgotPassword(data),
+    mutationFn: (data: forgotPasswordInput) => {
+      console.log("🚀 Sending forgot password request to backend:", data);
+      return authApi.forgotPassword(data);
+    },
     onSuccess: (response) => {
-      console.log(response.message);
+      console.log("✅ Backend response received:", response);
       setIsSuccess(true);
     },
     onError: (error) => {
-      console.error("Forgot Password error:", error);
+      console.error("❌ Forgot Password error:", error);
     },
     retry: false,
-    gcTime: Infinity,
   });
 
   const onSubmit = (data: forgotPasswordInput) => {
+    console.log("📝 Form submitted, calling mutation...");
     forgotPasswordMutation.mutate(data);
   };
 
@@ -243,4 +246,3 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
-

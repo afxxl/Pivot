@@ -1,4 +1,7 @@
 import type { User } from "../api/auth.api";
+import type { SuperAdminUser } from "../api/superAdmin.api";
+
+type AuthUser = User | SuperAdminUser;
 
 export const storage = {
   setToken: (token: string) => {
@@ -13,11 +16,11 @@ export const storage = {
     return localStorage.removeItem("token");
   },
 
-  setUser: (user: User) => {
+  setUser: (user: AuthUser) => {
     localStorage.setItem("user", JSON.stringify(user));
   },
 
-  getUser: (): User | null => {
+  getUser: (): AuthUser | null => {
     const user = localStorage.getItem("user");
     return user ? JSON.parse(user) : null;
   },

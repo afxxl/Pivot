@@ -1,12 +1,11 @@
 import { ReactNode } from "react";
-import { NavLink, useNavigate, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Logo } from "@/components/shared/Logo";
 import { useAuthStore } from "@/store/authStore";
 import {
-  Home,
+  LayoutDashboard,
   Building2,
-  Users,
-  FolderKanban,
+  CreditCard,
   BarChart3,
   LogOut,
 } from "lucide-react";
@@ -25,7 +24,7 @@ const SidebarItem = ({ to, icon, label }: SidebarItemProps) => {
         `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
           isActive
             ? "bg-white/10 text-white font-medium"
-            : "text-purple-100 hover:bg-white/5 hover:text-white"
+            : "text-slate-200 hover:bg-white/5 hover:text-white"
         }`
       }
     >
@@ -35,28 +34,26 @@ const SidebarItem = ({ to, icon, label }: SidebarItemProps) => {
   );
 };
 
-export const AdminLayout = () => {
+export const SuperAdminLayout = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/super-admin/login");
   };
 
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-[#562182] text-white flex flex-col shadow-xl">
+      <aside className="w-64 bg-gradient-to-b from-slate-800 to-slate-900 text-white flex flex-col shadow-xl">
         {/* Logo Section */}
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <Logo size="md" showText={false} />
+            <Logo size="md" showText={false} variant="light" />
             <div>
               <h1 className="text-xl font-bold">PIVOT</h1>
-              <p className="text-xs text-purple-200">
-                {user?.company?.name || "Company"}
-              </p>
+              <p className="text-xs text-slate-300">Super Admin</p>
             </div>
           </div>
         </div>
@@ -64,27 +61,22 @@ export const AdminLayout = () => {
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           <SidebarItem
-            to="/admin/dashboard"
-            icon={<Home />}
+            to="/super-admin/dashboard"
+            icon={<LayoutDashboard />}
             label="Dashboard"
           />
           <SidebarItem
-            to="/admin/profile"
+            to="/super-admin/companies"
             icon={<Building2 />}
-            label="Company Profile"
+            label="Companies"
           />
           <SidebarItem
-            to="/admin/members"
-            icon={<Users />}
-            label="Team Members"
+            to="/super-admin/subscription-plans"
+            icon={<CreditCard />}
+            label="Subscription Plans"
           />
           <SidebarItem
-            to="/admin/projects"
-            icon={<FolderKanban />}
-            label="Projects"
-          />
-          <SidebarItem
-            to="/admin/analytics"
+            to="/super-admin/analytics"
             icon={<BarChart3 />}
             label="Analytics"
           />
@@ -93,7 +85,7 @@ export const AdminLayout = () => {
         {/* User Section */}
         <div className="p-4 border-t border-white/10">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-full bg-purple-400 flex items-center justify-center font-semibold text-white">
+            <div className="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center font-semibold text-white">
               {user?.firstName?.[0]}
               {user?.lastName?.[0]}
             </div>
@@ -101,7 +93,7 @@ export const AdminLayout = () => {
               <p className="text-sm font-medium text-white truncate">
                 {user?.firstName} {user?.lastName}
               </p>
-              <p className="text-xs text-purple-200 capitalize">{user?.role}</p>
+              <p className="text-xs text-slate-300 capitalize">{user?.role}</p>
             </div>
           </div>
           <button
@@ -121,3 +113,5 @@ export const AdminLayout = () => {
     </div>
   );
 };
+
+export default SuperAdminLayout;

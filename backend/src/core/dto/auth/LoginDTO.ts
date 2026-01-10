@@ -13,4 +13,3 @@ export interface LoginResponseDTO {
     redirectTo: string;
   };
 }
-

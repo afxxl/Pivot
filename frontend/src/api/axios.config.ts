@@ -24,6 +24,37 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
+const PUBLIC_ROUTES = [
+  "/auth/login",
+  "/auth/signup",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+  "/auth/validate-invite",
+  "/auth/accept-invitation",
+  "/super-admin/login",
+];
+
+const isPublicRoute = (url: string) => {
+  return PUBLIC_ROUTES.some((route) => url.includes(route));
+};
+
+const getLoginPage = () => {
+  const user = storage.getUser();
+  if (user?.role === "super_admin") {
+    return "/super-admin/login";
+  }
+  return "/login";
+};
+
+const isOnLoginPage = () => {
+  const pathname = window.location.pathname;
+  return (
+    pathname === "/login" ||
+    pathname === "/super-admin/login" ||
+    pathname === "/signup"
+  );
+};
+
 apiClient.interceptors.request.use((config) => {
   const token = storage.getToken();
   const subdomain = storage.getSubdomain();
@@ -43,50 +74,57 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return apiClient(originalRequest);
-          })
-          .catch((err) => {
-            return Promise.reject(err);
-          });
+    if (error.response?.status === 401) {
+      if (isPublicRoute(originalRequest.url)) {
+        return Promise.reject(error);
       }
 
-      originalRequest._retry = true;
-      isRefreshing = true;
+      if (isOnLoginPage()) {
+        return Promise.reject(error);
+      }
 
-      try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/refresh`,
-          {},
-          { withCredentials: true },
-        );
-
-        const { accessToken: token } = response.data.data;
-        storage.setToken(token);
-        console.log(response);
-
-        processQueue(null, token);
-
-        originalRequest.headers.Authorization = `Bearer ${token}`;
-        return apiClient(originalRequest);
-      } catch (refreshError) {
-        processQueue(refreshError, null);
-        storage.clear();
-
-        const isLoginPage = window.location.pathname === "/login";
-        if (!isLoginPage) {
-          window.location.href = "/login";
+      if (!originalRequest._retry) {
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
+          })
+            .then((token) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              return apiClient(originalRequest);
+            })
+            .catch((err) => {
+              return Promise.reject(err);
+            });
         }
 
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
+        originalRequest._retry = true;
+        isRefreshing = true;
+
+        try {
+          const response = await axios.post(
+            `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/refresh`,
+            {},
+            { withCredentials: true },
+          );
+
+          const { token } = response.data.data;
+          storage.setToken(token);
+
+          processQueue(null, token);
+
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return apiClient(originalRequest);
+        } catch (refreshError) {
+          processQueue(refreshError, null);
+          storage.clear();
+
+          const loginPage = getLoginPage();
+          window.location.href = loginPage;
+
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
+        }
       }
     }
 

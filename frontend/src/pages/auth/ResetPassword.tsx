@@ -92,7 +92,6 @@ const ResetPassword = () => {
       console.error("Reset Password error:", error);
     },
     retry: false,
-    gcTime: Infinity,
   });
 
   const onSubmit = (data: resetPasswordInput) => {

@@ -97,7 +97,6 @@ const AcceptInvite = () => {
       console.error("Validation Error:", error);
     },
     retry: false,
-    gcTime: Infinity,
   });
 
   useEffect(() => {
@@ -117,7 +116,6 @@ const AcceptInvite = () => {
       console.error("Accept Invite error:", error);
     },
     retry: false,
-    gcTime: Infinity,
   });
 
   const onSubmit = (

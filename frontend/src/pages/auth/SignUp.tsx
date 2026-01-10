@@ -88,7 +88,6 @@ const SignUp = () => {
       console.log("Signup error:", error);
     },
     retry: false,
-    gcTime: Infinity,
   });
 
   const onSubmit = (data: signupInput, event?: React.BaseSyntheticEvent) => {

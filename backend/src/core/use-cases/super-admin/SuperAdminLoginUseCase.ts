@@ -18,11 +18,11 @@ export class SuperAdminLoginUseCase {
     private passwordService: IPasswordService,
     @inject(Types.TokenService)
     private tokenService: ITokenService,
-  ) {}
+  ) { }
 
   async execute(
     req: SuperAdminLoginRequestDTO,
-  ): Promise<{ response: SuperAdminLoginResponseDTO }> {
+  ): Promise<{ response: SuperAdminLoginResponseDTO; refreshToken: string }> {
     let superAdminEmail = process.env.SUPER_ADMIN_EMAIL as string;
     let superAdminPassword = process.env.SUPER_ADMIN_PASSWORD;
 
@@ -87,8 +87,10 @@ export class SuperAdminLoginUseCase {
           },
           token: tokens.accessToken,
           expiresAt: expiresAt.toISOString(),
+          redirectTo: "/super-admin/dashboard",
         },
       },
+      refreshToken: tokens.refreshToken,
     };
   }
 }

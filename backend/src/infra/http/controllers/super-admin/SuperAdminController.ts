@@ -42,7 +42,7 @@ export class SuperAdminController {
 
     @inject(Types.UpdateCompanySubscriptionUseCase)
     private updateCompanySubscriptionUseCase: UpdateCompanySubscriptionUseCase,
-  ) {}
+  ) { }
 
   loginSuperAdmin = async (
     req: Request,
@@ -51,6 +51,15 @@ export class SuperAdminController {
   ): Promise<void> => {
     try {
       const result = await this.superAdminLoginUseCase.execute(req.body);
+
+      res.cookie("refreshToken", result.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: "/",
+      });
+
       res.status(200).json(result.response);
     } catch (error) {
       next(error);
