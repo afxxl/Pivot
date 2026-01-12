@@ -13,7 +13,6 @@ import { getRedirectPath } from "@/utils/redirect";
 import { useState, useEffect } from "react";
 import { Logo } from "@/components/shared/Logo";
 import { PasswordStrengthIndicator } from "@/components/auth/PasswordStrengthIndicator";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,7 +25,6 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
-
 import {
   Eye,
   EyeOff,
@@ -37,7 +35,6 @@ import {
   UserCheck,
   Loader2,
 } from "lucide-react";
-
 interface ApiErrorResponse {
   response?: {
     data?: {
@@ -47,7 +44,6 @@ interface ApiErrorResponse {
     };
   };
 }
-
 const AcceptInvite = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -56,9 +52,7 @@ const AcceptInvite = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordValue, setPasswordValue] = useState("");
   const [invitationData, setInvitationData] = useState<any>(null);
-
   const tokenFromUrl = searchParams.get("token") || "";
-
   const {
     register,
     handleSubmit,
@@ -74,20 +68,16 @@ const AcceptInvite = () => {
       agreeToTerms: false,
     },
   });
-
   const password = watch("password");
   const agreeToTerms = watch("agreeToTerms");
-
   useEffect(() => {
     setPasswordValue(password || "");
   }, [password]);
-
   useEffect(() => {
     if (tokenFromUrl) {
       setValue("token", tokenFromUrl);
     }
   }, [tokenFromUrl, setValue]);
-
   const verifyMutation = useMutation({
     mutationFn: (token: string) => inviteApi.validateInvite(token),
     onSuccess: (response) => {
@@ -98,26 +88,23 @@ const AcceptInvite = () => {
     },
     retry: false,
   });
-
   useEffect(() => {
     if (tokenFromUrl) {
       verifyMutation.mutate(tokenFromUrl);
     }
   }, [tokenFromUrl]);
-
   const acceptInviteMutation = useMutation({
     mutationFn: (data: acceptInviteInput) => inviteApi.acceptInvite(data),
     onSuccess: (response) => {
       storage.setSubdomain(response.data.subdomain);
       setAuth(response.data.user, response.data.token, response.data.subdomain);
-      navigate(getRedirectPath(response.data.redirectTo));
+      navigate(getRedirectPath(response.data.redirectTo), { replace: true });
     },
     onError: (error) => {
       console.error("Accept Invite error:", error);
     },
     retry: false,
   });
-
   const onSubmit = (
     data: acceptInviteInput,
     event?: React.BaseSyntheticEvent,
@@ -125,7 +112,6 @@ const AcceptInvite = () => {
     event?.preventDefault();
     acceptInviteMutation.mutate(data);
   };
-
   if (!tokenFromUrl) {
     return (
       <div className="min-h-screen overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
@@ -158,7 +144,6 @@ const AcceptInvite = () => {
       </div>
     );
   }
-
   if (verifyMutation.isPending) {
     return (
       <div className="min-h-screen overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
@@ -169,7 +154,6 @@ const AcceptInvite = () => {
       </div>
     );
   }
-
   if (verifyMutation.isError) {
     return (
       <div className="min-h-screen overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
@@ -203,7 +187,6 @@ const AcceptInvite = () => {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
@@ -219,7 +202,6 @@ const AcceptInvite = () => {
               Complete your account setup
             </CardDescription>
           </CardHeader>
-
           <CardContent>
             {invitationData && (
               <div className="mb-6 p-4 rounded-lg bg-gradient-to-br from-purple-50/50 to-blue-50/50 border border-purple-100/30">
@@ -245,7 +227,6 @@ const AcceptInvite = () => {
                 </div>
               </div>
             )}
-
             {acceptInviteMutation.isError && (
               <Alert variant="destructive" className="mb-4">
                 <AlertCircle className="h-4 w-4" />
@@ -256,10 +237,8 @@ const AcceptInvite = () => {
                 </AlertDescription>
               </Alert>
             )}
-
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <input type="hidden" {...register("token")} />
-
               <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-sm font-medium">
                   <Lock className="h-3.5 w-3.5 inline mr-1" />
@@ -287,9 +266,7 @@ const AcceptInvite = () => {
                     )}
                   </button>
                 </div>
-
                 <PasswordStrengthIndicator password={passwordValue} />
-
                 {errors.password && (
                   <p className="text-sm text-destructive flex items-center gap-1.5 mt-1.5">
                     <AlertCircle className="h-4 w-4" />
@@ -297,7 +274,6 @@ const AcceptInvite = () => {
                   </p>
                 )}
               </div>
-
               <div className="space-y-1.5">
                 <Label
                   htmlFor="confirmPassword"
@@ -335,7 +311,6 @@ const AcceptInvite = () => {
                   </p>
                 )}
               </div>
-
               <div className="flex items-start gap-3 p-3 rounded-lg border border-purple-100 bg-purple-50/30">
                 <Checkbox
                   id="agreeToTerms"
@@ -373,7 +348,6 @@ const AcceptInvite = () => {
                   )}
                 </div>
               </div>
-
               <Button
                 type="submit"
                 className="w-full mt-4 h-11 font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary"
@@ -408,7 +382,6 @@ const AcceptInvite = () => {
                 )}
               </Button>
             </form>
-
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-purple-100" />
@@ -419,7 +392,6 @@ const AcceptInvite = () => {
                 </span>
               </div>
             </div>
-
             <div className="text-center">
               <Link
                 to="/login"
@@ -430,7 +402,6 @@ const AcceptInvite = () => {
             </div>
           </CardContent>
         </Card>
-
         <p className="text-center text-xs text-muted-foreground mt-3 font-medium">
           © 2026 PIVOT. All rights reserved.
         </p>
@@ -438,5 +409,4 @@ const AcceptInvite = () => {
     </div>
   );
 };
-
 export default AcceptInvite;

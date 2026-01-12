@@ -1,6 +1,5 @@
 import axios from "axios";
 import { storage } from "@/utils/storage";
-
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
   headers: {
@@ -8,10 +7,8 @@ const apiClient = axios.create({
   },
   withCredentials: true,
 });
-
 let isRefreshing = false;
 let failedQueue: any[] = [];
-
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
@@ -20,10 +17,8 @@ const processQueue = (error: any, token: string | null = null) => {
       prom.resolve(token);
     }
   });
-
   failedQueue = [];
 };
-
 const PUBLIC_ROUTES = [
   "/auth/login",
   "/auth/signup",
@@ -33,11 +28,9 @@ const PUBLIC_ROUTES = [
   "/auth/accept-invitation",
   "/super-admin/login",
 ];
-
 const isPublicRoute = (url: string) => {
   return PUBLIC_ROUTES.some((route) => url.includes(route));
 };
-
 const getLoginPage = () => {
   const user = storage.getUser();
   if (user?.role === "super_admin") {
@@ -45,7 +38,6 @@ const getLoginPage = () => {
   }
   return "/login";
 };
-
 const isOnLoginPage = () => {
   const pathname = window.location.pathname;
   return (
@@ -54,35 +46,28 @@ const isOnLoginPage = () => {
     pathname === "/signup"
   );
 };
-
 apiClient.interceptors.request.use((config) => {
   const token = storage.getToken();
   const subdomain = storage.getSubdomain();
-
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
   if (import.meta.env.DEV && subdomain) {
     config.headers["X-Company-Subdomain"] = subdomain;
   }
   return config;
 });
-
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
     if (error.response?.status === 401) {
       if (isPublicRoute(originalRequest.url)) {
         return Promise.reject(error);
       }
-
       if (isOnLoginPage()) {
         return Promise.reject(error);
       }
-
       if (!originalRequest._retry) {
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
@@ -96,40 +81,31 @@ apiClient.interceptors.response.use(
               return Promise.reject(err);
             });
         }
-
         originalRequest._retry = true;
         isRefreshing = true;
-
         try {
           const response = await axios.post(
             `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/auth/refresh`,
             {},
             { withCredentials: true },
           );
-
           const { token } = response.data.data;
           storage.setToken(token);
-
           processQueue(null, token);
-
           originalRequest.headers.Authorization = `Bearer ${token}`;
           return apiClient(originalRequest);
         } catch (refreshError) {
           processQueue(refreshError, null);
           storage.clear();
-
           const loginPage = getLoginPage();
           window.location.href = loginPage;
-
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;
         }
       }
     }
-
     return Promise.reject(error);
   },
 );
-
 export default apiClient;

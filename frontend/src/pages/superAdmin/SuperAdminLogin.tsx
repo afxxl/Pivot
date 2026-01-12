@@ -11,7 +11,6 @@ import { useMutation } from "@tanstack/react-query";
 import { superAdminApi } from "@/api/superAdmin.api";
 import { getRedirectPath } from "@/utils/redirect";
 import { Logo } from "@/components/shared/Logo";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +23,6 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
-
 interface ApiErrorResponse {
   response?: {
     data?: {
@@ -34,12 +32,10 @@ interface ApiErrorResponse {
     };
   };
 }
-
 const SuperAdminLogin = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [showPassword, setShowPassword] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -48,7 +44,6 @@ const SuperAdminLogin = () => {
     resolver: zodResolver(superAdminLoginSchema),
     defaultValues: { email: "", password: "" },
   });
-
   const loginMutation = useMutation({
     mutationFn: (data: superAdminLoginInput) => superAdminApi.login(data),
     onSuccess: (response) => {
@@ -60,7 +55,6 @@ const SuperAdminLogin = () => {
     },
     retry: false,
   });
-
   const onSubmit = (
     data: superAdminLoginInput,
     event?: React.BaseSyntheticEvent,
@@ -68,7 +62,6 @@ const SuperAdminLogin = () => {
     event?.preventDefault();
     loginMutation.mutate(data);
   };
-
   return (
     <div className="min-h-screen overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -84,7 +77,6 @@ const SuperAdminLogin = () => {
               Platform Administration Access
             </CardDescription>
           </CardHeader>
-
           <CardContent>
             {loginMutation.isError && (
               <Alert variant="destructive" className="mb-4">
@@ -95,7 +87,6 @@ const SuperAdminLogin = () => {
                 </AlertDescription>
               </Alert>
             )}
-
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
               <div className="space-y-1.5">
                 <Label htmlFor="email" className="text-sm font-medium">
@@ -116,7 +107,6 @@ const SuperAdminLogin = () => {
                   </p>
                 )}
               </div>
-
               <div className="space-y-1.5">
                 <Label htmlFor="password" className="text-sm font-medium">
                   Password *
@@ -150,7 +140,6 @@ const SuperAdminLogin = () => {
                   </p>
                 )}
               </div>
-
               <Button
                 type="submit"
                 className="w-full mt-4 h-11 font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary"
@@ -185,7 +174,6 @@ const SuperAdminLogin = () => {
                 )}
               </Button>
             </form>
-
             <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t border-purple-100" />
@@ -196,7 +184,6 @@ const SuperAdminLogin = () => {
                 </span>
               </div>
             </div>
-
             <div className="text-center">
               <Link
                 to="/login"
@@ -207,7 +194,6 @@ const SuperAdminLogin = () => {
             </div>
           </CardContent>
         </Card>
-
         <p className="text-center text-xs text-muted-foreground mt-3 font-medium">
           © 2026 PIVOT. All rights reserved.
         </p>
@@ -215,5 +201,4 @@ const SuperAdminLogin = () => {
     </div>
   );
 };
-
 export default SuperAdminLogin;

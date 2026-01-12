@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 export const InviteSchema = z.object({
   email: z.string().trim().email("Invalid email address").toLowerCase(),
   firstName: z
@@ -13,9 +12,7 @@ export const InviteSchema = z.object({
     .min(2, "Last Name must be at least 2 characters")
     .max(100, "Last Name must not exceed 100 characters"),
 });
-
 export type InviteInput = z.infer<typeof InviteSchema>;
-
 export const acceptInviteSchema = z
   .object({
     token: z
@@ -40,5 +37,4 @@ export const acceptInviteSchema = z
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
-
 export type acceptInviteInput = z.infer<typeof acceptInviteSchema>;

@@ -4,7 +4,6 @@ interface LogoProps {
   className?: string;
   variant?: "default" | "light";
 }
-
 export const Logo = ({
   size = "md",
   showText = true,
@@ -16,9 +15,7 @@ export const Logo = ({
     md: { width: 32, height: 32, text: "text-xl" },
     lg: { width: 40, height: 40, text: "text-2xl" },
   };
-
   const currentSize = sizeMap[size];
-
   const colors = {
     default: {
       gradientId: "pivotGradientBlue",
@@ -34,7 +31,6 @@ export const Logo = ({
     },
   };
   const colorScheme = colors[variant];
-
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <svg

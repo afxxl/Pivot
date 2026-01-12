@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { UserPlus, Users as UsersIcon } from "lucide-react";
-
 const TeamMembers = () => {
   const navigate = useNavigate();
-
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
@@ -22,7 +20,6 @@ const TeamMembers = () => {
           Invite Member
         </Button>
       </div>
-
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-purple-100 mb-6">
@@ -48,5 +45,4 @@ const TeamMembers = () => {
     </div>
   );
 };
-
 export default TeamMembers;

@@ -1,14 +1,11 @@
 import { Check, X } from "lucide-react";
-
 interface PasswordRequirement {
   label: string;
   met: boolean;
 }
-
 interface PasswordStrengthIndicatorProps {
   password: string;
 }
-
 export const PasswordStrengthIndicator = ({
   password,
 }: PasswordStrengthIndicatorProps) => {
@@ -34,27 +31,22 @@ export const PasswordStrengthIndicator = ({
       met: /[@$!%*?&]/.test(password),
     },
   ];
-
   const passwordStrength = passwordRequirements.filter((req) => req.met).length;
-
   const getPasswordStrengthColor = () => {
     if (passwordStrength <= 2) return "bg-red-500";
     if (passwordStrength <= 3) return "bg-orange-500";
     if (passwordStrength <= 4) return "bg-yellow-500";
     return "bg-green-500";
   };
-
   const getPasswordStrengthText = () => {
     if (passwordStrength <= 2) return "Weak";
     if (passwordStrength <= 3) return "Fair";
     if (passwordStrength <= 4) return "Good";
     return "Strong";
   };
-
   if (password.length === 0) {
     return null;
   }
-
   return (
     <div className="mt-2 space-y-2">
       <div className="flex items-center justify-between">

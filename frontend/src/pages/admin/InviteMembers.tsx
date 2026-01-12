@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +24,6 @@ import {
   User,
   Send,
 } from "lucide-react";
-
 interface ApiErrorResponse {
   response?: {
     data?: {
@@ -35,12 +33,10 @@ interface ApiErrorResponse {
     };
   };
 }
-
 const InviteMembers = () => {
   const navigate = useNavigate();
   const [isSuccess, setIsSuccess] = useState(false);
   const [invitedEmail, setInvitedEmail] = useState("");
-
   const {
     register,
     handleSubmit,
@@ -54,7 +50,6 @@ const InviteMembers = () => {
       lastName: "",
     },
   });
-
   const inviteMutation = useMutation({
     mutationFn: (data: InviteInput) => inviteApi.inviteMember(data),
     onSuccess: (response, variables) => {
@@ -68,16 +63,13 @@ const InviteMembers = () => {
     },
     retry: false,
   });
-
   const onSubmit = (data: InviteInput) => {
     inviteMutation.mutate(data);
   };
-
   const handleInviteAnother = () => {
     setIsSuccess(false);
     inviteMutation.reset();
   };
-
   return (
     <div className="p-8 max-w-2xl mx-auto">
       {/* Header */}
@@ -95,7 +87,6 @@ const InviteMembers = () => {
           Send an invitation to join your team
         </p>
       </div>
-
       {/* Form Card */}
       <Card className="border-purple-100 shadow-lg">
         <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 border-b border-purple-100">
@@ -108,7 +99,6 @@ const InviteMembers = () => {
               : "Enter the details of the person you want to invite"}
           </CardDescription>
         </CardHeader>
-
         <CardContent className="pt-6">
           {isSuccess ? (
             <div className="space-y-6">
@@ -119,7 +109,6 @@ const InviteMembers = () => {
                   <span className="font-semibold">{invitedEmail}</span>
                 </AlertDescription>
               </Alert>
-
               <div className="p-6 rounded-lg bg-gradient-to-br from-purple-50/50 to-blue-50/50 border border-purple-100/30">
                 <div className="flex items-start gap-3">
                   <Mail className="h-5 w-5 text-[#562182] mt-0.5" />
@@ -139,7 +128,6 @@ const InviteMembers = () => {
                   </div>
                 </div>
               </div>
-
               <div className="flex gap-3">
                 <Button
                   onClick={handleInviteAnother}
@@ -169,7 +157,6 @@ const InviteMembers = () => {
                   </AlertDescription>
                 </Alert>
               )}
-
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Email Field */}
                 <div className="space-y-2">
@@ -192,7 +179,6 @@ const InviteMembers = () => {
                     </p>
                   )}
                 </div>
-
                 {/* Name Fields */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -215,7 +201,6 @@ const InviteMembers = () => {
                       </p>
                     )}
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="lastName" className="text-sm font-medium">
                       <User className="h-3.5 w-3.5 inline mr-1" />
@@ -237,7 +222,6 @@ const InviteMembers = () => {
                     )}
                   </div>
                 </div>
-
                 {/* Info Box */}
                 <div className="p-4 rounded-lg bg-blue-50 border border-blue-100">
                   <p className="text-sm text-blue-800">
@@ -246,7 +230,6 @@ const InviteMembers = () => {
                     a password to complete their account setup.
                   </p>
                 </div>
-
                 {/* Submit Button */}
                 <Button
                   type="submit"
@@ -292,5 +275,4 @@ const InviteMembers = () => {
     </div>
   );
 };
-
 export default InviteMembers;

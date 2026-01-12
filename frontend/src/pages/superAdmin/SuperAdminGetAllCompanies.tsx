@@ -30,20 +30,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
 const SuperAdminGetAllCompanies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchInput, setSearchInput] = useState(
     searchParams.get("search") || "",
   );
   const [showFilters, setShowFilters] = useState(false);
-
   const page = Number(searchParams.get("page")) || 1;
   const limit = Number(searchParams.get("limit")) || 20;
   const search = searchParams.get("search") || "";
   const status = searchParams.get("status") || "";
   const plan = searchParams.get("plan") || "";
-
   const { data, isLoading, isError } = useQuery({
     queryKey: ["companies", page, limit, search, status, plan],
     queryFn: () =>
@@ -57,19 +54,16 @@ const SuperAdminGetAllCompanies = () => {
         sortOrder: "desc",
       }),
   });
-
   const handlePageChange = (newPage: number) => {
     searchParams.set("page", newPage.toString());
     setSearchParams(searchParams);
   };
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     searchParams.set("search", searchInput);
     searchParams.set("page", "1");
     setSearchParams(searchParams);
   };
-
   const handleFilterChange = (filterType: string, value: string) => {
     if (value) {
       searchParams.set(filterType, value);
@@ -79,7 +73,6 @@ const SuperAdminGetAllCompanies = () => {
     searchParams.set("page", "1");
     setSearchParams(searchParams);
   };
-
   const clearFilters = () => {
     searchParams.delete("status");
     searchParams.delete("plan");
@@ -87,9 +80,7 @@ const SuperAdminGetAllCompanies = () => {
     setSearchInput("");
     setSearchParams(searchParams);
   };
-
   const activeFiltersCount = [status, plan].filter(Boolean).length;
-
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "destructive"> = {
       active: "default",
@@ -102,7 +93,6 @@ const SuperAdminGetAllCompanies = () => {
       </Badge>
     );
   };
-
   const getPlanBadge = (plan: string) => {
     const colors: Record<string, string> = {
       free: "bg-slate-100 text-slate-800",
@@ -119,7 +109,6 @@ const SuperAdminGetAllCompanies = () => {
       </span>
     );
   };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -130,7 +119,6 @@ const SuperAdminGetAllCompanies = () => {
       </div>
     );
   }
-
   if (isError) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -145,9 +133,7 @@ const SuperAdminGetAllCompanies = () => {
       </div>
     );
   }
-
   const { companies, pagination, stats } = data!.data;
-
   return (
     <div className="p-8 space-y-6 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
       {/* Header */}
@@ -157,7 +143,6 @@ const SuperAdminGetAllCompanies = () => {
           Manage all companies on the platform
         </p>
       </div>
-
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-slate-200 bg-white hover:shadow-lg transition-shadow">
@@ -179,7 +164,6 @@ const SuperAdminGetAllCompanies = () => {
             </p>
           </CardContent>
         </Card>
-
         <Card className="border-slate-200 bg-white hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-700">
@@ -194,7 +178,6 @@ const SuperAdminGetAllCompanies = () => {
             <p className="text-xs text-slate-600 mt-1">Across all companies</p>
           </CardContent>
         </Card>
-
         <Card className="border-slate-200 bg-white hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-700">
@@ -214,7 +197,6 @@ const SuperAdminGetAllCompanies = () => {
             </p>
           </CardContent>
         </Card>
-
         <Card className="border-slate-200 bg-white hover:shadow-lg transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-700">
@@ -230,7 +212,6 @@ const SuperAdminGetAllCompanies = () => {
           </CardContent>
         </Card>
       </div>
-
       {/* Search and Filters */}
       <Card className="border-slate-200 bg-white">
         <CardContent className="pt-6">
@@ -273,7 +254,6 @@ const SuperAdminGetAllCompanies = () => {
                 </Button>
               )}
             </div>
-
             {/* Filter Options */}
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-200">
@@ -294,7 +274,6 @@ const SuperAdminGetAllCompanies = () => {
                     <option value="suspended">Suspended</option>
                   </select>
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Subscription Plan
@@ -317,7 +296,6 @@ const SuperAdminGetAllCompanies = () => {
           </form>
         </CardContent>
       </Card>
-
       {/* Companies Table */}
       <Card className="border-slate-200 bg-white">
         <CardHeader>
@@ -387,7 +365,6 @@ const SuperAdminGetAllCompanies = () => {
               ))}
             </TableBody>
           </Table>
-
           {/* Pagination */}
           <div className="flex items-center justify-between mt-6">
             <p className="text-sm text-slate-600">
@@ -421,5 +398,4 @@ const SuperAdminGetAllCompanies = () => {
     </div>
   );
 };
-
 export default SuperAdminGetAllCompanies;

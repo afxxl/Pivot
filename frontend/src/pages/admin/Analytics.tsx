@@ -1,5 +1,4 @@
 import { Construction } from "lucide-react";
-
 const Analytics = () => {
   return (
     <div className="p-8">
@@ -9,7 +8,6 @@ const Analytics = () => {
           View insights and analytics for your team
         </p>
       </div>
-
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-purple-100 mb-6">
@@ -24,5 +22,4 @@ const Analytics = () => {
     </div>
   );
 };
-
 export default Analytics;

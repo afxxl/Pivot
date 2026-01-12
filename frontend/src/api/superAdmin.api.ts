@@ -1,13 +1,11 @@
 import { superAdminLoginInput } from "@/validations/superAdminSchemas";
 import apiClient from "./axios.config";
-
 export interface SuperAdminPermissions {
   managePlatform: boolean;
   manageCompanies: boolean;
   manageSubscriptions: boolean;
   viewAllData: boolean;
 }
-
 export interface SuperAdminUser {
   id: string;
   email: string;
@@ -17,9 +15,7 @@ export interface SuperAdminUser {
   status: "active";
   permissions: SuperAdminPermissions;
 }
-
 export type SuperAdminLoginRequest = superAdminLoginInput;
-
 export interface SuperAdminLoginResponse {
   success: boolean;
   message: string;
@@ -30,7 +26,6 @@ export interface SuperAdminLoginResponse {
     redirectTo: string;
   };
 }
-
 export interface CompanySummary {
   id: string;
   name: string;
@@ -44,7 +39,6 @@ export interface CompanySummary {
   lastActiveAt: string;
   createdAt: string;
 }
-
 export interface GetAllCompaniesParams {
   page: number;
   limit: number;
@@ -54,7 +48,6 @@ export interface GetAllCompaniesParams {
   sortBy: string;
   sortOrder: "asc" | "desc";
 }
-
 export interface GetAllCompaniesResponse {
   success: boolean;
   data: {
@@ -78,7 +71,6 @@ export interface GetAllCompaniesResponse {
     };
   };
 }
-
 export interface CompanyDetails {
   id: string;
   name: string;
@@ -119,14 +111,12 @@ export interface CompanyDetails {
   createdAt: string;
   lastActiveAt: string;
 }
-
 export interface GetCompanyResponse {
   success: boolean;
   data: {
     company: CompanyDetails;
   };
 }
-
 export const superAdminApi = {
   login: async (
     data: SuperAdminLoginRequest,
@@ -134,7 +124,6 @@ export const superAdminApi = {
     const response = await apiClient.post("super-admin/login", data);
     return response.data;
   },
-
   getAllCompanies: async (
     params: GetAllCompaniesParams,
   ): Promise<GetAllCompaniesResponse> => {
@@ -144,17 +133,14 @@ export const superAdminApi = {
       sortBy: params.sortBy,
       sortOrder: params.sortOrder,
     };
-
     if (params.search) cleanParams.search = params.search;
     if (params.status) cleanParams.status = params.status;
     if (params.plan) cleanParams.plan = params.plan;
-
     const response = await apiClient.get("super-admin/companies", {
       params: cleanParams,
     });
     return response.data;
   },
-
   getCompany: async (companyId: string): Promise<GetCompanyResponse> => {
     const response = await apiClient.get(`super-admin/companies/${companyId}`);
     return response.data;

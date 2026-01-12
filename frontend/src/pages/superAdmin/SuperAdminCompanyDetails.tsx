@@ -25,17 +25,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
 const SuperAdminCompanyDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-
   const { data, isLoading, isError } = useQuery({
     queryKey: ["company", id],
     queryFn: () => superAdminApi.getCompany(id!),
     enabled: !!id,
   });
-
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "destructive"> = {
       active: "default",
@@ -49,7 +46,6 @@ const SuperAdminCompanyDetails = () => {
       </Badge>
     );
   };
-
   const getPlanBadge = (plan: string) => {
     const colors: Record<string, string> = {
       free: "bg-slate-100 text-slate-800",
@@ -66,7 +62,6 @@ const SuperAdminCompanyDetails = () => {
       </span>
     );
   };
-
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString("en-IN", {
@@ -75,7 +70,6 @@ const SuperAdminCompanyDetails = () => {
       day: "numeric",
     });
   };
-
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -83,14 +77,12 @@ const SuperAdminCompanyDetails = () => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   };
-
   const safeString = (value: any): string | null => {
     if (!value) return null;
     if (typeof value === "string") return value;
     if (typeof value === "object") return null;
     return String(value);
   };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -103,7 +95,6 @@ const SuperAdminCompanyDetails = () => {
       </div>
     );
   }
-
   if (isError || !data) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -122,10 +113,8 @@ const SuperAdminCompanyDetails = () => {
       </div>
     );
   }
-
   const company = data.data.company;
   const storagePercentage = (company.storageUsed / company.storageLimit) * 100;
-
   return (
     <div className="p-8 space-y-6 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
       {/* Header */}
@@ -149,7 +138,6 @@ const SuperAdminCompanyDetails = () => {
           {getPlanBadge(company.subscriptionPlan)}
         </div>
       </div>
-
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="border-slate-200 bg-white">
@@ -171,7 +159,6 @@ const SuperAdminCompanyDetails = () => {
             </p>
           </CardContent>
         </Card>
-
         <Card className="border-slate-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-700">
@@ -191,7 +178,6 @@ const SuperAdminCompanyDetails = () => {
             </p>
           </CardContent>
         </Card>
-
         <Card className="border-slate-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-700">
@@ -206,7 +192,6 @@ const SuperAdminCompanyDetails = () => {
             <p className="text-xs text-slate-600 mt-1">Per month</p>
           </CardContent>
         </Card>
-
         <Card className="border-slate-200 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-slate-700">
@@ -225,7 +210,6 @@ const SuperAdminCompanyDetails = () => {
           </CardContent>
         </Card>
       </div>
-
       {/* Company Information & Admin Details */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Company Information */}
@@ -244,7 +228,6 @@ const SuperAdminCompanyDetails = () => {
                 <p className="text-sm text-slate-900">{company.email}</p>
               </div>
             </div>
-
             <div className="flex items-start gap-3">
               <Globe className="h-5 w-5 text-slate-400 mt-0.5" />
               <div>
@@ -254,7 +237,6 @@ const SuperAdminCompanyDetails = () => {
                 </p>
               </div>
             </div>
-
             {safeString(company.phone) && (
               <div className="flex items-start gap-3">
                 <Phone className="h-5 w-5 text-slate-400 mt-0.5" />
@@ -266,7 +248,6 @@ const SuperAdminCompanyDetails = () => {
                 </div>
               </div>
             )}
-
             {safeString(company.website) && (
               <div className="flex items-start gap-3">
                 <Globe className="h-5 w-5 text-slate-400 mt-0.5" />
@@ -283,7 +264,6 @@ const SuperAdminCompanyDetails = () => {
                 </div>
               </div>
             )}
-
             {safeString(company.address) && (
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-slate-400 mt-0.5" />
@@ -295,7 +275,6 @@ const SuperAdminCompanyDetails = () => {
                 </div>
               </div>
             )}
-
             <div className="flex items-start gap-3">
               <Calendar className="h-5 w-5 text-slate-400 mt-0.5" />
               <div>
@@ -305,7 +284,6 @@ const SuperAdminCompanyDetails = () => {
                 </p>
               </div>
             </div>
-
             <div className="flex items-start gap-3">
               <Activity className="h-5 w-5 text-slate-400 mt-0.5" />
               <div>
@@ -319,7 +297,6 @@ const SuperAdminCompanyDetails = () => {
             </div>
           </CardContent>
         </Card>
-
         {/* Admin Details */}
         <Card className="border-slate-200 bg-white">
           <CardHeader>
@@ -358,7 +335,6 @@ const SuperAdminCompanyDetails = () => {
           </CardContent>
         </Card>
       </div>
-
       {/* Subscription & Billing */}
       <Card className="border-slate-200 bg-white">
         <CardHeader>
@@ -380,7 +356,6 @@ const SuperAdminCompanyDetails = () => {
                 {company.subscriptionStatus || "N/A"}
               </p>
             </div>
-
             <div>
               <p className="text-sm font-medium text-slate-700 mb-2">
                 Billing Cycle
@@ -389,7 +364,6 @@ const SuperAdminCompanyDetails = () => {
                 {company.billingCycle || "N/A"}
               </p>
             </div>
-
             <div>
               <p className="text-sm font-medium text-slate-700 mb-2">
                 Monthly Revenue
@@ -398,7 +372,6 @@ const SuperAdminCompanyDetails = () => {
                 ₹{company.billing.monthlyRevenue.toLocaleString("en-IN")}
               </p>
             </div>
-
             <div>
               <p className="text-sm font-medium text-slate-700 mb-2">
                 Subscription Start
@@ -407,7 +380,6 @@ const SuperAdminCompanyDetails = () => {
                 {formatDate(company.subscriptionStartDate)}
               </p>
             </div>
-
             <div>
               <p className="text-sm font-medium text-slate-700 mb-2">
                 Subscription End
@@ -416,7 +388,6 @@ const SuperAdminCompanyDetails = () => {
                 {formatDate(company.subscriptionEndDate)}
               </p>
             </div>
-
             <div>
               <p className="text-sm font-medium text-slate-700 mb-2">
                 Next Billing Date
@@ -431,5 +402,4 @@ const SuperAdminCompanyDetails = () => {
     </div>
   );
 };
-
 export default SuperAdminCompanyDetails;

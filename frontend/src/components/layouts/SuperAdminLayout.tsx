@@ -9,13 +9,11 @@ import {
   BarChart3,
   LogOut,
 } from "lucide-react";
-
 interface SidebarItemProps {
   to: string;
   icon: ReactNode;
   label: string;
 }
-
 const SidebarItem = ({ to, icon, label }: SidebarItemProps) => {
   return (
     <NavLink
@@ -33,16 +31,13 @@ const SidebarItem = ({ to, icon, label }: SidebarItemProps) => {
     </NavLink>
   );
 };
-
 export const SuperAdminLayout = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-
   const handleLogout = () => {
     logout();
     navigate("/super-admin/login");
   };
-
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -57,7 +52,6 @@ export const SuperAdminLayout = () => {
             </div>
           </div>
         </div>
-
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           <SidebarItem
@@ -81,7 +75,6 @@ export const SuperAdminLayout = () => {
             label="Analytics"
           />
         </nav>
-
         {/* User Section */}
         <div className="p-4 border-t border-white/10">
           <div className="flex items-center gap-3 mb-3">
@@ -105,7 +98,6 @@ export const SuperAdminLayout = () => {
           </button>
         </div>
       </aside>
-
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <Outlet />
@@ -113,5 +105,4 @@ export const SuperAdminLayout = () => {
     </div>
   );
 };
-
 export default SuperAdminLayout;

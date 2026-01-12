@@ -1,5 +1,4 @@
 import { Construction } from "lucide-react";
-
 const Projects = () => {
   return (
     <div className="p-8">
@@ -7,7 +6,6 @@ const Projects = () => {
         <h1 className="text-3xl font-bold text-gray-900">Projects</h1>
         <p className="text-gray-600 mt-1">Manage and track your projects</p>
       </div>
-
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-purple-100 mb-6">
@@ -22,5 +20,4 @@ const Projects = () => {
     </div>
   );
 };
-
 export default Projects;

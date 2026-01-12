@@ -10,22 +10,19 @@ import {
   BarChart3,
   LogOut,
 } from "lucide-react";
-
 interface SidebarItemProps {
   to: string;
   icon: ReactNode;
   label: string;
 }
-
 const SidebarItem = ({ to, icon, label }: SidebarItemProps) => {
   return (
     <NavLink
       to={to}
       className={({ isActive }) =>
-        `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-          isActive
-            ? "bg-white/10 text-white font-medium"
-            : "text-purple-100 hover:bg-white/5 hover:text-white"
+        `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive
+          ? "bg-white/10 text-white font-medium"
+          : "text-purple-100 hover:bg-white/5 hover:text-white"
         }`
       }
     >
@@ -34,16 +31,13 @@ const SidebarItem = ({ to, icon, label }: SidebarItemProps) => {
     </NavLink>
   );
 };
-
 export const AdminLayout = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
-
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
-
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
@@ -55,12 +49,11 @@ export const AdminLayout = () => {
             <div>
               <h1 className="text-xl font-bold">PIVOT</h1>
               <p className="text-xs text-purple-200">
-                {user?.company?.name || "Company"}
+                {(user as any)?.company?.name || "Company"}
               </p>
             </div>
           </div>
         </div>
-
         {/* Navigation */}
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           <SidebarItem
@@ -89,7 +82,6 @@ export const AdminLayout = () => {
             label="Analytics"
           />
         </nav>
-
         {/* User Section */}
         <div className="p-4 border-t border-white/10">
           <div className="flex items-center gap-3 mb-3">
@@ -113,7 +105,6 @@ export const AdminLayout = () => {
           </button>
         </div>
       </aside>
-
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <Outlet />

@@ -1,12 +1,9 @@
 import { z } from "zod";
-
 export const superAdminLoginSchema = z.object({
   email: z.string().trim().email("Invalid email address").toLowerCase(),
   password: z.string().min(1, "Password is required"),
 });
-
 export type superAdminLoginInput = z.infer<typeof superAdminLoginSchema>;
-
 export const getAllCompaniesSchema = z.object({
   page: z.coerce.number().min(1).optional().default(1),
   limit: z.coerce.number().min(1).max(100).optional().default(20),

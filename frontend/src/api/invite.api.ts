@@ -1,7 +1,6 @@
 import { acceptInviteInput, InviteInput } from "@/validations/inviteSchemas";
 import apiClient from "./axios.config";
 import { User } from "./auth.api";
-
 export type InviteRequest = InviteInput;
 export interface InviteResponse {
   success: boolean;
@@ -28,7 +27,6 @@ export interface InviteResponse {
     };
   };
 }
-
 export type AcceptInviteRequest = acceptInviteInput;
 export interface AcceptInviteResponse {
   success: boolean;
@@ -41,7 +39,6 @@ export interface AcceptInviteResponse {
     redirectTo: string;
   };
 }
-
 export interface VerifyInviteResponse {
   success: boolean;
   data: {
@@ -62,7 +59,6 @@ export interface VerifyInviteResponse {
     expiresAt: string;
   };
 }
-
 export const inviteApi = {
   inviteMember: async (data: InviteRequest): Promise<InviteResponse> => {
     const response = await apiClient.post("admin/members/invite", data);

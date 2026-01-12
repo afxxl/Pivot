@@ -9,7 +9,6 @@ import { authApi } from "../../api/auth.api";
 import { storage } from "../../utils/storage";
 import { getRedirectPath } from "@/utils/redirect";
 import { Logo } from "@/components/shared/Logo";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,9 +21,8 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import { Navbar } from "@/components/shared/Navbar";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
-
 interface ApiErrorResponse {
   response?: {
     data?: {
@@ -34,14 +32,12 @@ interface ApiErrorResponse {
     };
   };
 }
-
 const Login = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
   const [subdomain, setSubdomain] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const isDev = import.meta.env.DEV;
-
   const {
     register,
     handleSubmit,
@@ -51,7 +47,6 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "", rememberMe: false },
   });
-
   const loginMutation = useMutation({
     mutationFn: ({
       data,
@@ -63,14 +58,13 @@ const Login = () => {
     onSuccess: (response, variables) => {
       storage.setSubdomain(variables.subdomain);
       setAuth(response.data.user, response.data.token, variables.subdomain);
-      navigate(getRedirectPath(response.data.redirectTo));
+      navigate(getRedirectPath(response.data.redirectTo), { replace: true });
     },
     onError: (error) => {
       console.error("Login error:", error);
     },
     retry: false,
   });
-
   const onSubmit = (data: LoginInput, event?: React.BaseSyntheticEvent) => {
     event?.preventDefault();
     if (isDev && !subdomain) {
@@ -80,212 +74,204 @@ const Login = () => {
     if (isDev) storage.setSubdomain(subdomain);
     loginMutation.mutate({ data, subdomain: isDev ? subdomain.trim() : "" });
   };
-
   return (
-    <div className="min-h-screen overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <Card className="border border-purple-100/50 shadow-2xl shadow-purple-100/50 backdrop-blur-sm">
-          <CardHeader className="space-y-2 pb-3 pt-4">
-            <div className="flex justify-center">
-              <Logo size="lg" showText={true} />
-            </div>
-            <CardTitle className="text-2xl sm:text-3xl text-center font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-              Welcome Back
-            </CardTitle>
-            <CardDescription className="text-center text-base text-muted-foreground">
-              Sign in to access your workspace
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            {loginMutation.isError && (
-              <Alert variant="destructive" className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  {(loginMutation.error as ApiErrorResponse)?.response?.data
-                    ?.error?.message || "Invalid email or password"}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-              {isDev && (
-                <div className="space-y-1.5">
-                  <Label htmlFor="subdomain" className="text-sm font-medium">
-                    Company Subdomain{" "}
-                    <span className="text-destructive">*</span>
-                    <span className="ml-2 text-xs px-2.5 py-1 bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 rounded-full font-medium shadow-sm">
-                      DEV MODE
-                    </span>
-                  </Label>
-                  <Input
-                    id="subdomain"
-                    type="text"
-                    value={subdomain}
-                    onChange={(e) => setSubdomain(e.target.value)}
-                    placeholder="techcorp"
-                    className="transition-all duration-200 focus:ring-2 focus:ring-purple-200"
-                    required
-                  />
-                  <p className="text-xs text-muted-foreground mt-1.5">
-                    Enter your company subdomain for local testing
-                  </p>
-                </div>
+    <>
+      <Navbar variant="auth" authType="login" />
+      <div className="min-h-screen overflow-hidden bg-gradient-to-br from-purple-50 via-white to-blue-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <Card className="border border-purple-100/50 shadow-2xl shadow-purple-100/50 backdrop-blur-sm">
+            <CardHeader className="space-y-2 pb-3 pt-4">
+              <div className="flex justify-center">
+                <Logo size="lg" showText={true} />
+              </div>
+              <CardTitle className="text-2xl sm:text-3xl text-center font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Welcome Back
+              </CardTitle>
+              <CardDescription className="text-center text-base text-muted-foreground">
+                Sign in to access your workspace
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loginMutation.isError && (
+                <Alert variant="destructive" className="mb-4">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    {(loginMutation.error as ApiErrorResponse)?.response?.data
+                      ?.error?.message || "Invalid email or password"}
+                  </AlertDescription>
+                </Alert>
               )}
-
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Email Address *
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@company.com"
-                  className="transition-all duration-200 focus:ring-2 focus:ring-purple-200"
-                  onFocus={() => loginMutation.reset()}
-                  {...register("email")}
-                />
-                {errors.email && (
-                  <p className="text-sm text-destructive flex items-center gap-1.5 mt-1.5">
-                    <AlertCircle className="h-4 w-4" />
-                    {errors.email.message}
-                  </p>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+                {isDev && (
+                  <div className="space-y-1.5">
+                    <Label htmlFor="subdomain" className="text-sm font-medium">
+                      Company Subdomain{" "}
+                      <span className="text-destructive">*</span>
+                      <span className="ml-2 text-xs px-2.5 py-1 bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 rounded-full font-medium shadow-sm">
+                        DEV MODE
+                      </span>
+                    </Label>
+                    <Input
+                      id="subdomain"
+                      type="text"
+                      value={subdomain}
+                      onChange={(e) => setSubdomain(e.target.value)}
+                      placeholder="techcorp"
+                      className="transition-all duration-200 focus:ring-2 focus:ring-purple-200"
+                      required
+                    />
+                    <p className="text-xs text-muted-foreground mt-1.5">
+                      Enter your company subdomain for local testing
+                    </p>
+                  </div>
                 )}
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-sm font-medium">
-                  Password *
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-purple-200"
-                    onFocus={() => loginMutation.reset()}
-                    {...register("password")}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="text-sm text-destructive flex items-center gap-1.5 mt-1.5">
-                    <AlertCircle className="h-4 w-4" />
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="remember"
-                    onCheckedChange={(checked) =>
-                      setValue("rememberMe", checked as boolean)
-                    }
-                  />
-                  <Label
-                    htmlFor="remember"
-                    className="text-sm font-normal cursor-pointer select-none"
-                  >
-                    Remember me
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="text-sm font-medium">
+                    Email Address *
                   </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@company.com"
+                    className="transition-all duration-200 focus:ring-2 focus:ring-purple-200"
+                    onFocus={() => loginMutation.reset()}
+                    {...register("email")}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-destructive flex items-center gap-1.5 mt-1.5">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
-                <Link
-                  to="/forgot-password"
-                  className="text-sm font-medium text-primary hover:text-purple-600 transition-colors duration-200"
+                <div className="space-y-1.5">
+                  <Label htmlFor="password" className="text-sm font-medium">
+                    Password *
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-purple-200"
+                      onFocus={() => loginMutation.reset()}
+                      {...register("password")}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive flex items-center gap-1.5 mt-1.5">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+                <div className="flex items-center justify-between pt-1">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="remember"
+                      onCheckedChange={(checked) =>
+                        setValue("rememberMe", checked as boolean)
+                      }
+                    />
+                    <Label
+                      htmlFor="remember"
+                      className="text-sm font-normal cursor-pointer select-none"
+                    >
+                      Remember me
+                    </Label>
+                  </div>
+                  <Link
+                    to="/forgot-password"
+                    className="text-sm font-medium text-primary hover:text-purple-600 transition-colors duration-200"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full mt-4 h-10 font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary"
+                  disabled={loginMutation.isPending}
                 >
-                  Forgot password?
+                  {loginMutation.isPending ? (
+                    <span className="flex items-center gap-2">
+                      <svg
+                        className="animate-spin h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Signing in...
+                    </span>
+                  ) : (
+                    "Sign in"
+                  )}
+                </Button>
+              </form>
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-purple-100" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-card px-3 py-1 text-muted-foreground font-medium">
+                    New to PIVOT?
+                  </span>
+                </div>
+              </div>
+              <div className="text-center">
+                <Link
+                  to="/signup"
+                  className="group text-sm font-medium text-primary hover:text-purple-600 inline-flex items-center gap-1.5 transition-all duration-200"
+                >
+                  Create a free account
+                  <svg
+                    className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
                 </Link>
               </div>
-
-              <Button
-                type="submit"
-                className="w-full mt-4 h-10 font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary"
-                disabled={loginMutation.isPending}
-              >
-                {loginMutation.isPending ? (
-                  <span className="flex items-center gap-2">
-                    <svg
-                      className="animate-spin h-4 w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Signing in...
-                  </span>
-                ) : (
-                  "Sign in"
-                )}
-              </Button>
-            </form>
-
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-purple-100" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-3 py-1 text-muted-foreground font-medium">
-                  New to PIVOT?
-                </span>
-              </div>
-            </div>
-
-            <div className="text-center">
-              <Link
-                to="/signup"
-                className="group text-sm font-medium text-primary hover:text-purple-600 inline-flex items-center gap-1.5 transition-all duration-200"
-              >
-                Create a free account
-                <svg
-                  className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        <p className="text-center text-xs text-muted-foreground mt-3 font-medium">
-          © 2026 PIVOT. All rights reserved.
-        </p>
+            </CardContent>
+          </Card>
+          <p className="text-center text-xs text-muted-foreground mt-3 font-medium">
+            © 2026 PIVOT. All rights reserved.
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
-
 export default Login;

@@ -1,5 +1,3 @@
-// src/config/theme.ts
-
 export const theme = {
   colors: {
     primary: {
@@ -44,5 +42,4 @@ export const theme = {
     xl: "0 20px 25px -5px rgba(56, 35, 68, 0.1), 0 10px 10px -5px rgba(56, 35, 68, 0.04)",
   },
 } as const;
-
 export type Theme = typeof theme;

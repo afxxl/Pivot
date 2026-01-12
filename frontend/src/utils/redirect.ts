@@ -7,6 +7,5 @@ export function getRedirectPath(redirectTo: string): string {
       return redirectTo;
     }
   }
-
   return redirectTo;
 }
