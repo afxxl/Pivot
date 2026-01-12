@@ -12,7 +12,7 @@ import {
   ResetPasswordUseCase,
 } from "../../core/use-cases/auth";
 import { AuthController } from "../http/controllers/auth/AuthController";
-import { WinstonService } from "../services/WinstonService";
+import { PinoService } from "../services/PinoService";
 import { ILogger } from "../../core/services/ILogger";
 import { MongooseUnitOfWork } from "../uow/MongooseUnitOfWork";
 import { InviteController } from "../http/controllers/invite/InviteController";
@@ -94,7 +94,7 @@ container
   .bind(Types.PasswordService)
   .to(BcryptPasswordService)
   .inSingletonScope();
-container.bind<ILogger>(Types.Logger).to(WinstonService).inSingletonScope();
+container.bind<ILogger>(Types.Logger).to(PinoService).inSingletonScope();
 container.bind(Types.EmailService).to(NodemailerService).inSingletonScope();
 
 //Uow
