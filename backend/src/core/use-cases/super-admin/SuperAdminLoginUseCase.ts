@@ -18,7 +18,7 @@ export class SuperAdminLoginUseCase {
     private passwordService: IPasswordService,
     @inject(Types.TokenService)
     private tokenService: ITokenService,
-  ) { }
+  ) {}
 
   async execute(
     req: SuperAdminLoginRequestDTO,

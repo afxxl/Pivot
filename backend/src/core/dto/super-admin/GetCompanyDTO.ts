@@ -21,8 +21,6 @@ export interface GetCompanyResponseDTO {
       activeUsers: number;
       totalProjects: number;
       activeProjects: number;
-      storageUsed: number;
-      storageLimit: number;
       admin: {
         id: string;
         name: string;

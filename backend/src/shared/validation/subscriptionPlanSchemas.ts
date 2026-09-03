@@ -48,10 +48,6 @@ export const createSubscriptionPlanSchema = z.object({
       .refine((val) => val === -1 || val > 0, {
         message: "Max projects must be positive or -1 for unlimited",
       }),
-    maxStorageGB: z
-      .number()
-      .min(0, "Max storage cannot be negative")
-      .nonnegative("Max storae must be a positive number"),
     supportLevel: z.enum(["community", "email", "priority", "dedicated"], {
       error:
         "Support level must be one of: community, email, priority, dedicated",
@@ -136,11 +132,6 @@ export const updateSubscriptionPlanSchema = z
           .refine((val) => val === -1 || val > 0, {
             message: "Max projects must be positive or -1 for unlimited",
           })
-          .optional(),
-        maxStorageGB: z
-          .number()
-          .min(0, "Max storage cannot be negative")
-          .nonnegative("Max storage must be a positive number")
           .optional(),
         supportLevel: z
           .enum(["community", "email", "priority", "dedicated"], {

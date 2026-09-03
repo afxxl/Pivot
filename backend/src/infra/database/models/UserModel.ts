@@ -7,7 +7,7 @@ interface IUser {
   email: string;
   password: string;
   role: "admin" | "member";
-  status: "active" | "inactive" | "invited";
+  status: "active" | "invited";
   companyId: string;
   phone?: string;
   profile?: {

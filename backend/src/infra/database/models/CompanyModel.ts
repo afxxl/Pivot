@@ -17,20 +17,17 @@ interface ICompany {
   status: "active" | "inactive" | "trial" | "suspended" | "deleted";
 
   subscriptionPlan:
-    | "free"
-    | "trial"
-    | "starter"
-    | "professional"
-    | "enterprise";
+  | "free"
+  | "trial"
+  | "starter"
+  | "professional"
+  | "enterprise";
   subscriptionStatus?: "active" | "cancelled" | "expired";
   billingCycle?: "monthly" | "annual";
   subscriptionStartDate?: Date;
   subscriptionEndDate?: Date;
   nextBillingDate?: Date;
   monthlyPrice?: number;
-
-  storageUsed?: number;
-  storageLimit?: number;
 
   lastActiveAt?: Date;
 
@@ -77,9 +74,6 @@ const CompanySchema = new Schema<ICompany>(
     subscriptionEndDate: { type: Date },
     nextBillingDate: { type: Date },
     monthlyPrice: { type: Number },
-
-    storageUsed: { type: Number, default: 0 },
-    storageLimit: { type: Number, default: 5368709120 }, // 5GB in bytes
 
     lastActiveAt: { type: Date },
   },

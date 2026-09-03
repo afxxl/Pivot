@@ -159,8 +159,6 @@ export class CompanyRepository implements ICompanyRepository {
       subscriptionEndDate: doc.subscriptionEndDate,
       nextBillingDate: doc.nextBillingDate,
       monthlyPrice: doc.monthlyPrice,
-      storageUsed: doc.storageUsed,
-      storageLimit: doc.storageLimit,
       lastActiveAt: doc.lastActiveAt,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,

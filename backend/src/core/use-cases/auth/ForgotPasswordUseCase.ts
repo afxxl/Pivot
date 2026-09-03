@@ -44,7 +44,7 @@ export class ForgotPasswordUseCase {
       };
     }
 
-    if (user.status === "invited" || user.status === "inactive") {
+    if (user.status === "inactive") {
       return {
         response: res,
       };

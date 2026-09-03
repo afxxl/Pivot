@@ -5,7 +5,7 @@ export interface User {
   lastName: string;
   password: string;
   role: "admin" | "member";
-  status: "active" | "invited" | "inactive";
+  status: "active" | "inactive";
   companyId: string;
   phone?: string;
   profile?: {

@@ -45,7 +45,7 @@ export class AcceptInviteUseCase {
     private emailService: IEmailService,
     @inject(Types.Logger)
     private logger: ILogger,
-  ) { }
+  ) {}
 
   async execute(
     req: AcceptInviteRequestDTO,
@@ -134,9 +134,7 @@ export class AcceptInviteUseCase {
     }
 
     const existingUserId = existingUser?.id;
-    const isReactivation =
-      existingUser &&
-      (existingUser.status === "invited" || existingUser.status === "inactive");
+    const isReactivation = existingUser && existingUser.status === "inactive";
 
     if (invitation.status !== "pending") {
       throw new InvitationAlreadyAcceptedError(

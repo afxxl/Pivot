@@ -60,15 +60,9 @@ export class SendCompanyInviteUseCase {
     );
 
     if (user) {
-      if (user.status === "active") {
-        throw new EmailAlreadyExistsError(
-          "User with this email is already active in your company",
-        );
-      } else if (user.status === "invited") {
-        throw new InviteAlreadyExistsError(
-          "User already has a pending invitation. Use resend feature instead.",
-        );
-      }
+      throw new EmailAlreadyExistsError(
+        "User with this email is already active in your company",
+      );
     }
 
     const invite = await this.inviteRepository.findByEmailAndCompany(

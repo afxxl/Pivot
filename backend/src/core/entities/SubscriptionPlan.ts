@@ -8,7 +8,6 @@ export interface SubscriptionPlan {
     maxUsers: number;
     maxWorkspaces: number;
     maxProjects: number;
-    maxStorageGB: number;
     supportLevel: "community" | "email" | "priority" | "dedicated";
     customFields?: boolean;
     integrations?: string[] | "all";

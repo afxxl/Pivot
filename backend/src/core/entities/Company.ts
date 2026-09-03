@@ -14,11 +14,11 @@ export interface Company {
   };
   status: "active" | "inactive" | "trial" | "suspended" | "deleted";
   subscriptionPlan:
-    | "free"
-    | "trial"
-    | "starter"
-    | "professional"
-    | "enterprise";
+  | "free"
+  | "trial"
+  | "starter"
+  | "professional"
+  | "enterprise";
   subscriptionStatus?: "active" | "cancelled" | "expired";
   billingCycle?: "monthly" | "annual";
 
@@ -28,9 +28,6 @@ export interface Company {
   nextBillingDate?: Date;
 
   monthlyPrice?: number;
-
-  storageUsed?: number;
-  storageLimit?: number;
 
   lastActiveAt?: Date;
 

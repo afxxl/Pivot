@@ -10,7 +10,6 @@ export interface ISubscriptionPlan {
     maxUsers: number;
     maxWorkspaces: number;
     maxProjects: number;
-    maxStorageGB: number;
     supportLevel: "community" | "email" | "priority" | "dedicated";
     customFields?: boolean;
     integrations?: string[] | "all";
@@ -61,10 +60,6 @@ const SubscriptionPlanSchema = new Schema<ISubscriptionPlan>(
         required: true,
       },
       maxProjects: {
-        type: Number,
-        required: true,
-      },
-      maxStorageGB: {
         type: Number,
         required: true,
       },

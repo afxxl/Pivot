@@ -88,12 +88,6 @@ export class ResetPasswordUseCase {
       );
     }
 
-    if (user.status === "invited") {
-      throw new UserInvitedError(
-        "Please accept your invitation first to set your password.",
-      );
-    }
-
     if (await this.passwordService.compare(req.newPassword, user.password)) {
       throw new PasswordReuseError(
         "Please choose a different password. You cannot reuse your current password",

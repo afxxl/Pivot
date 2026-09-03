@@ -11,7 +11,6 @@ export interface GetAllSubscriptionPlansResponseDTO {
         maxUsers: number;
         maxWorkspaces: number;
         maxProjects: number;
-        maxStorageGB: number;
         supportLevel: string;
         customFields?: boolean;
         integrations?: string[] | string;
@@ -42,7 +41,6 @@ export interface GetSubscriptionPlanByIdResponseDTO {
         maxUsers: number;
         maxWorkspaces: number;
         maxProjects: number;
-        maxStorageGB: number;
         supportLevel: string;
         customFields?: boolean;
         integrations?: string[] | string;
@@ -69,7 +67,6 @@ export interface CreateSubscriptionPlanRequestDTO {
     maxUsers: number;
     maxWorkspaces: number;
     maxProjects: number;
-    maxStorageGB: number;
     supportLevel: "community" | "email" | "priority" | "dedicated";
     customFields?: boolean;
     integrations?: string[] | "all";
@@ -106,7 +103,6 @@ export interface UpdateSubscriptionPlanRequestDTO {
     maxUsers?: number;
     maxWorkspaces?: number;
     maxProjects?: number;
-    maxStorageGB?: number;
     supportLevel?: "community" | "email" | "priority" | "dedicated";
     customFields?: boolean;
     integrations?: string[] | "all";

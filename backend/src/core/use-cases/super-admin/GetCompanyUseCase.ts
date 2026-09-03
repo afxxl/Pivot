@@ -18,7 +18,7 @@ export class GetCompanyUseCase {
     private companyRepository: ICompanyRepository,
     @inject(Types.UserRepository)
     private userRepository: IUserRepository,
-  ) {}
+  ) { }
 
   async execute(
     companyId: string,
@@ -115,8 +115,6 @@ export class GetCompanyUseCase {
             activeUsers: companyStats.activeUsers,
             totalProjects: companyStats.totalProjects,
             activeProjects: companyStats.activeProjects,
-            storageUsed: company.storageUsed || 0,
-            storageLimit: company.storageLimit || 5368709120,
             admin: companyAdminData,
             stats: {
               totalTasks: 0,

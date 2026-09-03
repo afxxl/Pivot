@@ -33,7 +33,7 @@ export class LoginUseCase {
 
     @inject(Types.Logger)
     private logger: ILogger,
-  ) { }
+  ) {}
 
   async execute(
     req: LoginRequestDTO,
@@ -64,11 +64,6 @@ export class LoginUseCase {
     }
 
     if (user.status !== "active") {
-      if (user.status === "invited") {
-        throw new UserInvitedError(
-          "Please complete your account setup. Check your email for invite link.",
-        );
-      }
       if (user.status === "inactive") {
         throw new UserInactiveError(
           "Your account is deactivated. Please contact your admin.",
