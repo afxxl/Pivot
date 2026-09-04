@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
   "email": "admin@pivot.com",
-  "password": "pivot@321"
+  "password": "Admin@123"
 }
 
 ### Test 1.2 - Super Admin Login - Invalid Credentials
@@ -37,7 +37,7 @@ Content-Type: application/json
 # 2. GET ALL COMPANIES
 ##########################################################
 
-@superToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Njc0MjAyODgsImV4cCI6MTc2NzQyMTE4OH0.lvRtpAFIxCOgW2UxN7pPs9PW4IGv8WpFBmWJrHze_UE 
+@superToken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHBpdm90LmNvbSIsInJvbGUiOiJzdXBlcl9hZG1pbiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3ODg1MTc0NTAsImV4cCI6MTc4ODUxODM1MH0.PVHVYPpYU9anNac4SVPbLgU22OWu3LMXViBRCEtzNIw 
 
 ### Test 2.1 - Get All Companies (Default Pagination)
 # @name getAllCompanies
@@ -65,7 +65,7 @@ GET http://localhost:5000/api/super-admin/companies?page=1&limit=20&sortBy=creat
 
 ### Test 3.1 - Get Company by ID Successfully
 # @name getCompany
-GET http://localhost:5000/api/super-admin/companies/55afd7ff-8346-409a-ad61-41092ea6e97c/
+GET http://localhost:5000/api/super-admin/companies/a10034d0-005a-4a99-8eea-6d98064eeec1/
 Authorization: Bearer {{superToken}}
 
 ### Test 3.2 - Get Company - Invalid ID
@@ -82,7 +82,7 @@ Authorization: Bearer {{superToken}}
 
 ### Test 4.1 - Update Company Subscription Successfully
 # @name updateSubscription
-PUT http://localhost:5000/api/super-admin/companies/55afd7ff-8346-409a-ad61-41092ea6e97c/subscription
+PUT http://localhost:5000/api/super-admin/companies/a10034d0-005a-4a99-8eea-6d98064eeec1/subscription
 Content-Type: application/json
 Authorization: Bearer {{superToken}}
 
@@ -260,3 +260,13 @@ Authorization: Bearer {{superToken}}
 
 ### Test 9.4 - Delete Plan - Unauthorized
 DELETE http://localhost:5000/api/super-admin/subscription-plans/PLAN_ID_HERE
+
+### Test 9.5 - Update Company
+PUT http://localhost:5000/api/super-admin/companies/73428ac4-ec25-4017-b671-c61de1bb0a7f/
+Content-Type: application/json
+Authorization: Bearer {{superToken}}
+
+{
+  "name": "TechCorp Inc.",
+  "email":"facebook@gmail.com",
+}

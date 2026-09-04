@@ -33,9 +33,13 @@ export const Types = {
   UpdateSubscriptionPlanUseCase: "UpdateSubscriptionPlanUseCase",
   DeleteSubscriptionPlanUseCase: "DeleteSubscriptionPlanUseCase",
   UpdateCompanySubscriptionUseCase: "UpdateCompanySubscriptionUseCase",
+  GetCompanyProfileUseCase: "GetCompanyProfileUseCase",
+  UpdateCompanyProfileUseCase: "UpdateCompanyProfileUseCase",
+  SuperAdminUpdateCompanyUseCase: "SuperAdminUpdateCompanyUseCase",
 
   //Controllers
   AuthController: "AuthController",
   InviteController: "InviteController",
   SuperAdminController: "SuperAdminController",
+  AdminController: "AdminController",
 };

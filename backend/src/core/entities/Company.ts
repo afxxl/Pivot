@@ -5,6 +5,7 @@ export interface Company {
   subdomain: string;
   phone?: string;
   website?: string;
+  logo?: string;
   address?: {
     street?: string;
     city?: string;
@@ -14,11 +15,11 @@ export interface Company {
   };
   status: "active" | "inactive" | "trial" | "suspended" | "deleted";
   subscriptionPlan:
-  | "free"
-  | "trial"
-  | "starter"
-  | "professional"
-  | "enterprise";
+    | "free"
+    | "trial"
+    | "starter"
+    | "professional"
+    | "enterprise";
   subscriptionStatus?: "active" | "cancelled" | "expired";
   billingCycle?: "monthly" | "annual";
 

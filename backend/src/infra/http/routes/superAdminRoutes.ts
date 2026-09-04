@@ -3,6 +3,7 @@ import { validateRequest } from "../middlewares/validateRequest";
 import {
   getAllCompaniesSchema,
   superAdminLoginSchema,
+  superAdminUpdateCompanySchema,
   updateCompanySubscriptionSchema,
 } from "../../../shared/validation/superAdminSchemas";
 import { superAdminLoginLimiter } from "../middlewares/rateLimiter";
@@ -87,6 +88,14 @@ router.put(
   requireSuperAdmin,
   validateRequest(updateCompanySubscriptionSchema),
   superAdminController.updateCompanySubscription,
+);
+
+router.put(
+  "/companies/:id",
+  requireAuth,
+  requireSuperAdmin,
+  validateRequest(superAdminUpdateCompanySchema),
+  superAdminController.updateCompany,
 );
 
 export default router;

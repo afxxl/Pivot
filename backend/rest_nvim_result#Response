@@ -1,0 +1,29 @@
+### test 1.7 - Get Company
+GET http://localhost:5000/api/admin/company
+HTTP/1.1 200 OK
+
+# @_RES (formatted)
+{
+  "success": true,
+  "data": {
+    "company": {
+      "id": "73428ac4-ec25-4017-b671-c61de1bb0a7f",
+      "name": "TechCorp Inc.",
+      "email": "contact@techcorp.com",
+      "phone": null,
+      "website": "http://www.techcorp.com",
+      "logo": null,
+      "status": "active",
+      "plan": "trial",
+      "planDetails": {
+        "name": "trial",
+        "maxUsers": 10,
+        "maxProjects": 5,
+        "usedUsers": 1,
+        "usedProjects": 0
+      },
+      "createdAt": "2026-01-08T17:07:10.029Z"
+    }
+  }
+}
+# @_END

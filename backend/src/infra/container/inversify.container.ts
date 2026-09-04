@@ -37,6 +37,10 @@ import {
 import { GetCompanyUseCase } from "../../core/use-cases/super-admin/GetCompanyUseCase";
 import { SubscriptionPlanRepository } from "../database/repositories/SubscriptionPlanRepository";
 import { UpdateCompanySubscriptionUseCase } from "../../core/use-cases/super-admin/UpdateCompanySubscriptionUseCase";
+import { GetCompanyProfileUseCase } from "../../core/use-cases/admin/GetCompanyProfileUseCase";
+import { AdminController } from "../http/controllers/admin/AdminController";
+import { UpdateCompanyProfileUseCase } from "../../core/use-cases/admin/UpdateCompanyProfileUseCase";
+import { SuperAdminUpdateCompanyUseCase } from "../../core/use-cases/super-admin/SuperAdminUpdateCompanyUseCase";
 
 export const container = new Container();
 
@@ -86,6 +90,14 @@ container
 container
   .bind(Types.UpdateCompanySubscriptionUseCase)
   .to(UpdateCompanySubscriptionUseCase);
+container.bind(Types.GetCompanyProfileUseCase).to(GetCompanyProfileUseCase);
+container
+  .bind(Types.UpdateCompanyProfileUseCase)
+  .to(UpdateCompanyProfileUseCase);
+
+container
+  .bind(Types.SuperAdminUpdateCompanyUseCase)
+  .to(SuperAdminUpdateCompanyUseCase);
 
 //Services
 
@@ -106,3 +118,4 @@ container.bind(Types.UnitOfWork).to(MongooseUnitOfWork).inTransientScope();
 container.bind(Types.AuthController).to(AuthController);
 container.bind(Types.InviteController).to(InviteController);
 container.bind(Types.SuperAdminController).to(SuperAdminController);
+container.bind(Types.AdminController).to(AdminController);

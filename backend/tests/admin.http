@@ -2,7 +2,7 @@
 ### Base URL: http://localhost:5000/api/admin
 ### Requires: Admin authentication token
 
-@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyYzdkOGEyNC01Y2RlLTQ0YTctOTM2MS01MjYzNjU4ODc3YzQiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjU1YWZkN2ZmLTgzNDYtNDA5YS1hZDYxLTQxMDkyZWE2ZTk3YyIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3Njc0MTY1MzgsImV4cCI6MTc2NzQxNzQzOH0.Tn2A3ftTAvgUS8V1jtEE2zK5ji_AD30CqbEVQPSyDbk 
+@token =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiYTI1MDljYS1jYTgwLTQ4M2QtYmI1Ni0yNmRkNTQ1MmFjZDMiLCJlbWFpbCI6InJhaHVsQHRlY2hjb3JwLmNvbSIsInJvbGUiOiJhZG1pbiIsImNvbXBhbnlJZCI6IjczNDI4YWM0LWVjMjUtNDAxNy1iNjcxLWM2MWRlMWJiMGE3ZiIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3ODg1MTEwMzIsImV4cCI6MTc4ODUxMTkzMn0.ev9kMo_mnDWtrax70ZN1apxBOk_2h_t6hBK6eP_3f8Y 
 
 ##########################################################
 # 1. INVITE TEAM MEMBER
@@ -66,14 +66,34 @@ Content-Type: application/json
   "role": "member"
 }
 
-### Test 1.6 - Invite - Invalid Token
+### test 1.6 - invite - invalid token
 POST http://localhost:5000/api/admin/members/invite
-Content-Type: application/json
-Authorization: Bearer invalid_token_here
+content-type: application/json
+authorization: bearer invalid_token_here
 
 {
-  "firstName": "Test",
-  "lastName": "User",
+  "firstname": "test",
+  "lastname": "user",
   "email": "test@techcorp.com",
   "role": "member"
 }
+
+### test 1.7 - Get Company
+GET http://localhost:5000/api/admin/company
+content-type: application/json
+Authorization: Bearer {{token}}
+
+
+### test 1.8 - Update Company Profile
+PUT http://localhost:5000/api/admin/company
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name":"TechCorp Inc.",
+  "email": "contact@techcorp.com",
+  "website":"http://www.techcorp.com"
+}
+
+
+

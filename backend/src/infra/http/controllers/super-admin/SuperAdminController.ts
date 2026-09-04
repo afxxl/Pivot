@@ -12,6 +12,8 @@ import {
 } from "../../../../core/use-cases/super-admin";
 import { GetCompanyUseCase } from "../../../../core/use-cases/super-admin/GetCompanyUseCase";
 import { UpdateCompanySubscriptionUseCase } from "../../../../core/use-cases/super-admin/UpdateCompanySubscriptionUseCase";
+import { SuperAdminUpdateCompanyUseCase } from "../../../../core/use-cases/super-admin/SuperAdminUpdateCompanyUseCase";
+import { InvalidCompanyIdError } from "../../../../shared/errors";
 
 @injectable()
 export class SuperAdminController {
@@ -42,7 +44,10 @@ export class SuperAdminController {
 
     @inject(Types.UpdateCompanySubscriptionUseCase)
     private updateCompanySubscriptionUseCase: UpdateCompanySubscriptionUseCase,
-  ) { }
+
+    @inject(Types.SuperAdminUpdateCompanyUseCase)
+    private superAdminCompanyUpdateUseCase: SuperAdminUpdateCompanyUseCase,
+  ) {}
 
   loginSuperAdmin = async (
     req: Request,
@@ -175,6 +180,31 @@ export class SuperAdminController {
     try {
       const result = await this.updateCompanySubscriptionUseCase.execute(
         req.params.id,
+        req.body,
+      );
+      res.status(200).json(result.response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateCompany = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const companyId = req.params.id;
+
+      const uuidV4Regex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+      if (!uuidV4Regex.test(companyId)) {
+        throw new InvalidCompanyIdError("Invalid company ID format");
+      }
+
+      const result = await this.superAdminCompanyUpdateUseCase.execute(
+        companyId,
         req.body,
       );
       res.status(200).json(result.response);
